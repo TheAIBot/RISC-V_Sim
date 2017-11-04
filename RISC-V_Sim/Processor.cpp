@@ -9,7 +9,7 @@ Processor::Processor()
 	memory = new uint8_t[Processor::MEMORY_SIZE];
 }
 
-void Processor::Run(uint32_t* rawInstructions, uint64_t instructionCount)
+void Processor::Run(const uint32_t* rawInstructions, const uint64_t instructionCount)
 {
 	Instruction* instructions = DecodeInstructions(rawInstructions, instructionCount);
 
@@ -41,8 +41,6 @@ void Processor::Run(uint32_t* rawInstructions, uint64_t instructionCount)
 			break;
 		}
 	}
-
-	PrintRegisters();
 }
 
 void Processor::EnvironmentCall(bool* stopProgram)
@@ -53,223 +51,223 @@ void Processor::EnvironmentCall(bool* stopProgram)
 	}
 }
 
-void Processor::RunInstruction(Instruction instruction, bool* stopProgram)
+void Processor::RunInstruction(const Instruction instruction, bool* stopProgram)
 {
 	int64_t x;
 	switch (instruction.type)
 	{
-		case lb:
+		case InstructionType::lb:
 			registers[instruction.rd].dword = static_cast<int64_t>(static_cast<int8_t>(GetByteFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate))));
 			pc += 4;
 			break;
-		case lh:
+		case InstructionType::lh:
 			registers[instruction.rd].dword = static_cast<int64_t>(static_cast<int16_t>(GetHalfWordFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate))));
 			pc += 4;
 			break;
-		case lw:
+		case InstructionType::lw:
 			registers[instruction.rd].dword = static_cast<int64_t>(static_cast<int32_t>(GetWordFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate))));
 			pc += 4;
 			break;
-		case ld:
+		case InstructionType::ld:
 			registers[instruction.rd].dword = static_cast<int64_t>(GetDoubleWordFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate)));
 			pc += 4;
 			break;
-		case lbu:
+		case InstructionType::lbu:
 			registers[instruction.rd].udword = static_cast<uint64_t>(GetByteFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate)));
 			pc += 4;
 			break;
-		case lhu:
+		case InstructionType::lhu:
 			registers[instruction.rd].udword = static_cast<uint64_t>(GetHalfWordFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate)));
 			pc += 4;
 			break;
-		case lwu:
+		case InstructionType::lwu:
 			registers[instruction.rd].udword = static_cast<uint64_t>(GetWordFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate)));
 			pc += 4;
 			break;
-		case fence:
-		case fence_i:
+		case InstructionType::fence:
+		case InstructionType::fence_i:
 			throw new std::runtime_error("Instruction not implemented yet.");
-		case addi:
+		case InstructionType::addi:
 			x = static_cast<int64_t>(instruction.immediate);
 			registers[instruction.rd].dword = registers[instruction.rs1].dword + x;
 			//registers[instruction.rd].dword = registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate));
 			pc += 4;
 			break;
-		case slli:
+		case InstructionType::slli:
 			registers[instruction.rd].dword = registers[instruction.rs1].dword << static_cast<int64_t>(instruction.immediate);
 			pc += 4;
 			break;
-		case slti:
+		case InstructionType::slti:
 			registers[instruction.rd].dword = (registers[instruction.rs1].dword < static_cast<int64_t>(instruction.immediate)) ? 1 : 0;
 			pc += 4;
 			break;
-		case sltiu:
+		case InstructionType::sltiu:
 			registers[instruction.rd].dword = (registers[instruction.rs1].udword < static_cast<uint64_t>(instruction.immediate)) ? 1 : 0;
 			pc += 4;
 			break;
-		case xori:
+		case InstructionType::xori:
 			registers[instruction.rd].dword = registers[instruction.rs1].dword ^ static_cast<int64_t>(instruction.immediate);
 			pc += 4;
 			break;
-		case srli:
+		case InstructionType::srli:
 			registers[instruction.rd].udword = registers[instruction.rs1].udword >> static_cast<uint64_t>(instruction.immediate);
 			pc += 4;
 			break;
-		case srai:
+		case InstructionType::srai:
 			registers[instruction.rd].dword = registers[instruction.rs1].dword >> static_cast<int64_t>(instruction.immediate);
 			pc += 4;
 			break;
-		case ori:
+		case InstructionType::ori:
 			registers[instruction.rd].dword = registers[instruction.rs1].dword | static_cast<int64_t>(instruction.immediate);
 			pc += 4;
 			break;
-		case andi:
+		case InstructionType::andi:
 			registers[instruction.rd].dword = registers[instruction.rs1].dword & static_cast<int64_t>(instruction.immediate);
 			pc += 4;
 			break;
-		case auipc:
+		case InstructionType::auipc:
 			registers[instruction.rd].udword = pc + static_cast<uint64_t>(instruction.immediate);
 			pc += 4;
 			break;
-		case addiw:
+		case InstructionType::addiw:
 			registers[instruction.rd].word = registers[instruction.rs1].word + static_cast<int32_t>(instruction.immediate);
 			pc += 4;
 			break;
-		case slliw:
+		case InstructionType::slliw:
 			registers[instruction.rd].word = registers[instruction.rs1].word << static_cast<int32_t>(instruction.immediate);
 			pc += 4;
 			break;
-		case srliw:
+		case InstructionType::srliw:
 			registers[instruction.rd].uword = registers[instruction.rs1].uword >> instruction.immediate;
 			pc += 4;
 			break;
-		case sraiw:
+		case InstructionType::sraiw:
 			registers[instruction.rd].word = registers[instruction.rs1].word >> static_cast<int32_t>(instruction.immediate);
 			pc += 4;
 			break;
-		case sb:
+		case InstructionType::sb:
 			StoreByteInMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate), registers[instruction.rs2].byte);
 			pc += 4;
 			break;
-		case sh:
+		case InstructionType::sh:
 			StoreHalfWordInMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate), registers[instruction.rs2].half);
 			pc += 4;
 			break;
-		case sw:
+		case InstructionType::sw:
 			StoreWordInMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate), registers[instruction.rs2].word);
 			pc += 4;
 			break;
-		case sd:
+		case InstructionType::sd:
 			StoreDoubleWordInMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate), registers[instruction.rs2].dword);
 			pc += 4;
 			break;
-		case add:
+		case InstructionType::add:
 			registers[instruction.rd].dword = registers[instruction.rs1].dword + registers[instruction.rs2].dword;
 			pc += 4;
 			break;
-		case sub:
+		case InstructionType::sub:
 			registers[instruction.rd].dword = registers[instruction.rs1].dword - registers[instruction.rs2].dword;
 			pc += 4;
 			break;
-		case sll:
+		case InstructionType::sll:
 			registers[instruction.rd].dword = registers[instruction.rs1].dword << registers[instruction.rs2].dword;
 			pc += 4;
 			break;
-		case slt:
+		case InstructionType::slt:
 			registers[instruction.rd].dword = (registers[instruction.rs1].dword < registers[instruction.rs2].dword) ? 1 : 0;
 			pc += 4;
 			break;
-		case sltu:
+		case InstructionType::sltu:
 			registers[instruction.rd].dword = (registers[instruction.rs1].udword < registers[instruction.rs2].udword) ? 1 : 0;
 			pc += 4;
 			break;
-		case xor_:
+		case InstructionType::xor_:
 			registers[instruction.rd].dword = registers[instruction.rs1].dword ^ registers[instruction.rs2].dword;
 			pc += 4;
 			break;
-		case srl:
+		case InstructionType::srl:
 			registers[instruction.rd].udword = registers[instruction.rs1].udword >> registers[instruction.rs2].udword;
 			pc += 4;
 			break;
-		case sra:
+		case InstructionType::sra:
 			registers[instruction.rd].dword = registers[instruction.rs1].dword >> registers[instruction.rs2].dword;
 			pc += 4;
 			break;
-		case or_:
+		case InstructionType::or_:
 			registers[instruction.rd].dword = registers[instruction.rs1].dword | registers[instruction.rs2].dword;
 			pc += 4;
 			break;
-		case and_:
+		case InstructionType::and_:
 			registers[instruction.rd].dword = registers[instruction.rs1].dword & registers[instruction.rs2].dword;
 			pc += 4;
 			break;
-		case lui:
+		case InstructionType::lui:
 			x = static_cast<int64_t>(static_cast<int32_t>(instruction.immediate));
 			registers[instruction.rd].dword = x;
 			//registers[instruction.rd].dword = static_cast<int64_t>(static_cast<int32_t>(instruction.immediate));
 			pc += 4;
 			break;
-		case addw://(*) Ask if sign bit should be at position 32 or 64
+		case InstructionType::addw:
 			registers[instruction.rd].word = registers[instruction.rs1].word + registers[instruction.rs2].word;
 			pc += 4;
 			break;
-		case subw:
+		case InstructionType::subw:
 			registers[instruction.rd].word = registers[instruction.rs1].word - registers[instruction.rs2].word;
 			pc += 4;
 			break;
-		case sllw:
+		case InstructionType::sllw:
 			registers[instruction.rd].word = registers[instruction.rs1].word << registers[instruction.rs2].word;
 			pc += 4;
 			break;
-		case srlw:
+		case InstructionType::srlw:
 			registers[instruction.rd].uword = registers[instruction.rs1].uword >> registers[instruction.rs2].uword;
 			pc += 4;
 			break;
-		case sraw:
+		case InstructionType::sraw:
 			registers[instruction.rd].word = registers[instruction.rs1].word >> registers[instruction.rs2].word;
 			pc += 4;
 			break;
-		case beq:
-			pc = (registers[instruction.rs1].dword ==  registers[instruction.rs2].dword)  ? pc + static_cast<uint64_t>(instruction.immediate << 1) : pc;
+		case InstructionType::beq:
+			pc = (registers[instruction.rs1].dword ==  registers[instruction.rs2].dword)  ? pc + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate)) : pc + 4;
 			break;
-		case bne:
-			pc = (registers[instruction.rs1].dword !=  registers[instruction.rs2].dword)  ? pc + static_cast<uint64_t>(instruction.immediate << 1) : pc;
+		case InstructionType::bne:
+			pc = (registers[instruction.rs1].dword !=  registers[instruction.rs2].dword)  ? pc + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate)) : pc + 4;
 			break;
-		case blt:
-			pc = (registers[instruction.rs1].dword <   registers[instruction.rs2].dword)  ? pc + static_cast<uint64_t>(instruction.immediate << 1) : pc;
+		case InstructionType::blt:
+			pc = (registers[instruction.rs1].dword <   registers[instruction.rs2].dword)  ? pc + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate)) : pc + 4;
 			break;
-		case bge:
-			pc = (registers[instruction.rs1].dword >=  registers[instruction.rs2].dword)  ? pc + static_cast<uint64_t>(instruction.immediate << 1) : pc;
+		case InstructionType::bge:
+			pc = (registers[instruction.rs1].dword >=  registers[instruction.rs2].dword)  ? pc + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate)) : pc + 4;
 			break;
-		case bltu:
-			pc = (registers[instruction.rs1].udword <  registers[instruction.rs2].udword) ? pc + static_cast<uint64_t>(instruction.immediate << 1) : pc;
+		case InstructionType::bltu:
+			pc = (registers[instruction.rs1].udword <  registers[instruction.rs2].udword) ? pc + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate)) : pc + 4;
 			break;
-		case bgeu:
-			pc = (registers[instruction.rs1].udword >= registers[instruction.rs2].udword) ? pc + static_cast<uint64_t>(instruction.immediate << 1) : pc;
+		case InstructionType::bgeu:
+			pc = (registers[instruction.rs1].udword >= registers[instruction.rs2].udword) ? pc + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate)) : pc + 4;
 			break;
-		case jalr: //(*) ask about 3
+		case InstructionType::jalr: //(*) ask about 3
 			registers[instruction.rd].dword = pc + 4;
 			pc = registers[instruction.rs1].udword + static_cast<uint64_t>(instruction.immediate);
 			break;
-		case jal:
+		case InstructionType::jal:
 			registers[instruction.rd].dword = pc + 4;
 			pc = pc + static_cast<uint64_t>(instruction.immediate << 1);
 			break;
-		case ecall:
+		case InstructionType::ecall:
 			EnvironmentCall(stopProgram);
 			pc += 4;
 			break;
-		case ebreak:
+		case InstructionType::ebreak:
 			PrintRegisters();
 			std::cin.get();
 			pc += 4;
 			break;
-		case csrrw:
-		case csrrs:
-		case csrrc:
-		case csrrwi:
-		case csrrsi:
-		case csrrci:
+		case InstructionType::csrrw:
+		case InstructionType::csrrs:
+		case InstructionType::csrrc:
+		case InstructionType::csrrwi:
+		case InstructionType::csrrsi:
+		case InstructionType::csrrci:
 			throw new std::runtime_error("Instruction not implemented yet.");
 		default:
 			throw std::runtime_error("instruction identifier not recognized. iid: " + NumberToBits(static_cast<uint32_t>(instruction.type)));
@@ -277,7 +275,21 @@ void Processor::RunInstruction(Instruction instruction, bool* stopProgram)
 	}
 }
 
-void Processor::SetDebugMode(bool useDebugMode)
+bool Processor::CompareRegisters(const uint32_t* compareWith)
+{
+	for (uint32_t i = 0; i < 32; i++)
+	{
+		//(*)don't compare stack pointer because the correct is wrong
+		if (registers[i].uword != compareWith[i] && i != 2)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+void Processor::SetDebugMode(const bool useDebugMode)
 {
 	debugEnabled = useDebugMode;
 }

@@ -36,12 +36,13 @@ private:
 	void StoreDoubleWordInMemory(int64_t index, int64_t doubleWord);
 	void EnvironmentCall(bool* stopProgram);
 	void RunInstruction(Instruction instruction, bool* stopProgram);
-	void PrintRegisters();
 
 public:
 	Processor();
-	void Run(uint32_t* instructions, uint64_t instructionCount);
-	void SetDebugMode(bool useDebugMode);
+	void Run(const uint32_t* instructions, const uint64_t instructionCount);
+	void PrintRegisters();
+	void SetDebugMode(const bool useDebugMode);
+	bool CompareRegisters(const uint32_t* compareWith);
 
 	~Processor();
 };

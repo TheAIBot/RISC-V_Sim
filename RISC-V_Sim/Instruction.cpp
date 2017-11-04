@@ -1,6 +1,5 @@
 #include "Instruction.h"
 #include <cstdint>
-#include <stdexcept>
 #include <iostream>
 #include <iomanip>
 
@@ -228,133 +227,6 @@ static Instruction DecodeUType(const uint32_t rawInstruction)
 	return decoded;
 }
 
-std::string GetNameOfInstructionType(InstructionType type)
-{
-	switch (type)
-	{
-		case lb:
-			return "lb";
-		case lh:
-			return "lh";
-		case lw:
-			return "lw";
-		case ld:
-			return "ld";
-		case lbu:
-			return "lbu";
-		case lhu:
-			return "lhu";
-		case lwu:
-			return "lwu";
-		case fence:
-			return "fence";
-		case fence_i:
-			return "fence_i";
-		case addi:
-			return "addi";
-		case slli:
-			return "slli";
-		case slti:
-			return "slti";
-		case sltiu:
-			return "sltiu";
-		case xori:
-			return "xori";
-		case srli:
-			return "srli";
-		case srai:
-			return "srai";
-		case ori:
-			return "ori";
-		case andi:
-			return "andi";
-		case auipc:
-			return "auipc";
-		case addiw:
-			return "addiw";
-		case slliw:
-			return "slliw";
-		case srliw:
-			return "srliw";
-		case sraiw:
-			return "sraiw";
-		case sb:
-			return "sb";
-		case sh:
-			return "sh";
-		case sw:
-			return "sw";
-		case sd:
-			return "sd";
-		case add:
-			return "add";
-		case sub:
-			return "sub";
-		case sll:
-			return "sll";
-		case slt:
-			return "slt";
-		case sltu:
-			return "sltu";
-		case xor_:
-			return "xor";
-		case srl:
-			return "srl";
-		case sra:
-			return "sra";
-		case or_:
-			return "or";
-		case and_:
-			return "and";
-		case lui:
-			return "lui";
-		case addw:
-			return "addw";
-		case subw:
-			return "subw";
-		case sllw:
-			return "sllw";
-		case srlw:
-			return "srlw";
-		case sraw:
-			return "sraw";
-		case beq:
-			return "beq";
-		case bne:
-			return "bne";
-		case blt:
-			return "blt";
-		case bge:
-			return "bge";
-		case bltu:
-			return "bltu";
-		case bgeu:
-			return "bgeu";
-		case jalr:
-			return "jalr";
-		case jal:
-			return "jal";
-		case ecall:
-			return "ecall";
-		case ebreak:
-			return "ebreak";
-		case csrrw:
-			return "csrrw";
-		case csrrs:
-			return "csrrs";
-		case csrrc:
-			return "csrrc";
-		case csrrwi:
-			return "csrrwi";
-		case csrrsi:
-			return "csrrsi";
-		case csrrci:
-			return "csrrci";
-		default:
-			throw new std::runtime_error("Invalid instruction type. Type: " + std::to_string(static_cast<uint16_t>(type)));
-	}
-}
-
 std::string NumberToBits(uint32_t n)
 {
 	//32 bits, 3 spaces and 1 null terminator
@@ -399,6 +271,135 @@ std::string NumberToBits64(uint64_t n)
 	return std::string(bits);
 }
 
+std::string GetNameOfInstructionType(InstructionType type)
+{
+	uint32_t x;
+	switch (type)
+	{
+		case InstructionType::lb:
+			return "lb";
+		case InstructionType::lh:
+			return "lh";
+		case InstructionType::lw:
+			return "lw";
+		case InstructionType::ld:
+			return "ld";
+		case InstructionType::lbu:
+			return "lbu";
+		case InstructionType::lhu:
+			return "lhu";
+		case InstructionType::lwu:
+			return "lwu";
+		case InstructionType::fence:
+			return "fence";
+		case InstructionType::fence_i:
+			return "fence_i";
+		case InstructionType::addi:
+			return "addi";
+		case InstructionType::slli:
+			return "slli";
+		case InstructionType::slti:
+			return "slti";
+		case InstructionType::sltiu:
+			return "sltiu";
+		case InstructionType::xori:
+			return "xori";
+		case InstructionType::srli:
+			return "srli";
+		case InstructionType::srai:
+			return "srai";
+		case InstructionType::ori:
+			return "ori";
+		case InstructionType::andi:
+			return "andi";
+		case InstructionType::auipc:
+			return "auipc";
+		case InstructionType::addiw:
+			return "addiw";
+		case InstructionType::slliw:
+			return "slliw";
+		case InstructionType::srliw:
+			return "srliw";
+		case InstructionType::sraiw:
+			return "sraiw";
+		case InstructionType::sb:
+			return "sb";
+		case InstructionType::sh:
+			return "sh";
+		case InstructionType::sw:
+			return "sw";
+		case InstructionType::sd:
+			return "sd";
+		case InstructionType::add:
+			return "add";
+		case InstructionType::sub:
+			return "sub";
+		case InstructionType::sll:
+			return "sll";
+		case InstructionType::slt:
+			return "slt";
+		case InstructionType::sltu:
+			return "sltu";
+		case InstructionType::xor_:
+			return "xor";
+		case InstructionType::srl:
+			return "srl";
+		case InstructionType::sra:
+			return "sra";
+		case InstructionType::or_:
+			return "or";
+		case InstructionType::and_:
+			return "and";
+		case InstructionType::lui:
+			return "lui";
+		case InstructionType::addw:
+			return "addw";
+		case InstructionType::subw:
+			return "subw";
+		case InstructionType::sllw:
+			return "sllw";
+		case InstructionType::srlw:
+			return "srlw";
+		case InstructionType::sraw:
+			return "sraw";
+		case InstructionType::beq:
+			return "beq";
+		case InstructionType::bne:
+			return "bne";
+		case InstructionType::blt:
+			return "blt";
+		case InstructionType::bge:
+			return "bge";
+		case InstructionType::bltu:
+			return "bltu";
+		case InstructionType::bgeu:
+			return "bgeu";
+		case InstructionType::jalr:
+			return "jalr";
+		case InstructionType::jal:
+			return "jal";
+		case InstructionType::ecall:
+			return "ecall";
+		case InstructionType::ebreak:
+			return "ebreak";
+		case InstructionType::csrrw:
+			return "csrrw";
+		case InstructionType::csrrs:
+			return "csrrs";
+		case InstructionType::csrrc:
+			return "csrrc";
+		case InstructionType::csrrwi:
+			return "csrrwi";
+		case InstructionType::csrrsi:
+			return "csrrsi";
+		case InstructionType::csrrci:
+			return "csrrci";
+		default:
+			x = static_cast<uint32_t>(type);
+			throw new std::runtime_error("Invalid instruction type. Type: " + NumberToBits(x));
+	}
+}
+
 static void PrintInstruction(Instruction instruction) 
 {
 	std::cout << std::setfill(' ') << std::endl;
@@ -419,7 +420,7 @@ static void PrintInstruction(Instruction instruction)
 	std::cout << std::endl;
 }
 
-Instruction* DecodeInstructions(uint32_t* rawInstructions, uint64_t instructionsCount)
+Instruction* DecodeInstructions(const uint32_t* rawInstructions, const uint64_t instructionsCount)
 {
 	Instruction* instructions = new Instruction[instructionsCount];
 
@@ -461,7 +462,7 @@ Instruction* DecodeInstructions(uint32_t* rawInstructions, uint64_t instructions
 			throw std::runtime_error("Invalid opcode. opcode: " + std::to_string(opcode));
 		}
 
-		PrintInstruction(instruction);
+		//PrintInstruction(instruction);
 		instructions[i] = instruction;
 	}
 

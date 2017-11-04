@@ -77,4 +77,4 @@ struct Instruction
 
 std::string NumberToBits(uint32_t n);
 std::string NumberToBits64(uint64_t n);
-Instruction* DecodeInstructions(uint32_t* rawInstructions, uint64_t instructionsCount);
+Instruction* DecodeInstructions(const uint32_t* rawInstructions, const uint64_t instructionsCount);

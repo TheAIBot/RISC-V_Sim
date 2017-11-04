@@ -158,9 +158,6 @@
     <ClInclude Include="Processor.h" />
     <ClInclude Include="simexceptions.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="addlarge.bin" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

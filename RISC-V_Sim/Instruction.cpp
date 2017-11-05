@@ -6,7 +6,7 @@
 #include "Register.h"
 
 template<uint32_t SIZE, uint32_t BITS>
-static std::string InstructionToBits(uint32_t n, const uint32_t* sizes)
+static std::string InstructionToBits(uint64_t n, const uint32_t* sizes)
 {
 	//i should make this method return
 	//a uniwue_ptr but i haven't worked
@@ -226,19 +226,23 @@ std::string InstructionAsString(Instruction instruction)
 	switch (static_cast<uint16_t>(instruction.type) & 127)
 	{
 		case 0b0000'0011:
+			sprintf(text, "%s %s %i(%s)", type.c_str(), rdText.c_str(), static_cast<int16_t>(instruction.immediate), rs1Text.c_str());
+			break;
 		case 0b0000'1111:
 		case 0b0001'0011:
 		case 0b0001'1011:
 		case 0b0110'0111:
-		case 0b0111'0011:
 			sprintf(text, "%s %s %s %i", type.c_str(), rdText.c_str(), rs1Text.c_str(), static_cast<int16_t>(instruction.immediate));
+			break;
+		case 0b0111'0011:
+			sprintf(text, "%s", type.c_str());
 			break;
 		case 0b0001'0111:
 		case 0b0011'0111:
 			sprintf(text, "%s %s %i", type.c_str(), rdText.c_str(), static_cast<int16_t>(instruction.immediate >> 12));
 			break;
 		case 0b0010'0011:
-			sprintf(text, "%s %s %i(%s)", type.c_str(), rs2Text.c_str(), static_cast<int16_t>(instruction.immediate), rs1Text.c_str());
+			sprintf(text, "%s %s %i(%s)", type.c_str(), rs1Text.c_str(), static_cast<int16_t>(instruction.immediate), rs2Text.c_str());
 			break;
 		case 0b0011'0011:
 		case 0b0011'1011:
@@ -255,24 +259,4 @@ std::string InstructionAsString(Instruction instruction)
 	}
 
 	return std::string(text);
-}
-
-static void PrintInstruction(Instruction instruction) 
-{
-	std::cout << std::setfill(' ') << std::endl;
-	std::cout << std::setw(10) << GetNameOfInstructionType(instruction.type);
-	std::cout << "   " << NumberToBits(instruction.type) << std::endl;
-
-	std::cout << std::setw(10) << instruction.immediate;  
-	std::cout << "   " << NumberToBits(instruction.immediate) << std::endl;
-
-	std::cout << std::setw(10) << static_cast<uint32_t>(instruction.rd);     
-	std::cout << "   " << NumberToBits(instruction.rd) << std::endl;
-
-	std::cout << std::setw(10) << static_cast<uint32_t>(instruction.rs1);    
-	std::cout << "   " << NumberToBits(instruction.rs1) << std::endl;
-
-	std::cout << std::setw(10) << static_cast<uint32_t>(instruction.rs2);   
-	std::cout << "   " << NumberToBits(instruction.rs2) << std::endl;
-	std::cout << std::endl;
 }

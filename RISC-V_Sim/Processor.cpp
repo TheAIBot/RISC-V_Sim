@@ -28,6 +28,8 @@ void Processor::Run(const uint32_t* rawInstructions, const uint64_t instructionC
 
 		const Instruction instruction = instructions[pc / 4];
 
+		std::cout << std::to_string(instructionIndex) + ": " << InstructionAsString(instruction) << std::endl;
+
 		bool stopProgram = false;
 		RunInstruction(instruction, &stopProgram);
 
@@ -69,38 +71,38 @@ void Processor::RunInstruction(const Instruction instruction, bool* stopProgram)
 	switch (instruction.type)
 	{
 		case InstructionType::lb:
-			registers[instruction.rd].dword = static_cast<int64_t>(static_cast<int8_t>(GetByteFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate))));
+			registers[instruction.rd].dword = static_cast<int64_t>(static_cast<int8_t>(GetByteFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate)))));
 			pc += 4;
 			break;
 		case InstructionType::lh:
-			registers[instruction.rd].dword = static_cast<int64_t>(static_cast<int16_t>(GetHalfWordFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate))));
+			registers[instruction.rd].dword = static_cast<int64_t>(static_cast<int16_t>(GetHalfWordFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate)))));
 			pc += 4;
 			break;
 		case InstructionType::lw:
-			registers[instruction.rd].dword = static_cast<int64_t>(static_cast<int32_t>(GetWordFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate))));
+			registers[instruction.rd].dword = static_cast<int64_t>(static_cast<int32_t>(GetWordFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate)))));
 			pc += 4;
 			break;
 		case InstructionType::ld:
-			registers[instruction.rd].dword = static_cast<int64_t>(GetDoubleWordFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate)));
+			registers[instruction.rd].dword = static_cast<int64_t>(GetDoubleWordFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate))));
 			pc += 4;
 			break;
 		case InstructionType::lbu:
-			registers[instruction.rd].udword = static_cast<uint64_t>(GetByteFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate)));
+			registers[instruction.rd].udword = static_cast<uint64_t>(GetByteFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate))));
 			pc += 4;
 			break;
 		case InstructionType::lhu:
-			registers[instruction.rd].udword = static_cast<uint64_t>(GetHalfWordFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate)));
+			registers[instruction.rd].udword = static_cast<uint64_t>(GetHalfWordFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate))));
 			pc += 4;
 			break;
 		case InstructionType::lwu:
-			registers[instruction.rd].udword = static_cast<uint64_t>(GetWordFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate)));
+			registers[instruction.rd].udword = static_cast<uint64_t>(GetWordFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate))));
 			pc += 4;
 			break;
 		case InstructionType::fence:
 		case InstructionType::fence_i:
 			throw new std::runtime_error("Instruction not implemented yet.");
 		case InstructionType::addi:
-			x = static_cast<int64_t>(instruction.immediate);
+			x = static_cast<int64_t>(static_cast<int32_t>(instruction.immediate));
 			registers[instruction.rd].dword = registers[instruction.rs1].dword + x;
 			//registers[instruction.rd].dword = registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate));
 			pc += 4;
@@ -259,11 +261,11 @@ void Processor::RunInstruction(const Instruction instruction, bool* stopProgram)
 			break;
 		case InstructionType::jalr: //(*) ask about 3
 			registers[instruction.rd].dword = pc + 4;
-			pc = registers[instruction.rs1].udword + static_cast<uint64_t>(instruction.immediate);
+			pc = registers[instruction.rs1].udword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate));
 			break;
 		case InstructionType::jal:
 			registers[instruction.rd].dword = pc + 4;
-			pc = pc + static_cast<uint64_t>(instruction.immediate << 1);
+			pc = pc + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate));
 			break;
 		case InstructionType::ecall:
 			EnvironmentCall(stopProgram);
@@ -285,6 +287,9 @@ void Processor::RunInstruction(const Instruction instruction, bool* stopProgram)
 			throw std::runtime_error("instruction identifier not recognized. iid: " + NumberToBits(static_cast<uint32_t>(instruction.type)));
 			break;
 	}
+	//the 0'th register can only be 0
+	//so set it back to 0 in case it was changed
+	registers[0].dword = 0;
 }
 
 bool Processor::CompareRegisters(const uint32_t* compareWith)

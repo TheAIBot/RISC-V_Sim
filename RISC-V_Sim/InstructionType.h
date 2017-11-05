@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-enum InstructionType : uint16_t
+enum class InstructionType : uint16_t
 {
 	lb		= 0b000000'000'0000011,
 	lh		= 0b000000'001'0000011,

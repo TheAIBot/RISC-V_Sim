@@ -3,6 +3,22 @@
 #include "Instruction.h"
 #include "InstructionFormat.h"
 
+static uint32_t GetImmediateMask(uint16_t instructionIdentifier)
+{
+	const uint32_t removefunct7    = 0b00000000'00000000'00000000'00011111;
+	const uint32_t wholeidentifier = 0b11111111'11111111'11111111'11111111;
+	switch (instructionIdentifier)
+	{
+		case 0b000000'001'0010011:
+		case 0b000000'101'0010011:
+		case 0b000000'001'0011011:
+		case 0b000000'101'0011011:
+			return removefunct7;
+		default:
+			return wholeidentifier;
+	}
+}
+
 static uint16_t GetInstructionIdentifierMask(uint16_t instructionIdentifier)
 {
 	const uint16_t onlyOpCodeAndFunct3 = 0b000000'111'1111111;
@@ -72,7 +88,8 @@ static Instruction DecodeIType(const uint32_t rawInstruction)
 	decoded.rd = iType.type.rd;
 	decoded.rs1 = iType.type.rs1;
 	decoded.immediate = SignExtend_uint12_t(iType.type.immediate);
-	decoded.type = GetInstructionType(iType.type.opcode, iType.type.funct3, iType.type.immediate);
+	decoded.type = GetInstructionType(iType.type.opcode, iType.type.funct3, iType.type.immediate >> 5);
+	decoded.immediate &= GetImmediateMask((iType.type.funct3 << 7) | iType.type.opcode);
 
 	return decoded;
 }
@@ -139,6 +156,37 @@ static Instruction DecodeUType(const uint32_t rawInstruction)
 	return decoded;
 }
 
+Instruction DecodeInstruction(const uint32_t rawInstruction)
+{
+	//opcode is the first 7 bits
+	const uint32_t opcode = rawInstruction & 127;
+
+	switch (opcode)
+	{
+		case 0b0000'0011:
+		case 0b0000'1111:
+		case 0b0001'0011:
+		case 0b0001'1011:
+		case 0b0110'0111:
+		case 0b0111'0011:
+			return DecodeIType(rawInstruction);
+		case 0b0001'0111:
+		case 0b0011'0111:
+			return DecodeUType(rawInstruction);
+		case 0b0010'0011:
+			return DecodeSType(rawInstruction);
+		case 0b0011'0011:
+		case 0b0011'1011:
+			return DecodeRType(rawInstruction);
+		case 0b0110'0011:
+			return DecodeSBType(rawInstruction);
+		case 0b0110'1111:
+			return DecodeUJType(rawInstruction);
+		default:
+			throw std::runtime_error("Invalid opcode. opcode: " + std::to_string(opcode));
+	}
+}
+
 Instruction* DecodeInstructions(const uint32_t* rawInstructions, const uint64_t instructionsCount)
 {
 	Instruction* instructions = new Instruction[instructionsCount];
@@ -146,43 +194,8 @@ Instruction* DecodeInstructions(const uint32_t* rawInstructions, const uint64_t 
 	for (uint64_t i = 0; i < instructionsCount; i++)
 	{
 		const uint32_t rawInstruction = rawInstructions[i];
-		//opcode is the first 7 bits
-		const uint32_t opcode = rawInstruction & 127;
-
-		Instruction instruction;
-		switch (opcode)
-		{
-			case 0b0000'0011:
-			case 0b0000'1111:
-			case 0b0001'0011:
-			case 0b0001'1011:
-			case 0b0110'0111:
-			case 0b0111'0011:
-				instruction = DecodeIType(rawInstruction);
-				break;
-			case 0b0001'0111:
-			case 0b0011'0111:
-				instruction = DecodeUType(rawInstruction);
-				break;
-			case 0b0010'0011:
-				instruction = DecodeSType(rawInstruction);
-				break;
-			case 0b0011'0011:
-			case 0b0011'1011:
-				instruction = DecodeRType(rawInstruction);
-				break;
-			case 0b0110'0011:
-				instruction = DecodeSBType(rawInstruction);
-				break;
-			case 0b0110'1111:
-				instruction = DecodeUJType(rawInstruction);
-				break;
-			default:
-				throw std::runtime_error("Invalid opcode. opcode: " + std::to_string(opcode));
-		}
-
-		//PrintInstruction(instruction);
-		instructions[i] = instruction;
+		instructions[i] = DecodeInstruction(rawInstruction);
+		//PrintInstruction(instructions[i]);
 	}
 
 	return instructions;

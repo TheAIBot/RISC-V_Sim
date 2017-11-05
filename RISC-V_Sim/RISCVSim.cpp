@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include "Processor.h"
+#include "TestEncodeDecode.h"
 
 static char* ReadFileContent(std::string filename, uint64_t* fileSize)
 {
@@ -135,15 +136,16 @@ void testFile(std::string filePath)
 
 int main()
 {	
+	TestAllEncodeDecode();
 	try
 	{
 		testFile("tests/task1/addlarge");
-		testFile("tests/task1/addneg");
-		testFile("tests/task1/addpos");
+		//testFile("tests/task1/addneg");
+		//testFile("tests/task1/addpos");
 		//testFile("tests/task1/shift");
 
-		testFile("tests/task2/branchcnt");
-		testFile("tests/task2/branchmany");
+		//testFile("tests/task2/branchcnt");
+		//testFile("tests/task2/branchmany");
 
 		//testFile("tests/task3/loop");
 	}

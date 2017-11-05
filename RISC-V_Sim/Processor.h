@@ -2,18 +2,7 @@
 
 #include<cstdint>
 #include "Instruction.h"
-
-union Register
-{
-	int8_t byte;
-	uint8_t ubyte;
-	int16_t half;
-	uint16_t uhalf;
-	int32_t word;
-	uint32_t uword;
-	int64_t dword;
-	uint64_t udword;
-};
+#include "Register.h"
 
 class Processor
 {
@@ -40,6 +29,7 @@ private:
 public:
 	Processor();
 	void Run(const uint32_t* instructions, const uint64_t instructionCount);
+	void Processor::PrintInstructions(const uint32_t* rawInstructions, const uint64_t instructionCount);
 	void PrintRegisters();
 	void SetDebugMode(const bool useDebugMode);
 	bool CompareRegisters(const uint32_t* compareWith);

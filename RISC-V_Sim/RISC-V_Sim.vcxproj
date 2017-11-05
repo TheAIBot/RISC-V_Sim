@@ -102,7 +102,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <EnablePREfast>false</EnablePREfast>
     </ClCompile>
@@ -150,13 +150,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Instruction.cpp" />
+    <ClCompile Include="InstructionDecode.cpp" />
+    <ClCompile Include="InstructionEncode.cpp" />
     <ClCompile Include="Processor.cpp" />
+    <ClCompile Include="Register.cpp" />
     <ClCompile Include="RISCVSim.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Instruction.h" />
+    <ClInclude Include="InstructionDecode.h" />
+    <ClInclude Include="InstructionFormat.h" />
     <ClInclude Include="Processor.h" />
-    <ClInclude Include="simexceptions.h" />
+    <ClInclude Include="Register.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

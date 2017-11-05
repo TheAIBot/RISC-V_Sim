@@ -2,6 +2,8 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
+#include "InstructionDecode.h"
+#include "Register.h"
 
 
 Processor::Processor()
@@ -40,6 +42,16 @@ void Processor::Run(const uint32_t* rawInstructions, const uint64_t instructionC
 		{
 			break;
 		}
+	}
+}
+
+void Processor::PrintInstructions(const uint32_t* rawInstructions, const uint64_t instructionCount)
+{
+	Instruction* instructions = DecodeInstructions(rawInstructions, instructionCount);
+	for (int i = 0; i < instructionCount; i++)
+	{
+		const Instruction instruction = instructions[i];
+		std::cout << std::setw(32 + 6) << InstructionToBits(rawInstructions[i]) << "  " << InstructionAsString(instruction) << std::endl;
 	}
 }
 
@@ -146,19 +158,19 @@ void Processor::RunInstruction(const Instruction instruction, bool* stopProgram)
 			pc += 4;
 			break;
 		case InstructionType::sb:
-			StoreByteInMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate), registers[instruction.rs2].byte);
+			StoreByteInMemory(registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate)), registers[instruction.rs2].byte);
 			pc += 4;
 			break;
 		case InstructionType::sh:
-			StoreHalfWordInMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate), registers[instruction.rs2].half);
+			StoreHalfWordInMemory(registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate)), registers[instruction.rs2].half);
 			pc += 4;
 			break;
 		case InstructionType::sw:
-			StoreWordInMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate), registers[instruction.rs2].word);
+			StoreWordInMemory(registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate)), registers[instruction.rs2].word);
 			pc += 4;
 			break;
 		case InstructionType::sd:
-			StoreDoubleWordInMemory(registers[instruction.rs1].dword + static_cast<int64_t>(instruction.immediate), registers[instruction.rs2].dword);
+			StoreDoubleWordInMemory(registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate)), registers[instruction.rs2].dword);
 			pc += 4;
 			break;
 		case InstructionType::add:
@@ -292,47 +304,6 @@ bool Processor::CompareRegisters(const uint32_t* compareWith)
 void Processor::SetDebugMode(const bool useDebugMode)
 {
 	debugEnabled = useDebugMode;
-}
-
-static std::string RegisterName(uint32_t registerIndex)
-{
-	std::string registerNames[32] = 
-	{
-		"zero",
-		"ra  ",
-		"sp  ",
-		"qp  ",
-		"tp  ",
-		"t0  ",
-		"t1  ",
-		"t2  ",
-		"s0  ",
-		"s1  ",
-		"a0  ",
-		"a1  ",
-		"a2  ",
-		"a3  ",
-		"a4  ",
-		"a5  ",
-		"a6  ",
-		"a7  ",
-		"s2  ",
-		"s3  ",
-		"s4  ",
-		"s5  ",
-		"s6  ",
-		"s7  ",
-		"s8  ",
-		"s9  ",
-		"s10 ",
-		"s11 ",
-		"t3  ",
-		"t4  ",
-		"t5  ",
-		"t6  "
-	};
-
-	return	registerNames[registerIndex];
 }
 
 void Processor::PrintRegisters()

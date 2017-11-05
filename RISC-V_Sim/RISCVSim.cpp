@@ -118,9 +118,7 @@ void testFile(std::string filePath)
 	processor.SetDebugMode(false);
 	processor.Run(rawInstructions, instructionCount);
 	//processor.PrintRegisters();
-
-	delete[] rawInstructions;
-	delete[] registers;
+	//processor.PrintInstructions(rawInstructions, instructionCount);
 
 	if (!processor.CompareRegisters(registers))
 	{
@@ -130,19 +128,24 @@ void testFile(std::string filePath)
 	{
 		std::cout << "SUCCESS" << std::endl;
 	}
+
+	delete[] rawInstructions;
+	delete[] registers;
 }
 
 int main()
 {	
 	try
 	{
-		//testFile("tests/task1/addlarge");
-		//testFile("tests/task1/addneg");
-		//testFile("tests/task1/addpos");
+		testFile("tests/task1/addlarge");
+		testFile("tests/task1/addneg");
+		testFile("tests/task1/addpos");
 		//testFile("tests/task1/shift");
 
 		testFile("tests/task2/branchcnt");
 		testFile("tests/task2/branchmany");
+
+		//testFile("tests/task3/loop");
 	}
 	catch (std::runtime_error &e)
 	{

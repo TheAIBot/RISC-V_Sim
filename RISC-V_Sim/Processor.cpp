@@ -85,12 +85,6 @@ bool Processor::RunInstruction(const Instruction instruction)
 			registers[instruction.rd].uword = GetWordFromMemory(registers[instruction.rs1].word + instruction.immediate);
 			pc += 4;
 			break;
-			/*
-		case InstructionType::ld:
-			registers[instruction.rd].dword = static_cast<int64_t>(GetDoubleWordFromMemory(registers[instruction.rs1].dword + instruction.immediate));
-			pc += 4;
-			break;
-			*/
 		case InstructionType::lbu:
 			registers[instruction.rd].uword = static_cast<uint32_t>(GetByteFromMemory(registers[instruction.rs1].word + instruction.immediate));
 			pc += 4;
@@ -99,12 +93,6 @@ bool Processor::RunInstruction(const Instruction instruction)
 			registers[instruction.rd].uword = static_cast<uint32_t>(GetHalfWordFromMemory(registers[instruction.rs1].word + instruction.immediate));
 			pc += 4;
 			break;
-			/*
-		case InstructionType::lwu:
-			registers[instruction.rd].udword = static_cast<uint64_t>(GetWordFromMemory(registers[instruction.rs1].dword + instruction.immediate));
-			pc += 4;
-			break;
-			*/
 		case InstructionType::fence:
 		case InstructionType::fence_i:
 			throw std::runtime_error("Instruction not implemented yet.");
@@ -148,24 +136,6 @@ bool Processor::RunInstruction(const Instruction instruction)
 			registers[instruction.rd].uword = pc + instruction.immediate;
 			pc += 4;
 			break;
-			/*
-		case InstructionType::addiw:
-			registers[instruction.rd].word = registers[instruction.rs1].word + static_cast<int32_t>(instruction.immediate);
-			pc += 4;
-			break;
-		case InstructionType::slliw:
-			registers[instruction.rd].word = registers[instruction.rs1].word << static_cast<int32_t>(instruction.immediate);
-			pc += 4;
-			break;
-		case InstructionType::srliw:
-			registers[instruction.rd].uword = registers[instruction.rs1].uword >> instruction.immediate;
-			pc += 4;
-			break;
-		case InstructionType::sraiw:
-			registers[instruction.rd].word = registers[instruction.rs1].word >> static_cast<int32_t>(instruction.immediate);
-			pc += 4;
-			break;
-			*/
 		case InstructionType::sb:
 			StoreByteInMemory(registers[instruction.rs1].word + instruction.immediate, registers[instruction.rs2].byte);
 			pc += 4;
@@ -178,12 +148,6 @@ bool Processor::RunInstruction(const Instruction instruction)
 			StoreWordInMemory(registers[instruction.rs1].word + instruction.immediate, registers[instruction.rs2].word);
 			pc += 4;
 			break;
-			/*
-		case InstructionType::sd:
-			StoreDoubleWordInMemory(registers[instruction.rs1].dword + instruction.immediate, registers[instruction.rs2].dword);
-			pc += 4;
-			break;
-			*/
 		case InstructionType::add:
 			registers[instruction.rd].word = registers[instruction.rs1].word + registers[instruction.rs2].word;
 			pc += 4;
@@ -228,28 +192,6 @@ bool Processor::RunInstruction(const Instruction instruction)
 			registers[instruction.rd].word = instruction.immediate;
 			pc += 4;
 			break;
-			/*
-		case InstructionType::addw:
-			registers[instruction.rd].word = registers[instruction.rs1].word + registers[instruction.rs2].word;
-			pc += 4;
-			break;
-		case InstructionType::subw:
-			registers[instruction.rd].word = registers[instruction.rs1].word - registers[instruction.rs2].word;
-			pc += 4;
-			break;
-		case InstructionType::sllw:
-			registers[instruction.rd].word = registers[instruction.rs1].word << registers[instruction.rs2].word;
-			pc += 4;
-			break;
-		case InstructionType::srlw:
-			registers[instruction.rd].uword = registers[instruction.rs1].uword >> registers[instruction.rs2].uword;
-			pc += 4;
-			break;
-		case InstructionType::sraw:
-			registers[instruction.rd].word = registers[instruction.rs1].word >> registers[instruction.rs2].word;
-			pc += 4;
-			break;
-			*/
 		case InstructionType::beq:
 			pc = (registers[instruction.rs1].word ==  registers[instruction.rs2].word)  ? pc + instruction.immediate : pc + 4;
 			break;
@@ -268,7 +210,7 @@ bool Processor::RunInstruction(const Instruction instruction)
 		case InstructionType::bgeu:
 			pc = (registers[instruction.rs1].uword >= registers[instruction.rs2].uword) ? pc + instruction.immediate : pc + 4;
 			break;
-		case InstructionType::jalr: //(*) ask about 3
+		case InstructionType::jalr:
 			registers[instruction.rd].uword = pc + 4;
 			pc = registers[instruction.rs1].word + instruction.immediate;
 			break;
@@ -307,7 +249,7 @@ bool Processor::CompareRegisters(const uint32_t* compareWith)
 {
 	for (uint32_t i = 0; i < 32; i++)
 	{
-		//(*)don't compare stack pointer because the correct is wrong
+		//don't compare stack pointer because the correct is wrong
 		if (registers[i].uword != compareWith[i] && i != 2)
 		{
 			return false;
@@ -372,30 +314,6 @@ uint32_t Processor::GetWordFromMemory(int32_t index)
 		   (t3 <<  8) |
 		   (t4 <<  0);
 }
-/*
-uint64_t Processor::GetDoubleWordFromMemory(int64_t index)
-{
-	VerifyMemorySpace(index, 8);
-
-	const uint64_t t1 = static_cast<uint64_t>(memory[index + 0]);
-	const uint64_t t2 = static_cast<uint64_t>(memory[index + 1]);
-	const uint64_t t3 = static_cast<uint64_t>(memory[index + 2]);
-	const uint64_t t4 = static_cast<uint64_t>(memory[index + 3]);
-	const uint64_t t5 = static_cast<uint64_t>(memory[index + 4]);
-	const uint64_t t6 = static_cast<uint64_t>(memory[index + 5]);
-	const uint64_t t7 = static_cast<uint64_t>(memory[index + 6]);
-	const uint64_t t8 = static_cast<uint64_t>(memory[index + 7]);
-
-	return (t1 << 56) |
-		   (t2 << 48) |
-		   (t3 << 40) |
-		   (t4 << 32) |
-		   (t5 << 24) |
-		   (t6 << 16) |
-		   (t7 <<  8) |
-		   (t8 <<  0);
-}
-*/
 
 void Processor::StoreByteInMemory(int32_t index, int8_t byte)
 {
@@ -419,21 +337,6 @@ void Processor::StoreWordInMemory(int32_t index, int32_t word)
 	memory[index + 2] = static_cast<uint8_t>(static_cast<uint32_t>(word) >>  8);
 	memory[index + 3] = static_cast<uint8_t>(static_cast<uint32_t>(word) >>  0);
 }
-/*
-void Processor::StoreDoubleWordInMemory(int64_t index, int64_t doubleWord)
-{
-	VerifyMemorySpace(index, 8);
-
-	memory[index + 0] = static_cast<uint8_t>(static_cast<uint64_t>(doubleWord) >> 56);
-	memory[index + 1] = static_cast<uint8_t>(static_cast<uint64_t>(doubleWord) >> 48);
-	memory[index + 2] = static_cast<uint8_t>(static_cast<uint64_t>(doubleWord) >> 40);
-	memory[index + 3] = static_cast<uint8_t>(static_cast<uint64_t>(doubleWord) >> 32);
-	memory[index + 4] = static_cast<uint8_t>(static_cast<uint64_t>(doubleWord) >> 24);
-	memory[index + 5] = static_cast<uint8_t>(static_cast<uint64_t>(doubleWord) >> 16);
-	memory[index + 6] = static_cast<uint8_t>(static_cast<uint64_t>(doubleWord) >>  8);
-	memory[index + 7] = static_cast<uint8_t>(static_cast<uint64_t>(doubleWord) >>  0);
-}
-*/
 
 Processor::~Processor()
 {

@@ -12,8 +12,6 @@ static uint32_t GetImmediateMask(uint16_t instructionIdentifier)
 	{
 		case 0b000000'001'0010011:
 		case 0b000000'101'0010011:
-		//case 0b000000'001'0011011:
-		//case 0b000000'101'0011011:
 			return removefunct7;
 		default:
 			return wholeidentifier;
@@ -28,8 +26,6 @@ static uint16_t GetInstructionIdentifierMask(uint16_t instructionIdentifier)
 	{
 		case 0b000000'001'0010011:
 		case 0b000000'101'0010011:
-		//case 0b000000'001'0011011:
-		//case 0b000000'101'0011011:
 		case 0b000000'000'0110011:
 		case 0b000000'001'0110011:
 		case 0b000000'010'0110011:
@@ -38,9 +34,6 @@ static uint16_t GetInstructionIdentifierMask(uint16_t instructionIdentifier)
 		case 0b000000'101'0110011:
 		case 0b000000'110'0110011:
 		case 0b000000'111'0110011:
-		//case 0b000000'000'0111011:
-		//case 0b000000'001'0111011:
-		//case 0b000000'101'0111011:
 		case 0b000000'000'1110011:
 			return wholeidentifier;
 		default:
@@ -62,12 +55,10 @@ static InstructionType GetInstructionType(const uint32_t opcode, const uint32_t 
 static int32_t SignExtend_uint12_t(int32_t toExtend)
 {
 	return (toExtend << 20) >> 20;
-	//return (toExtend & 0b1000'0000'0000) ? toExtend | 0xff'ff'f0'00 : toExtend;
 }
 static int32_t SignExtend_uint20_t(int32_t toExtend)
 {
 	return (toExtend << 12) >> 12;
-	//return (toExtend & 0b1000'0000'0000'0000'0000) ? toExtend | 0xff'f0'00'00 : toExtend;
 }
 
 static Instruction DecodeRType(const uint32_t rawInstruction)
@@ -169,7 +160,6 @@ Instruction DecodeInstruction(const uint32_t rawInstruction)
 		case 0b00000011:
 		case 0b00001111:
 		case 0b00010011:
-		//case 0b00011011:
 		case 0b01100111:
 		case 0b01110011:
 			return DecodeIType(rawInstruction);
@@ -179,7 +169,6 @@ Instruction DecodeInstruction(const uint32_t rawInstruction)
 		case 0b00100011:
 			return DecodeSType(rawInstruction);
 		case 0b00110011:
-		//case 0b00111011:
 			return DecodeRType(rawInstruction);
 		case 0b01100011:
 			return DecodeSBType(rawInstruction);

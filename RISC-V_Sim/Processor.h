@@ -18,11 +18,9 @@ private:
 	uint8_t  GetByteFromMemory      (int32_t index);
 	uint16_t GetHalfWordFromMemory  (int32_t index);
 	uint32_t GetWordFromMemory      (int32_t index);
-	//uint64_t GetDoubleWordFromMemory(int64_t index);
 	void StoreByteInMemory      (int32_t index, int8_t  byte      );
 	void StoreHalfWordInMemory  (int32_t index, int16_t halfWord  );
 	void StoreWordInMemory      (int32_t index, int32_t word      );
-	//void StoreDoubleWordInMemory(int64_t index, int64_t doubleWord);
 	void EnvironmentCall(bool* stopProgram);
 
 public:

@@ -42,13 +42,6 @@ std::string NumberToBits(uint32_t n)
 	const uint32_t sizes[4] = { 8, 8, 8, 8};
 	return InstructionToBits<4, 32>(n, sizes);
 }
-/*
-std::string NumberToBits64(uint64_t n)
-{
-	const uint32_t sizes[8] = { 8, 8, 8, 8, 8, 8, 8, 8};
-	return InstructionToBits<8, 64>(n, sizes);
-}
-*/
 
 std::string InstructionToBits(const uint32_t n)
 {
@@ -63,7 +56,6 @@ std::string InstructionToBits(const uint32_t n)
 		case 0b0000'0011:
 		case 0b0000'1111:
 		case 0b0001'0011:
-		//case 0b0001'1011:
 		case 0b0110'0111:
 		case 0b0111'0011:
 			return InstructionToBits<5, 32>(n, Isizes);
@@ -76,7 +68,6 @@ std::string InstructionToBits(const uint32_t n)
 			return InstructionToBits<6, 32>(n, Ssizes);
 			break;
 		case 0b0011'0011:
-		//case 0b0011'1011:
 			return InstructionToBits<6, 32>(n, Rsizes);
 			break;
 		case 0b0110'0011:
@@ -100,18 +91,10 @@ std::string GetNameOfInstructionType(InstructionType type)
 			return "lh";
 		case InstructionType::lw:
 			return "lw";
-			/*
-		case InstructionType::ld:
-			return "ld";
-			*/
 		case InstructionType::lbu:
 			return "lbu";
 		case InstructionType::lhu:
 			return "lhu";
-			/*
-		case InstructionType::lwu:
-			return "lwu";
-			*/
 		case InstructionType::fence:
 			return "fence";
 		case InstructionType::fence_i:
@@ -136,26 +119,12 @@ std::string GetNameOfInstructionType(InstructionType type)
 			return "andi";
 		case InstructionType::auipc:
 			return "auipc";
-			/*
-		case InstructionType::addiw:
-			return "addiw";
-		case InstructionType::slliw:
-			return "slliw";
-		case InstructionType::srliw:
-			return "srliw";
-		case InstructionType::sraiw:
-			return "sraiw";
-			*/
 		case InstructionType::sb:
 			return "sb";
 		case InstructionType::sh:
 			return "sh";
 		case InstructionType::sw:
 			return "sw";
-			/*
-		case InstructionType::sd:
-			return "sd";
-			*/
 		case InstructionType::add:
 			return "add";
 		case InstructionType::sub:
@@ -178,18 +147,6 @@ std::string GetNameOfInstructionType(InstructionType type)
 			return "and";
 		case InstructionType::lui:
 			return "lui";
-			/*
-		case InstructionType::addw:
-			return "addw";
-		case InstructionType::subw:
-			return "subw";
-		case InstructionType::sllw:
-			return "sllw";
-		case InstructionType::srlw:
-			return "srlw";
-		case InstructionType::sraw:
-			return "sraw";
-			*/
 		case InstructionType::beq:
 			return "beq";
 		case InstructionType::bne:
@@ -242,7 +199,6 @@ std::string InstructionAsString(Instruction instruction)
 			break;
 		case 0b0000'1111:
 		case 0b0001'0011:
-		//case 0b0001'1011:
 		case 0b0110'0111:
 			sprintf(text, "%s %s %s %i", type.c_str(), rdText.c_str(), rs1Text.c_str(), instruction.immediate);
 			break;
@@ -257,7 +213,6 @@ std::string InstructionAsString(Instruction instruction)
 			sprintf(text, "%s %s %i(%s)", type.c_str(), rs1Text.c_str(), instruction.immediate, rs2Text.c_str());
 			break;
 		case 0b0011'0011:
-		//case 0b0011'1011:
 			sprintf(text, "%s %s %s %s", type.c_str(), rdText.c_str(), rs1Text.c_str(), rs2Text.c_str());
 			break;
 		case 0b0110'0011:

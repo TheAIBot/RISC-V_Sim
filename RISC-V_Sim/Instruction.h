@@ -15,5 +15,4 @@ struct Instruction
 
 std::string NumberToBits(uint32_t n);
 std::string InstructionToBits(uint32_t n);
-//std::string NumberToBits64(uint64_t n);
 std::string InstructionAsString(Instruction instruction);

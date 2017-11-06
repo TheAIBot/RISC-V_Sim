@@ -11,7 +11,7 @@ static char* ReadFileContent(std::string filename, uint64_t* fileSize)
 	std::ifstream fileStream(filename, std::ios::binary | std::ios::ate);
 	if (!fileStream)
 	{
-		throw new std::runtime_error("Failed to open file: " + std::string(filename));
+		throw std::runtime_error("Failed to open file: " + std::string(filename));
 	}
 
 	//get file length
@@ -140,12 +140,12 @@ int main()
 	try
 	{
 		testFile("tests/task1/addlarge");
-		//testFile("tests/task1/addneg");
-		//testFile("tests/task1/addpos");
-		//testFile("tests/task1/shift");
+		testFile("tests/task1/addneg");
+		testFile("tests/task1/addpos");
+		testFile("tests/task1/shift");
 
-		//testFile("tests/task2/branchcnt");
-		//testFile("tests/task2/branchmany");
+		testFile("tests/task2/branchcnt");
+		testFile("tests/task2/branchmany");
 
 		//testFile("tests/task3/loop");
 	}

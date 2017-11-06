@@ -34,7 +34,7 @@ static std::string InstructionToBits(uint64_t n, const uint32_t* sizes)
 		index--;
 	}
 
-	throw new std::runtime_error("For some reason index never became 0 or SIZE was 0.");
+	throw std::runtime_error("For some reason index never became 0 or SIZE was 0.");
 }
 
 std::string NumberToBits(uint32_t n)
@@ -211,13 +211,13 @@ std::string GetNameOfInstructionType(InstructionType type)
 		case InstructionType::csrrci:
 			return "csrrci";
 		default:
-			throw new std::runtime_error("Invalid instruction type. Type: " + NumberToBits(static_cast<uint32_t>(type)));
+			throw std::runtime_error("Invalid instruction type. Type: " + NumberToBits(static_cast<uint32_t>(type)));
 	}
 }
 
 std::string InstructionAsString(Instruction instruction)
 {
-	char* text = new char[50];
+	char text[50];
 	std::string type = GetNameOfInstructionType(instruction.type);
 	std::string rdText = RegisterName(instruction.rd);
 	std::string rs1Text = RegisterName(instruction.rs1);
@@ -226,36 +226,36 @@ std::string InstructionAsString(Instruction instruction)
 	switch (static_cast<uint16_t>(instruction.type) & 127)
 	{
 		case 0b0000'0011:
-			sprintf(text, "%s %s %i(%s)", type.c_str(), rdText.c_str(), static_cast<int16_t>(instruction.immediate), rs1Text.c_str());
+			sprintf(text, "%s %s %i(%s)", type.c_str(), rdText.c_str(), static_cast<int32_t>(instruction.immediate), rs1Text.c_str());
 			break;
 		case 0b0000'1111:
 		case 0b0001'0011:
 		case 0b0001'1011:
 		case 0b0110'0111:
-			sprintf(text, "%s %s %s %i", type.c_str(), rdText.c_str(), rs1Text.c_str(), static_cast<int16_t>(instruction.immediate));
+			sprintf(text, "%s %s %s %i", type.c_str(), rdText.c_str(), rs1Text.c_str(), static_cast<int32_t>(instruction.immediate));
 			break;
 		case 0b0111'0011:
 			sprintf(text, "%s", type.c_str());
 			break;
 		case 0b0001'0111:
 		case 0b0011'0111:
-			sprintf(text, "%s %s %i", type.c_str(), rdText.c_str(), static_cast<int16_t>(instruction.immediate >> 12));
+			sprintf(text, "%s %s %i", type.c_str(), rdText.c_str(), static_cast<int32_t>(instruction.immediate) >> 12);
 			break;
 		case 0b0010'0011:
-			sprintf(text, "%s %s %i(%s)", type.c_str(), rs1Text.c_str(), static_cast<int16_t>(instruction.immediate), rs2Text.c_str());
+			sprintf(text, "%s %s %i(%s)", type.c_str(), rs1Text.c_str(), static_cast<int32_t>(instruction.immediate), rs2Text.c_str());
 			break;
 		case 0b0011'0011:
 		case 0b0011'1011:
 			sprintf(text, "%s %s %s %s", type.c_str(), rdText.c_str(), rs1Text.c_str(), rs2Text.c_str());
 			break;
 		case 0b0110'0011:
-			sprintf(text, "%s %s %s %i", type.c_str(), rs1Text.c_str(), rs2Text.c_str(), static_cast<int16_t>(instruction.immediate));
-			break;
+			sprintf(text, "%s %s %s %i", type.c_str(), rs1Text.c_str(), rs2Text.c_str(), static_cast<int32_t>(instruction.immediate));
+			break; 
 		case 0b0110'1111:
-			sprintf(text, "%s %s %i", type.c_str(), rdText.c_str(), static_cast<int16_t>(instruction.immediate));
+			sprintf(text, "%s %s %i", type.c_str(), rdText.c_str(), static_cast<int32_t>(instruction.immediate));
 			break;
 		default:
-			throw std::runtime_error("Invalid opcode. opcode: " + std::to_string(static_cast<uint16_t>(instruction.type) & 127));
+			throw std::runtime_error("Invalid opcode. opcode: " + std::to_string(InstructionTypeGetOpCode(instruction.type)));
 	}
 
 	return std::string(text);

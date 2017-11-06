@@ -24,11 +24,11 @@ private:
 	void StoreWordInMemory      (int64_t index, int32_t word      );
 	void StoreDoubleWordInMemory(int64_t index, int64_t doubleWord);
 	void EnvironmentCall(bool* stopProgram);
-	void RunInstruction(Instruction instruction, bool* stopProgram);
 
 public:
 	Processor();
 	void Run(const uint32_t* instructions, const uint64_t instructionCount);
+	bool RunInstruction(Instruction instruction);
 	void Processor::PrintInstructions(const uint32_t* rawInstructions, const uint64_t instructionCount);
 	void PrintRegisters();
 	void SetDebugMode(const bool useDebugMode);

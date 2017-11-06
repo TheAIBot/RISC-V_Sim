@@ -14,7 +14,7 @@ static void TestEncodeDecodeInstruction(uint32_t encoded, std::string expectedDe
 
 	if (actualDecoded != expectedDecoded)
 	{
-		throw new std::runtime_error("Decoded instruction doesn't match expected decoded instruction.\nExpected: " + expectedDecoded + 
+		throw std::runtime_error("\nDecoded instruction doesn't match expected decoded instruction.\nExpected: " + expectedDecoded + 
 			"\nActual:   " + actualDecoded + "\n");
 	}
 	else
@@ -129,7 +129,9 @@ static void Test_andi()
 }
 static void Test_auipc()
 {
-
+	TestEncodeDecodeInstruction(Create_auipc(Regs::t1,  1282), "auipc t1 1282");
+	TestEncodeDecodeInstruction(Create_auipc(Regs::s6, -1546), "auipc s6 -1546");
+	TestEncodeDecodeInstruction(Create_auipc(Regs::s1,     2), "auipc s1 2");
 }
 static void Test_addiw()
 {
@@ -241,7 +243,9 @@ static void Test_and()
 }
 static void Test_lui()
 {
-
+	TestEncodeDecodeInstruction(Create_lui(Regs::t1,  122782), "lui t1 122782");
+	TestEncodeDecodeInstruction(Create_lui(Regs::s6, -154694), "lui s6 -154694");
+	TestEncodeDecodeInstruction(Create_lui(Regs::s1,     2), "lui s1 2");
 }
 static void Test_addw()
 {
@@ -275,45 +279,59 @@ static void Test_sraw()
 }
 static void Test_beq()
 {
-	TestEncodeDecodeInstruction(Create_beq(Regs::a3, Regs::a5,  -4), "beq a3 a5 -4");
-	TestEncodeDecodeInstruction(Create_beq(Regs::s6, Regs::x0, 132), "beq s6 x0 132");
-	TestEncodeDecodeInstruction(Create_beq(Regs::t3, Regs::qp,  20), "beq t3 qp 20");
+	TestEncodeDecodeInstruction(Create_beq(Regs::a5, Regs::a1,  -4), "beq a5 a1 -4");
+	TestEncodeDecodeInstruction(Create_beq(Regs::s2, Regs::t4, 132), "beq s2 t4 132");
+	TestEncodeDecodeInstruction(Create_beq(Regs::t6, Regs::sp,  20), "beq t6 sp 20");
 }
 static void Test_bne()
 {
-
+	TestEncodeDecodeInstruction(Create_bne(Regs::a5, Regs::a1,  -4), "bne a5 a1 -4");
+	TestEncodeDecodeInstruction(Create_bne(Regs::s2, Regs::t4, 132), "bne s2 t4 132");
+	TestEncodeDecodeInstruction(Create_bne(Regs::t6, Regs::sp,  20), "bne t6 sp 20");
 }
 static void Test_blt()
 {
-
+	TestEncodeDecodeInstruction(Create_blt(Regs::a5, Regs::a1,  -4), "blt a5 a1 -4");
+	TestEncodeDecodeInstruction(Create_blt(Regs::s2, Regs::t4, 132), "blt s2 t4 132");
+	TestEncodeDecodeInstruction(Create_blt(Regs::t6, Regs::sp,  20), "blt t6 sp 20");
 }
 static void Test_bge()
 {
-
+	TestEncodeDecodeInstruction(Create_bge(Regs::a5, Regs::a1,  -4), "bge a5 a1 -4");
+	TestEncodeDecodeInstruction(Create_bge(Regs::s2, Regs::t4, 132), "bge s2 t4 132");
+	TestEncodeDecodeInstruction(Create_bge(Regs::t6, Regs::sp,  20), "bge t6 sp 20");
 }
 static void Test_bltu()
 {
-
+	TestEncodeDecodeInstruction(Create_bltu(Regs::a5, Regs::a1,  -4), "bltu a5 a1 -4");
+	TestEncodeDecodeInstruction(Create_bltu(Regs::s2, Regs::t4, 132), "bltu s2 t4 132");
+	TestEncodeDecodeInstruction(Create_bltu(Regs::t6, Regs::sp,  20), "bltu t6 sp 20");
 }
 static void Test_bgeu()
 {
-
+	TestEncodeDecodeInstruction(Create_bgeu(Regs::a5, Regs::a1,  -4), "bgeu a5 a1 -4");
+	TestEncodeDecodeInstruction(Create_bgeu(Regs::s2, Regs::t4, 132), "bgeu s2 t4 132");
+	TestEncodeDecodeInstruction(Create_bgeu(Regs::t6, Regs::sp,  20), "bgeu t6 sp 20");
 }
 static void Test_jalr()
 {
-
+	TestEncodeDecodeInstruction(Create_jalr(Regs::a3, Regs::a5,  1), "jalr a3 a5 1");
+	TestEncodeDecodeInstruction(Create_jalr(Regs::s6, Regs::x0, 21), "jalr s6 x0 21");
+	TestEncodeDecodeInstruction(Create_jalr(Regs::t3, Regs::qp,  0), "jalr t3 qp 0");
 }
 static void Test_jal()
 {
-
+	TestEncodeDecodeInstruction(Create_jal(Regs::s11,-54222), "jal s11 -54222");
+	TestEncodeDecodeInstruction(Create_jal(Regs::s6, 12322), "jal s6 12322");
+	TestEncodeDecodeInstruction(Create_jal(Regs::t0,    122), "jal t0 122");
 }
 static void Test_ecall()
 {
-
+	TestEncodeDecodeInstruction(Create_ecall(), "ecall");
 }
 static void Test_ebreak()
 {
-
+	TestEncodeDecodeInstruction(Create_ebreak(), "ebreak");
 }
 static void Test_csrrw()
 {

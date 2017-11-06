@@ -23,22 +23,20 @@ void Processor::Run(const uint32_t* rawInstructions, const uint64_t instructionC
 		const uint64_t instructionIndex = pc / 4;
 		if (instructionIndex >= instructionCount)
 		{
-			throw new std::runtime_error("Index out of bounds.\nTried to access instruction: " + std::to_string(instructionIndex));
+			throw std::runtime_error("Index out of bounds.\nTried to access instruction: " + std::to_string(instructionIndex));
 		}
 
 		const Instruction instruction = instructions[pc / 4];
 
 		std::cout << std::to_string(instructionIndex) + ": " << InstructionAsString(instruction) << std::endl;
 
-		bool stopProgram = false;
-		RunInstruction(instruction, &stopProgram);
+		bool stopProgram = RunInstruction(instruction);
 
 		if (debugEnabled)
 		{
 			PrintRegisters();
 			std::cin.get();
 		}
-
 
 		if (stopProgram)
 		{
@@ -65,8 +63,9 @@ void Processor::EnvironmentCall(bool* stopProgram)
 	}
 }
 
-void Processor::RunInstruction(const Instruction instruction, bool* stopProgram)
+bool Processor::RunInstruction(const Instruction instruction)
 {
+	bool stopProgram = false;
 	int64_t x;
 	switch (instruction.type)
 	{
@@ -100,7 +99,7 @@ void Processor::RunInstruction(const Instruction instruction, bool* stopProgram)
 			break;
 		case InstructionType::fence:
 		case InstructionType::fence_i:
-			throw new std::runtime_error("Instruction not implemented yet.");
+			throw std::runtime_error("Instruction not implemented yet.");
 		case InstructionType::addi:
 			x = static_cast<int64_t>(static_cast<int32_t>(instruction.immediate));
 			registers[instruction.rd].dword = registers[instruction.rs1].dword + x;
@@ -140,7 +139,7 @@ void Processor::RunInstruction(const Instruction instruction, bool* stopProgram)
 			pc += 4;
 			break;
 		case InstructionType::auipc:
-			registers[instruction.rd].udword = pc + static_cast<uint64_t>(instruction.immediate);
+			registers[instruction.rd].udword = pc + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate));
 			pc += 4;
 			break;
 		case InstructionType::addiw:
@@ -268,7 +267,7 @@ void Processor::RunInstruction(const Instruction instruction, bool* stopProgram)
 			pc = pc + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate));
 			break;
 		case InstructionType::ecall:
-			EnvironmentCall(stopProgram);
+			EnvironmentCall(&stopProgram);
 			pc += 4;
 			break;
 		case InstructionType::ebreak:
@@ -282,7 +281,7 @@ void Processor::RunInstruction(const Instruction instruction, bool* stopProgram)
 		case InstructionType::csrrwi:
 		case InstructionType::csrrsi:
 		case InstructionType::csrrci:
-			throw new std::runtime_error("Instruction not implemented yet.");
+			throw std::runtime_error("Instruction not implemented yet.");
 		default:
 			throw std::runtime_error("instruction identifier not recognized. iid: " + NumberToBits(static_cast<uint32_t>(instruction.type)));
 			break;
@@ -290,6 +289,8 @@ void Processor::RunInstruction(const Instruction instruction, bool* stopProgram)
 	//the 0'th register can only be 0
 	//so set it back to 0 in case it was changed
 	registers[0].dword = 0;
+
+	return stopProgram;
 }
 
 bool Processor::CompareRegisters(const uint32_t* compareWith)
@@ -327,7 +328,7 @@ void Processor::VerifyMemorySpace(int64_t index, int64_t size)
 {
 	if (index < 0 || index + size > Processor::MEMORY_SIZE)
 	{
-		throw new std::runtime_error("Memory access out of range.\nTried to access memory address " + std::to_string(index));
+		throw std::runtime_error("Memory access out of range.\nTried to access memory address " + std::to_string(index));
 	}
 }
 

@@ -141,9 +141,9 @@ void VerifyRange(int32_t min, int32_t max, int32_t x)
 {
 	if (x > max || x < min)
 	{
-		throw new std::runtime_error("Number is not within range.\nMin: " + std::to_string(min) + 
+		throw std::runtime_error("\nNumber is not within range.\nMin: " + std::to_string(min) + 
 			"\nMax: " + std::to_string(max) + 
-			"\nActual: " + std::to_string(x));
+			"\nActual: " + std::to_string(x) + "\n");
 	}
 }
 
@@ -237,8 +237,8 @@ uint32_t Create_andi(Regs rd, Regs rs1, uint32_t immediate)
 }
 uint32_t Create_auipc(Regs rd, uint32_t immediate)
 {
-	VerifyRange(-2048, 2047, immediate);
-	return EncodeUType(InstructionType::auipc, rd, immediate);
+	VerifyRange(-524288, 524287, immediate);
+	return EncodeUType(InstructionType::auipc, rd, immediate << 12);
 }
 uint32_t Create_addiw(Regs rd, Regs rs1, uint32_t immediate)
 {
@@ -322,7 +322,7 @@ uint32_t Create_and(Regs rd, Regs rs1, Regs rs2)
 }
 uint32_t Create_lui(Regs rd, uint32_t immediate)
 {
-	return EncodeUType(InstructionType::lui, rd, immediate);
+	return EncodeUType(InstructionType::lui, rd, immediate << 12);
 }
 uint32_t Create_addw(Regs rd, Regs rs1, Regs rs2)
 {
@@ -376,11 +376,12 @@ uint32_t Create_bgeu(Regs rs1, Regs rs2, uint32_t immediate)
 }
 uint32_t Create_jalr(Regs rd, Regs rs1, uint32_t immediate)
 {
+	VerifyRange(-2048, 2047, immediate);
 	return EncodeIType(InstructionType::jalr, rd, rs1, immediate);
 }
 uint32_t Create_jal(Regs rd, uint32_t immediate)
 {
-	VerifyRange(-2048, 2047, immediate);
+	VerifyRange(-524288, 524287, immediate);
 	return EncodeUJType(InstructionType::jal, rd, immediate);
 }
 uint32_t Create_ecall()

@@ -9,6 +9,10 @@
 Processor::Processor()
 {
 	memory = new uint8_t[Processor::MEMORY_SIZE];
+	for(uint32_t i = 0; i < 32; i++)
+	{
+		registers[i].dword = 0;
+	}
 }
 
 void Processor::Run(const uint32_t* rawInstructions, const uint64_t instructionCount)
@@ -48,7 +52,7 @@ void Processor::Run(const uint32_t* rawInstructions, const uint64_t instructionC
 void Processor::PrintInstructions(const uint32_t* rawInstructions, const uint64_t instructionCount)
 {
 	Instruction* instructions = DecodeInstructions(rawInstructions, instructionCount);
-	for (int i = 0; i < instructionCount; i++)
+	for (uint64_t i = 0; i < instructionCount; i++)
 	{
 		const Instruction instruction = instructions[i];
 		std::cout << std::setw(32 + 6) << InstructionToBits(rawInstructions[i]) << "  " << InstructionAsString(instruction) << std::endl;

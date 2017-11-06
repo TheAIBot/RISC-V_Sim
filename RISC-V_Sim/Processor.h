@@ -29,7 +29,7 @@ public:
 	Processor();
 	void Run(const uint32_t* instructions, const uint64_t instructionCount);
 	bool RunInstruction(Instruction instruction);
-	void Processor::PrintInstructions(const uint32_t* rawInstructions, const uint64_t instructionCount);
+	void PrintInstructions(const uint32_t* rawInstructions, const uint64_t instructionCount);
 	void PrintRegisters();
 	void SetDebugMode(const bool useDebugMode);
 	bool CompareRegisters(const uint32_t* compareWith);

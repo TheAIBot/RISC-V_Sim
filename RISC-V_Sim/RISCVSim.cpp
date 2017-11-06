@@ -63,10 +63,10 @@ uint64_t* char_to_uint64_t(char* chars, uint64_t fileSize)
 					   (t2 <<  8) |
 					   (t3 << 16) |
 					   (t4 << 24) |
-					   (t1 << 32) |
-					   (t2 << 40) |
-					   (t3 << 48) |
-					   (t4 << 56);
+					   (t5 << 32) |
+					   (t6 << 40) |
+					   (t7 << 48) |
+					   (t8 << 56);
 	}
 
 	return uints;
@@ -136,9 +136,10 @@ void testFile(std::string filePath)
 
 int main()
 {	
-	TestAllEncodeDecode();
+	//TestAllEncodeDecode();
 	try
 	{
+		
 		testFile("tests/task1/addlarge");
 		testFile("tests/task1/addneg");
 		testFile("tests/task1/addpos");
@@ -146,7 +147,7 @@ int main()
 
 		testFile("tests/task2/branchcnt");
 		testFile("tests/task2/branchmany");
-
+		
 		//testFile("tests/task3/loop");
 	}
 	catch (std::runtime_error &e)

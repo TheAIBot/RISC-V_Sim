@@ -1,5 +1,6 @@
 #include "InstructionDecode.h"
 #include <cstdint>
+#include <stdexcept>
 #include "Instruction.h"
 #include "InstructionFormat.h"
 

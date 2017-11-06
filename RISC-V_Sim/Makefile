@@ -7,10 +7,10 @@ CFLAGS = -Wall -g
 all: solver
 
 %.o: %.cpp
-	g++ -std=c++14 ${CFLAGS} -c $<
+	g++ -std=c++17 ${CFLAGS} -c $<
 
 solver: ${OBJS}
-	g++ -std=c++14 ${CFLAGS} ${OBJS} ${LIBS} -o RISC_V_Sim
+	g++ -std=c++17 ${CFLAGS} ${OBJS} ${LIBS} -o RISC_V_Sim
 	
 clean:
 	rm -f ${OBJS} RISC_V_Sim

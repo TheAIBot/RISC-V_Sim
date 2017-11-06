@@ -32,7 +32,7 @@ void Processor::Run(const uint32_t* rawInstructions, const uint64_t instructionC
 
 		const Instruction instruction = instructions[pc / 4];
 
-		std::cout << std::to_string(instructionIndex) + ": " << InstructionAsString(instruction) << std::endl;
+		//std::cout << std::to_string(instructionIndex) + ": " << InstructionAsString(instruction) << std::endl;
 
 		bool stopProgram = RunInstruction(instruction);
 
@@ -85,10 +85,12 @@ bool Processor::RunInstruction(const Instruction instruction)
 			registers[instruction.rd].dword = static_cast<int64_t>(static_cast<int32_t>(GetWordFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate)))));
 			pc += 4;
 			break;
+			/*
 		case InstructionType::ld:
 			registers[instruction.rd].dword = static_cast<int64_t>(GetDoubleWordFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate))));
 			pc += 4;
 			break;
+			*/
 		case InstructionType::lbu:
 			registers[instruction.rd].udword = static_cast<uint64_t>(GetByteFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate))));
 			pc += 4;
@@ -97,10 +99,12 @@ bool Processor::RunInstruction(const Instruction instruction)
 			registers[instruction.rd].udword = static_cast<uint64_t>(GetHalfWordFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate))));
 			pc += 4;
 			break;
+			/*
 		case InstructionType::lwu:
 			registers[instruction.rd].udword = static_cast<uint64_t>(GetWordFromMemory(registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate))));
 			pc += 4;
 			break;
+			*/
 		case InstructionType::fence:
 		case InstructionType::fence_i:
 			throw std::runtime_error("Instruction not implemented yet.");
@@ -146,6 +150,7 @@ bool Processor::RunInstruction(const Instruction instruction)
 			registers[instruction.rd].udword = pc + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate));
 			pc += 4;
 			break;
+			/*
 		case InstructionType::addiw:
 			registers[instruction.rd].word = registers[instruction.rs1].word + static_cast<int32_t>(instruction.immediate);
 			pc += 4;
@@ -162,6 +167,7 @@ bool Processor::RunInstruction(const Instruction instruction)
 			registers[instruction.rd].word = registers[instruction.rs1].word >> static_cast<int32_t>(instruction.immediate);
 			pc += 4;
 			break;
+			*/
 		case InstructionType::sb:
 			StoreByteInMemory(registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate)), registers[instruction.rs2].byte);
 			pc += 4;
@@ -174,10 +180,12 @@ bool Processor::RunInstruction(const Instruction instruction)
 			StoreWordInMemory(registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate)), registers[instruction.rs2].word);
 			pc += 4;
 			break;
+			/*
 		case InstructionType::sd:
 			StoreDoubleWordInMemory(registers[instruction.rs1].dword + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate)), registers[instruction.rs2].dword);
 			pc += 4;
 			break;
+			*/
 		case InstructionType::add:
 			registers[instruction.rd].dword = registers[instruction.rs1].dword + registers[instruction.rs2].dword;
 			pc += 4;
@@ -224,6 +232,7 @@ bool Processor::RunInstruction(const Instruction instruction)
 			//registers[instruction.rd].dword = static_cast<int64_t>(static_cast<int32_t>(instruction.immediate));
 			pc += 4;
 			break;
+			/*
 		case InstructionType::addw:
 			registers[instruction.rd].word = registers[instruction.rs1].word + registers[instruction.rs2].word;
 			pc += 4;
@@ -244,6 +253,7 @@ bool Processor::RunInstruction(const Instruction instruction)
 			registers[instruction.rd].word = registers[instruction.rs1].word >> registers[instruction.rs2].word;
 			pc += 4;
 			break;
+			*/
 		case InstructionType::beq:
 			pc = (registers[instruction.rs1].dword ==  registers[instruction.rs2].dword)  ? pc + static_cast<int64_t>(static_cast<int32_t>(instruction.immediate)) : pc + 4;
 			break;

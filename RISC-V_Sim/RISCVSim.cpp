@@ -136,7 +136,7 @@ void testFile(std::string filePath)
 
 int main()
 {	
-	//TestAllEncodeDecode();
+	TestAllEncodeDecode();
 	try
 	{
 		

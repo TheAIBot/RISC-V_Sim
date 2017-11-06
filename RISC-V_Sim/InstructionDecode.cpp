@@ -12,8 +12,8 @@ static uint32_t GetImmediateMask(uint16_t instructionIdentifier)
 	{
 		case 0b000000'001'0010011:
 		case 0b000000'101'0010011:
-		case 0b000000'001'0011011:
-		case 0b000000'101'0011011:
+		//case 0b000000'001'0011011:
+		//case 0b000000'101'0011011:
 			return removefunct7;
 		default:
 			return wholeidentifier;
@@ -28,8 +28,8 @@ static uint16_t GetInstructionIdentifierMask(uint16_t instructionIdentifier)
 	{
 		case 0b000000'001'0010011:
 		case 0b000000'101'0010011:
-		case 0b000000'001'0011011:
-		case 0b000000'101'0011011:
+		//case 0b000000'001'0011011:
+		//case 0b000000'101'0011011:
 		case 0b000000'000'0110011:
 		case 0b000000'001'0110011:
 		case 0b000000'010'0110011:
@@ -38,9 +38,9 @@ static uint16_t GetInstructionIdentifierMask(uint16_t instructionIdentifier)
 		case 0b000000'101'0110011:
 		case 0b000000'110'0110011:
 		case 0b000000'111'0110011:
-		case 0b000000'000'0111011:
-		case 0b000000'001'0111011:
-		case 0b000000'101'0111011:
+		//case 0b000000'000'0111011:
+		//case 0b000000'001'0111011:
+		//case 0b000000'101'0111011:
 		case 0b000000'000'1110011:
 			return wholeidentifier;
 		default:
@@ -164,24 +164,24 @@ Instruction DecodeInstruction(const uint32_t rawInstruction)
 
 	switch (opcode)
 	{
-		case 0b0000'0011:
-		case 0b0000'1111:
-		case 0b0001'0011:
-		case 0b0001'1011:
-		case 0b0110'0111:
-		case 0b0111'0011:
+		case 0b00000011:
+		case 0b00001111:
+		case 0b00010011:
+		//case 0b00011011:
+		case 0b01100111:
+		case 0b01110011:
 			return DecodeIType(rawInstruction);
-		case 0b0001'0111:
-		case 0b0011'0111:
+		case 0b00010111:
+		case 0b00110111:
 			return DecodeUType(rawInstruction);
-		case 0b0010'0011:
+		case 0b00100011:
 			return DecodeSType(rawInstruction);
-		case 0b0011'0011:
-		case 0b0011'1011:
+		case 0b00110011:
+		//case 0b00111011:
 			return DecodeRType(rawInstruction);
-		case 0b0110'0011:
+		case 0b01100011:
 			return DecodeSBType(rawInstruction);
-		case 0b0110'1111:
+		case 0b01101111:
 			return DecodeUJType(rawInstruction);
 		default:
 			throw std::runtime_error("Invalid opcode. opcode: " + std::to_string(opcode));

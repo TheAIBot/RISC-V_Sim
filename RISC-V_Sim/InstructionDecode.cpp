@@ -59,13 +59,15 @@ static InstructionType GetInstructionType(const uint32_t opcode, const uint32_t 
 	return static_cast<InstructionType>(instructionType);
 }
 
-static uint32_t SignExtend_uint12_t(uint32_t toExtend)
+static int32_t SignExtend_uint12_t(int32_t toExtend)
 {
-	return (toExtend & 0b1000'0000'0000) ? toExtend | 0xff'ff'f0'00 : toExtend;
+	return (toExtend << 20) >> 20;
+	//return (toExtend & 0b1000'0000'0000) ? toExtend | 0xff'ff'f0'00 : toExtend;
 }
-static uint32_t SignExtend_uint20_t(uint32_t toExtend)
+static int32_t SignExtend_uint20_t(int32_t toExtend)
 {
-	return (toExtend & 0b1000'0000'0000'0000'0000) ? toExtend | 0xff'f0'00'00 : toExtend;
+	return (toExtend << 12) >> 12;
+	//return (toExtend & 0b1000'0000'0000'0000'0000) ? toExtend | 0xff'f0'00'00 : toExtend;
 }
 
 static Instruction DecodeRType(const uint32_t rawInstruction)
@@ -188,11 +190,11 @@ Instruction DecodeInstruction(const uint32_t rawInstruction)
 	}
 }
 
-Instruction* DecodeInstructions(const uint32_t* rawInstructions, const uint64_t instructionsCount)
+Instruction* DecodeInstructions(const uint32_t* rawInstructions, const uint32_t instructionsCount)
 {
 	Instruction* instructions = new Instruction[instructionsCount];
 
-	for (uint64_t i = 0; i < instructionsCount; i++)
+	for (uint32_t i = 0; i < instructionsCount; i++)
 	{
 		const uint32_t rawInstruction = rawInstructions[i];
 		instructions[i] = DecodeInstruction(rawInstruction);

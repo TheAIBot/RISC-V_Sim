@@ -11,8 +11,8 @@ union Register
 	uint16_t uhalf;
 	int32_t word;
 	uint32_t uword;
-	int64_t dword;
-	uint64_t udword;
+	//int64_t dword;
+	//uint64_t udword;
 };
 
 enum class Regs : uint32_t

@@ -46,33 +46,8 @@ uint32_t* char_to_uint32_t(char* chars, uint64_t fileSize)
 	}
 	return uints;
 }
-uint64_t* char_to_uint64_t(char* chars, uint64_t fileSize)
-{
-	uint64_t* uints = new uint64_t[fileSize / 8];
-	for (uint64_t i = 0; i < fileSize; i += 8)
-	{
-		const uint64_t t1 = static_cast<uint64_t>(static_cast<uint8_t>(chars[i + 0]));
-		const uint64_t t2 = static_cast<uint64_t>(static_cast<uint8_t>(chars[i + 1]));
-		const uint64_t t3 = static_cast<uint64_t>(static_cast<uint8_t>(chars[i + 2]));
-		const uint64_t t4 = static_cast<uint64_t>(static_cast<uint8_t>(chars[i + 3]));
-		const uint64_t t5 = static_cast<uint64_t>(static_cast<uint8_t>(chars[i + 4]));
-		const uint64_t t6 = static_cast<uint64_t>(static_cast<uint8_t>(chars[i + 5]));
-		const uint64_t t7 = static_cast<uint64_t>(static_cast<uint8_t>(chars[i + 6]));
-		const uint64_t t8 = static_cast<uint64_t>(static_cast<uint8_t>(chars[i + 7]));
-		uints[i / 8] = (t1 <<  0) |
-					   (t2 <<  8) |
-					   (t3 << 16) |
-					   (t4 << 24) |
-					   (t5 << 32) |
-					   (t6 << 40) |
-					   (t7 << 48) |
-					   (t8 << 56);
-	}
 
-	return uints;
-}
-
-uint32_t* ReadInstructions(std::string filePath, uint64_t* instructionCount)
+uint32_t* ReadInstructions(std::string filePath, uint32_t* instructionCount)
 {
 	std::string instructionsFile = filePath + ".bin";
 	uint64_t fileSize;
@@ -111,7 +86,7 @@ uint32_t* ReadRegisters(std::string filePath)
 
 void testFile(std::string filePath)
 {
-	uint64_t instructionCount;
+	uint32_t instructionCount;
 	const uint32_t* rawInstructions = ReadInstructions(filePath, &instructionCount);
 	const uint32_t* registers = ReadRegisters(filePath);
 
@@ -148,7 +123,7 @@ int main()
 		testFile("tests/task2/branchcnt");
 		testFile("tests/task2/branchmany");
 		
-		//testFile("tests/task3/loop");
+		testFile("tests/task3/loop");
 	}
 	catch (std::runtime_error &e)
 	{

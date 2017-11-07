@@ -9,14 +9,7 @@
 Processor::Processor()
 {
 	memory = new uint8_t[Processor::MEMORY_SIZE];
-	for (uint32_t i = 0; i < Processor::MEMORY_SIZE; i++)
-	{
-		memory[i] = 0;
-	}
-	for(uint32_t i = 0; i < 32; i++)
-	{
-		registers[i].word = 0;
-	}
+	Reset();
 }
 
 void Processor::Run(const uint32_t* rawInstructions, const uint32_t instructionCount)
@@ -268,6 +261,10 @@ bool Processor::CompareRegisters(const uint32_t* compareWith)
 	return true;
 }
 
+uint32_t Processor::GetRegister(const Regs reg)
+{
+	return registers[static_cast<uint32_t>(reg)].uword;
+}
 void Processor::SetRegister(const Regs reg, const int32_t value)
 {
 	registers[static_cast<uint32_t>(reg)].word = value;
@@ -359,6 +356,19 @@ uint32_t Processor::GetPC()
 void Processor::SetPC(uint32_t value)
 {
 	pc = value;
+}
+
+void Processor::Reset()
+{
+	for (uint32_t i = 0; i < Processor::MEMORY_SIZE; i++)
+	{
+		memory[i] = 0;
+	}
+	for(uint32_t i = 0; i < 32; i++)
+	{
+		registers[i].word = 0;
+	}
+	pc = 0;
 }
 
 Processor::~Processor()

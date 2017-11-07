@@ -6,6 +6,7 @@
 #include "Processor.h"
 #include "InstructionDecode.h"
 #include "Instruction.h"
+#include "RISCV_Program.h"
 
 static void AssertTrue(bool value)
 {
@@ -28,8 +29,17 @@ static bool RunInstruction(Processor& processor, uint32_t rawInstruction)
 
 static bool RunInstruction(Processor& processor, MultiInstruction mInstruction)
 {
-	RunInstruction(processor, mInstruction.instruction1);
-	return RunInstruction(processor, mInstruction.instruction2);
+    if (mInstruction.instruction1 != 0)
+    {
+        RunInstruction(processor, mInstruction.instruction1);
+    }
+    if (mInstruction.instruction2 != 0)
+    {
+        return RunInstruction(processor, mInstruction.instruction2);
+    }
+
+    return false;
+	
 }
 
 static void Test_lb()
@@ -62,6 +72,20 @@ static void Test_fence_i()
 }
 static void Test_addi()
 {
+    RISCV_Program program;
+    program.AddInstruction(Create_addi(Regs::t1, Regs::x0, 125));
+    program.ExpectRegisterValue(Regs::t1, 125);
+
+    program.AddInstruction(Create_addi(Regs::t2, Regs::t1, 35));
+    program.ExpectRegisterValue(Regs::t2, 160);
+
+    program.AddInstruction(Create_addi(Regs::t3, Regs::t2, -100));
+    program.ExpectRegisterValue(Regs::t3, 60);
+
+	program.EndProgram();
+    program.SaveAndTest("InstructionTests/test_addi");
+	
+
     Processor processor; 
 	RunInstruction(processor, Create_addi(Regs::t1, Regs::x0, 125));
     AssertTrue(processor.CompareRegister(Regs::t1, 125));
@@ -681,6 +705,13 @@ static void Test_li()
 
 	RunInstruction(processor, Create_li(Regs::t0,  -1'125'213'234));
 	AssertTrue(processor.CompareRegister(Regs::t0, -1'125'213'234));
+
+	RunInstruction(processor, Create_li(Regs::t0,  0xff'00'00'00));
+	AssertTrue(processor.CompareRegister(Regs::t0, 0xff'00'00'00));
+
+	processor.SetRegister(Regs::t0, 10);
+	RunInstruction(processor, Create_li(Regs::t0,  0));
+	AssertTrue(processor.CompareRegister(Regs::t0, 0));
 
 	Success();
 }

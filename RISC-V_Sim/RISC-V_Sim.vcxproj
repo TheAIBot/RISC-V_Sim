@@ -154,6 +154,7 @@
     <ClCompile Include="InstructionEncode.cpp" />
     <ClCompile Include="InstructionType.cpp" />
     <ClCompile Include="Processor.cpp" />
+    <ClCompile Include="ReadTest.cpp" />
     <ClCompile Include="Register.cpp" />
     <ClCompile Include="RISCVSim.cpp" />
     <ClCompile Include="RISCV_Program.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="InstructionFormat.h" />
     <ClInclude Include="InstructionType.h" />
     <ClInclude Include="Processor.h" />
+    <ClInclude Include="ReadTest.h" />
     <ClInclude Include="Register.h" />
     <ClInclude Include="RISCV_Program.h" />
     <ClInclude Include="TestEncodeDecode.h" />

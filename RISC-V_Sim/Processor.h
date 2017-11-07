@@ -1,6 +1,6 @@
 #pragma once
 
-#include<cstdint>
+#include <cstdint>
 #include "Instruction.h"
 #include "Register.h"
 
@@ -32,9 +32,11 @@ public:
 	void SetDebugMode(const bool useDebugMode);
 	bool CompareRegister(const Regs reg, const uint32_t compareWith);
 	bool CompareRegisters(const uint32_t* compareWith);
+	uint32_t GetRegister(const Regs reg);
 	void SetRegister(const Regs reg, const int32_t value);
 	uint32_t GetPC();
 	void SetPC(uint32_t value);
+	void Reset();
 
 	~Processor();
 };

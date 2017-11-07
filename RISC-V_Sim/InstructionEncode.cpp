@@ -4,6 +4,7 @@
 #include "Instruction.h"
 #include "InstructionFormat.h"
 #include "InstructionType.h"
+#include "InstructionDecode.h"
 
 struct SImmediate
 {
@@ -364,9 +365,35 @@ uint32_t Create_csrrci()
 }
 MultiInstruction Create_li(Regs rd, uint32_t immediate)
 {
+	const uint32_t addiImmediate = SignExtend_uint12_t(immediate & 0x0f'ff);
+	const uint32_t leftover = immediate - addiImmediate;
+
 	MultiInstruction mInstruction;
-	mInstruction.instruction1 = Create_lui(rd, immediate >> 12);
-	mInstruction.instruction2 = Create_addi(rd, rd, immediate & 0x0f'ff);
+	if (addiImmediate != 0 &&
+		leftover != 0)
+	{
+		mInstruction.instruction1 = Create_lui(rd, leftover >> 12);
+		mInstruction.instruction2 = Create_addi(rd, rd, addiImmediate & 0x0f'ff);
+	}
+	else if (addiImmediate != 0 &&
+			 leftover == 0)
+	{
+		mInstruction.instruction1 = 0;
+		//Here add with x0 to make sure to override the whole register
+		mInstruction.instruction2 = Create_addi(rd, Regs::x0, addiImmediate & 0x0f'ff);
+	}
+	else if (addiImmediate == 0 &&
+			 leftover != 0)
+	{
+		mInstruction.instruction1 = Create_lui(rd, leftover >> 12);
+		mInstruction.instruction2 = 0;
+	}
+	else
+	{
+		mInstruction.instruction1 = 0;
+		//load zero for some reason, so just set register to zero
+		mInstruction.instruction2 = Create_addi(rd, Regs::x0, 0);
+	}
 
 	return mInstruction;
 }

@@ -52,7 +52,7 @@ static InstructionType GetInstructionType(const uint32_t opcode, const uint32_t 
 	return static_cast<InstructionType>(instructionType);
 }
 
-static int32_t SignExtend_uint12_t(int32_t toExtend)
+int32_t SignExtend_uint12_t(int32_t toExtend)
 {
 	return (toExtend << 20) >> 20;
 }
@@ -191,4 +191,16 @@ Instruction* DecodeInstructions(const uint32_t* rawInstructions, const uint32_t 
 	}
 
 	return instructions;
+}
+
+std::string GetProgramAsString(const uint32_t* rawInstructions, const uint32_t instructionCount)
+{
+	std::string program;
+	for(uint32_t i = 0; i < instructionCount; i++)
+	{
+		const Instruction instruction = DecodeInstruction(rawInstructions[i]);
+		program += InstructionAsString(instruction) + "\n";
+	}
+
+	return program;
 }

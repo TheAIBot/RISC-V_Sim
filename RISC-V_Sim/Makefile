@@ -1,5 +1,5 @@
 
-OBJS = RISCVSim.o Processor.o Instruction.o InstructionDecode.o InstructionEncode.o InstructionType.o Register.o TestEncodeDecode.o
+OBJS = RISCVSim.o Processor.o Instruction.o InstructionDecode.o InstructionEncode.o InstructionType.o Register.o TestEncodeDecode.o TestInstructions.o
 LIBS = -lm 
 CFLAGS = -Wall -g
 #CFLAGS = -Wall -O2 -flto -march=native

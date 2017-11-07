@@ -9,6 +9,10 @@
 Processor::Processor()
 {
 	memory = new uint8_t[Processor::MEMORY_SIZE];
+	for (uint32_t i = 0; i < Processor::MEMORY_SIZE; i++)
+	{
+		memory[i] = 0;
+	}
 	for(uint32_t i = 0; i < 32; i++)
 	{
 		registers[i].word = 0;
@@ -20,7 +24,7 @@ void Processor::Run(const uint32_t* rawInstructions, const uint32_t instructionC
 	Instruction* instructions = DecodeInstructions(rawInstructions, instructionCount);
 
 	//set stack pointer
-	registers[2].word = Processor::MEMORY_SIZE;
+	registers[static_cast<uint32_t>(Regs::sp)].word = Processor::MEMORY_SIZE;
 
 	while (true)
 	{
@@ -240,9 +244,14 @@ bool Processor::RunInstruction(const Instruction instruction)
 	}
 	//the 0'th register can only be 0
 	//so set it back to 0 in case it was changed
-	registers[0].word = 0;
+	registers[static_cast<uint32_t>(Regs::x0)].word = 0;
 
 	return stopProgram;
+}
+
+bool Processor::CompareRegister(const Regs reg, const uint32_t compareWith)
+{
+	return registers[static_cast<uint32_t>(reg)].uword == compareWith;
 }
 
 bool Processor::CompareRegisters(const uint32_t* compareWith)
@@ -250,13 +259,18 @@ bool Processor::CompareRegisters(const uint32_t* compareWith)
 	for (uint32_t i = 0; i < 32; i++)
 	{
 		//don't compare stack pointer because the correct is wrong
-		if (registers[i].uword != compareWith[i] && i != 2)
+		if (registers[i].uword != compareWith[i] && i != static_cast<uint32_t>(Regs::sp))
 		{
 			return false;
 		}
 	}
 
 	return true;
+}
+
+void Processor::SetRegister(const Regs reg, const int32_t value)
+{
+	registers[static_cast<uint32_t>(reg)].word = value;
 }
 
 void Processor::SetDebugMode(const bool useDebugMode)
@@ -297,8 +311,8 @@ uint16_t Processor::GetHalfWordFromMemory(int32_t index)
 	const uint16_t t1 = static_cast<uint16_t>(memory[index + 0]);
 	const uint16_t t2 = static_cast<uint16_t>(memory[index + 1]);
 
-	return (t1 << 8) |
-		   (t2 << 0);
+	return (t1 << 0) |
+		   (t2 << 8);
 }
 uint32_t Processor::GetWordFromMemory(int32_t index)
 {
@@ -309,10 +323,10 @@ uint32_t Processor::GetWordFromMemory(int32_t index)
 	const uint32_t t3 = static_cast<uint32_t>(memory[index + 2]);
 	const uint32_t t4 = static_cast<uint32_t>(memory[index + 3]);
 
-	return (t1 << 24) |
-		   (t2 << 16) |
-		   (t3 <<  8) |
-		   (t4 <<  0);
+	return (t1 <<  0) |
+		   (t2 <<  8) |
+		   (t3 << 16) |
+		   (t4 << 24);
 }
 
 void Processor::StoreByteInMemory(int32_t index, int8_t byte)
@@ -325,17 +339,26 @@ void Processor::StoreHalfWordInMemory(int32_t index, int16_t halfWord)
 {
 	VerifyMemorySpace(index, 2);
 
-	memory[index + 0] = static_cast<uint8_t>(static_cast<uint16_t>(halfWord) >> 8);
-	memory[index + 1] = static_cast<uint8_t>(static_cast<uint16_t>(halfWord) >> 0);
+	memory[index + 0] = static_cast<uint8_t>(static_cast<uint16_t>(halfWord) >> 0);
+	memory[index + 1] = static_cast<uint8_t>(static_cast<uint16_t>(halfWord) >> 8);
 }
 void Processor::StoreWordInMemory(int32_t index, int32_t word)
 {
 	VerifyMemorySpace(index, 4);
 
-	memory[index + 0] = static_cast<uint8_t>(static_cast<uint32_t>(word) >> 24);
-	memory[index + 1] = static_cast<uint8_t>(static_cast<uint32_t>(word) >> 16);
-	memory[index + 2] = static_cast<uint8_t>(static_cast<uint32_t>(word) >>  8);
-	memory[index + 3] = static_cast<uint8_t>(static_cast<uint32_t>(word) >>  0);
+	memory[index + 0] = static_cast<uint8_t>(static_cast<uint32_t>(word) >>  0);
+	memory[index + 1] = static_cast<uint8_t>(static_cast<uint32_t>(word) >>  8);
+	memory[index + 2] = static_cast<uint8_t>(static_cast<uint32_t>(word) >> 16);
+	memory[index + 3] = static_cast<uint8_t>(static_cast<uint32_t>(word) >> 24);
+}
+
+uint32_t Processor::GetPC()
+{
+	return pc;
+}
+void Processor::SetPC(uint32_t value)
+{
+	pc = value;
 }
 
 Processor::~Processor()

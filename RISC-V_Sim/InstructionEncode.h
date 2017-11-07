@@ -3,6 +3,12 @@
 #include <cstdint>
 #include "Register.h"
 
+struct MultiInstruction
+{
+	uint32_t instruction1;
+	uint32_t instruction2;
+};
+
 uint32_t Create_lb(Regs rd, Regs rs1, uint32_t immediate);
 uint32_t Create_lh(Regs rd, Regs rs1, uint32_t immediate);
 uint32_t Create_lw(Regs rd, Regs rs1, uint32_t immediate);
@@ -50,3 +56,4 @@ uint32_t Create_csrrc();
 uint32_t Create_csrrwi();
 uint32_t Create_csrrsi();
 uint32_t Create_csrrci();
+MultiInstruction Create_li(Regs rd, uint32_t immediate);

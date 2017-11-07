@@ -30,7 +30,11 @@ public:
 	void PrintInstructions(const uint32_t* rawInstructions, const uint32_t instructionCount);
 	void PrintRegisters();
 	void SetDebugMode(const bool useDebugMode);
+	bool CompareRegister(const Regs reg, const uint32_t compareWith);
 	bool CompareRegisters(const uint32_t* compareWith);
+	void SetRegister(const Regs reg, const int32_t value);
+	uint32_t GetPC();
+	void SetPC(uint32_t value);
 
 	~Processor();
 };

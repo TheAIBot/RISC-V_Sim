@@ -5,6 +5,7 @@
 #include <string>
 #include "Processor.h"
 #include "TestEncodeDecode.h"
+#include "TestInstructions.h"
 
 static char* ReadFileContent(std::string filename, uint64_t* fileSize)
 {
@@ -62,7 +63,7 @@ uint32_t* ReadInstructions(std::string filePath, uint32_t* instructionCount)
 	uint32_t* instructions = char_to_uint32_t(fileContent, fileSize);
 	delete[] fileContent;
 
-	*instructionCount = fileSize / 4;
+	*instructionCount = static_cast<uint32_t>(fileSize / 4);
 	return instructions;
 }
 
@@ -111,10 +112,11 @@ void testFile(std::string filePath)
 
 int main()
 {	
-	TestAllEncodeDecode();
+	//TestAllEncodeDecode();
+	TestAllInstructions();
 	try
 	{
-		
+		/*
 		testFile("tests/task1/addlarge");
 		testFile("tests/task1/addneg");
 		testFile("tests/task1/addpos");
@@ -122,8 +124,8 @@ int main()
 
 		testFile("tests/task2/branchcnt");
 		testFile("tests/task2/branchmany");
-		
-		testFile("tests/task3/loop");
+		*/
+		//testFile("tests/task3/loop");
 	}
 	catch (std::runtime_error &e)
 	{

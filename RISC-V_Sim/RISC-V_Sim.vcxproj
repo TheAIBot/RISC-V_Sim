@@ -156,7 +156,9 @@
     <ClCompile Include="Processor.cpp" />
     <ClCompile Include="Register.cpp" />
     <ClCompile Include="RISCVSim.cpp" />
+    <ClCompile Include="RISCV_Program.cpp" />
     <ClCompile Include="TestEncodeDecode.cpp" />
+    <ClCompile Include="TestInstructions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Instruction.h" />
@@ -166,7 +168,9 @@
     <ClInclude Include="InstructionType.h" />
     <ClInclude Include="Processor.h" />
     <ClInclude Include="Register.h" />
+    <ClInclude Include="RISCV_Program.h" />
     <ClInclude Include="TestEncodeDecode.h" />
+    <ClInclude Include="TestInstructions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

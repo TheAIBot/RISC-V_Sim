@@ -150,27 +150,27 @@ void VerifyRange(int32_t min, int32_t max, int32_t x)
 
 uint32_t Create_lb(Regs rd, Regs rs1, uint32_t immediate)
 {
-	VerifyRange(-2048, 2047, immediate);
+	VerifyRange(-2048, 4095, immediate);
 	return EncodeIType(InstructionType::lb, rd, rs1, immediate);
 }
 uint32_t Create_lh(Regs rd, Regs rs1, uint32_t immediate)
 {
-	VerifyRange(-2048, 2047, immediate);
+	VerifyRange(-2048, 4095, immediate);
 	return EncodeIType(InstructionType::lh, rd, rs1, immediate);
 }
 uint32_t Create_lw(Regs rd, Regs rs1, uint32_t immediate)
 {
-	VerifyRange(-2048, 2047, immediate);
+	VerifyRange(-2048, 4095, immediate);
 	return EncodeIType(InstructionType::lw, rd, rs1, immediate);
 }
 uint32_t Create_lbu(Regs rd, Regs rs1, uint32_t immediate)
 {
-	VerifyRange(-2048, 2047, immediate);
+	VerifyRange(-2048, 4095, immediate);
 	return EncodeIType(InstructionType::lbu, rd, rs1, immediate);
 }
 uint32_t Create_lhu(Regs rd, Regs rs1, uint32_t immediate)
 {
-	VerifyRange(-2048, 2047, immediate);
+	VerifyRange(-2048, 4095, immediate);
 	return EncodeIType(InstructionType::lhu, rd, rs1, immediate);
 }
 uint32_t Create_fence()
@@ -183,7 +183,7 @@ uint32_t Create_fence_i()
 }
 uint32_t Create_addi(Regs rd, Regs rs1, uint32_t immediate)
 {
-	VerifyRange(-2048, 2047, immediate);
+	VerifyRange(-2048, 4095, immediate);
 	return EncodeIType(InstructionType::addi, rd, rs1, immediate);
 }
 uint32_t Create_slli(Regs rd, Regs rs1, uint32_t immediate)
@@ -193,17 +193,17 @@ uint32_t Create_slli(Regs rd, Regs rs1, uint32_t immediate)
 }
 uint32_t Create_slti(Regs rd, Regs rs1, uint32_t immediate)
 {
-	VerifyRange(-2048, 2047, immediate);
+	VerifyRange(-2048, 4095, immediate);
 	return EncodeIType(InstructionType::slti, rd, rs1, immediate);
 }
 uint32_t Create_sltiu(Regs rd, Regs rs1, uint32_t immediate)
 {
-	VerifyRange(-2048, 2047, immediate);
+	VerifyRange(-2048, 4095, immediate);
 	return EncodeIType(InstructionType::sltiu, rd, rs1, immediate);
 }
 uint32_t Create_xori(Regs rd, Regs rs1, uint32_t immediate)
 {
-	VerifyRange(-2048, 2047, immediate);
+	VerifyRange(-2048, 4095, immediate);
 	return EncodeIType(InstructionType::xori, rd, rs1, immediate);
 }
 uint32_t Create_srli(Regs rd, Regs rs1, uint32_t immediate)
@@ -218,32 +218,32 @@ uint32_t Create_srai(Regs rd, Regs rs1, uint32_t immediate)
 }
 uint32_t Create_ori(Regs rd, Regs rs1, uint32_t immediate)
 {
-	VerifyRange(-2048, 2047, immediate);
+	VerifyRange(-2048, 4095, immediate);
 	return EncodeIType(InstructionType::ori, rd, rs1, immediate);
 }
 uint32_t Create_andi(Regs rd, Regs rs1, uint32_t immediate)
 {
-	VerifyRange(-2048, 2047, immediate);
+	VerifyRange(-2048, 4095, immediate);
 	return EncodeIType(InstructionType::andi, rd, rs1, immediate);
 }
 uint32_t Create_auipc(Regs rd, uint32_t immediate)
 {
-	VerifyRange(-524288, 524287, immediate);
+	VerifyRange(-524288, 1048575, immediate);
 	return EncodeUType(InstructionType::auipc, rd, immediate << 12);
 }
 uint32_t Create_sb(Regs rs1, Regs rs2, uint32_t immediate)
 {
-	VerifyRange(-2048, 2047, immediate);
+	VerifyRange(-2048, 4095, immediate);
 	return EncodeSType(InstructionType::sb, rs1, rs2, immediate);
 }
 uint32_t Create_sh(Regs rs1, Regs rs2, uint32_t immediate)
 {
-	VerifyRange(-2048, 2047, immediate);
+	VerifyRange(-2048, 4095, immediate);
 	return EncodeSType(InstructionType::sh, rs1, rs2, immediate);
 }
 uint32_t Create_sw(Regs rs1, Regs rs2, uint32_t immediate)
 {
-	VerifyRange(-2048, 2047, immediate);
+	VerifyRange(-2048, 4095, immediate);
 	return EncodeSType(InstructionType::sw, rs1, rs2, immediate);
 }
 uint32_t Create_add(Regs rd, Regs rs1, Regs rs2)
@@ -292,42 +292,42 @@ uint32_t Create_lui(Regs rd, uint32_t immediate)
 }
 uint32_t Create_beq(Regs rs1, Regs rs2, uint32_t immediate)
 {
-	VerifyRange(-2047, 2046, immediate);
+	VerifyRange(-2047, 4095, immediate);
 	return EncodeSBType(InstructionType::beq, rs1, rs2, immediate);
 }
 uint32_t Create_bne(Regs rs1, Regs rs2, uint32_t immediate)
 {
-	VerifyRange(-2047, 2046, immediate);
+	VerifyRange(-2047, 4095, immediate);
 	return EncodeSBType(InstructionType::bne, rs1, rs2, immediate);
 }
 uint32_t Create_blt(Regs rs1, Regs rs2, uint32_t immediate)
 {
-	VerifyRange(-2047, 2046, immediate);
+	VerifyRange(-2047, 4095, immediate);
 	return EncodeSBType(InstructionType::blt, rs1, rs2, immediate);
 }
 uint32_t Create_bge(Regs rs1, Regs rs2, uint32_t immediate)
 {
-	VerifyRange(-2047, 2046, immediate);
+	VerifyRange(-2047, 4095, immediate);
 	return EncodeSBType(InstructionType::bge, rs1, rs2, immediate);
 }
 uint32_t Create_bltu(Regs rs1, Regs rs2, uint32_t immediate)
 {
-	VerifyRange(-2047, 2046, immediate);
+	VerifyRange(-2047, 4095, immediate);
 	return EncodeSBType(InstructionType::bltu, rs1, rs2, immediate);
 }
 uint32_t Create_bgeu(Regs rs1, Regs rs2, uint32_t immediate)
 {
-	VerifyRange(-2047, 2046, immediate);
+	VerifyRange(-2047, 4095, immediate);
 	return EncodeSBType(InstructionType::bgeu, rs1, rs2, immediate);
 }
 uint32_t Create_jalr(Regs rd, Regs rs1, uint32_t immediate)
 {
-	VerifyRange(-2048, 2047, immediate);
+	VerifyRange(-2048, 4095, immediate);
 	return EncodeIType(InstructionType::jalr, rd, rs1, immediate);
 }
 uint32_t Create_jal(Regs rd, uint32_t immediate)
 {
-	VerifyRange(-524288, 524287, immediate);
+	VerifyRange(-524288, 1048575, immediate);
 	return EncodeUJType(InstructionType::jal, rd, immediate);
 }
 uint32_t Create_ecall()
@@ -362,3 +362,17 @@ uint32_t Create_csrrci()
 {
 	throw std::runtime_error("Instruction encoding not implemented for this instruction.");
 }
+MultiInstruction Create_li(Regs rd, uint32_t immediate)
+{
+	MultiInstruction mInstruction;
+	mInstruction.instruction1 = Create_lui(rd, immediate >> 12);
+	mInstruction.instruction2 = Create_addi(rd, rd, immediate & 0x0f'ff);
+
+	return mInstruction;
+}
+
+//0001101111001101111000000101
+//
+//0001101111001110000000000000
+//                111000000101
+//0001101111001110111000000101

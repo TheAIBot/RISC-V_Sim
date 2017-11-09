@@ -49,7 +49,7 @@ void RISCV_Program::EndProgram()
 	AddInstruction(Create_ecall());
 }
 
-static void WriteFile(std::string filepath, const char* toWrite, uint32_t size)
+static void WriteFile(const std::string& filepath, const char* toWrite, uint32_t size)
 {
     std::ofstream file(filepath.c_str(), std::ios::binary);
 	if (!file)
@@ -60,7 +60,7 @@ static void WriteFile(std::string filepath, const char* toWrite, uint32_t size)
     file.close(); 
 }
 
-void RISCV_Program::WrongProgramResult(Processor& processor, std::string filepath, bool fromFile)
+void RISCV_Program::WrongProgramResult(Processor& processor, const std::string& filepath, bool fromFile)
 {
 	std::string registerSum = "";
 	for(uint32_t i = 0; i < 32; i++)
@@ -93,16 +93,16 @@ void RISCV_Program::WrongProgramResult(Processor& processor, std::string filepat
 
 }
 
-void RISCV_Program::SaveAndTest(std::string filepath)
+void RISCV_Program::SaveAndTest(const std::string& filepath)
 {
-    std::string binFile      = filepath + ".bin";
-    std::string registerFile = filepath + ".res";
-    std::string assemblyFile = filepath + ".s";
+    const std::string binFile      = filepath + ".bin";
+    const std::string registerFile = filepath + ".res";
+    const std::string assemblyFile = filepath + ".s";
 
     WriteFile(binFile     , reinterpret_cast<char*>(&Instructions[0]), sizeof(uint32_t) * Instructions.size());
     WriteFile(registerFile, reinterpret_cast<char*>(&Registers[0])   , sizeof(uint32_t) * 32);
 
-    std::string programAsText = GetProgramAsString(&Instructions[0], Instructions.size());
+    const std::string programAsText = GetProgramAsString(&Instructions[0], Instructions.size());
     WriteFile(assemblyFile, programAsText.c_str(), programAsText.length());
 
     Processor processor;
@@ -130,8 +130,4 @@ void RISCV_Program::SaveAndTest(std::string filepath)
 
 	delete[] rawInstructions;
 	delete[] registers;
-}
-
-RISCV_Program::~RISCV_Program()
-{
 }

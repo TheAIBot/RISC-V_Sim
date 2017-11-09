@@ -49,4 +49,4 @@ enum class Regs : uint32_t
 	t6
 };
 
-std::string RegisterName(uint32_t registerIndex);
+const std::string& RegisterName(const uint32_t registerIndex);

@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <fstream>
 
-static char* ReadFileContent(std::string filename, uint64_t* fileSize)
+static const char* ReadFileContent(const std::string filename, uint64_t* fileSize)
 {
 	std::ifstream fileStream(filename, std::ios::binary | std::ios::ate);
 	if (!fileStream)
@@ -28,7 +28,7 @@ static char* ReadFileContent(std::string filename, uint64_t* fileSize)
 	return fileContent;
 }
 
-static uint32_t* char_to_uint32_t(char* chars, uint64_t fileSize)
+static uint32_t* char_to_uint32_t(const char* chars, const uint64_t fileSize)
 {
 	uint32_t* uints = new uint32_t[fileSize / 4];
 	for (uint32_t i = 0; i < fileSize; i += 4)
@@ -45,11 +45,11 @@ static uint32_t* char_to_uint32_t(char* chars, uint64_t fileSize)
 	return uints;
 }
 
-uint32_t* ReadInstructions(std::string filePath, uint32_t* instructionCount)
+const uint32_t* ReadInstructions(const std::string& filePath, uint32_t* instructionCount)
 {
-	std::string instructionsFile = filePath + ".bin";
+	const std::string instructionsFile = filePath + ".bin";
 	uint64_t fileSize;
-	char* fileContent = ReadFileContent(instructionsFile, &fileSize);
+	const char* fileContent = ReadFileContent(instructionsFile, &fileSize);
 
 	//make sure file can be converted to integer array
 	if (fileSize % 4 != 0 || fileSize  == 0)
@@ -57,26 +57,26 @@ uint32_t* ReadInstructions(std::string filePath, uint32_t* instructionCount)
 		throw std::runtime_error("File doesn't have the correct length. Length: " + std::to_string(fileSize));
 	}
 
-	uint32_t* instructions = char_to_uint32_t(fileContent, fileSize);
+	const uint32_t* instructions = char_to_uint32_t(fileContent, fileSize);
 	delete[] fileContent;
 
 	*instructionCount = static_cast<uint32_t>(fileSize / 4);
 	return instructions;
 }
 
-uint32_t* ReadRegisters(std::string filePath)
+const uint32_t* ReadRegisters(const std::string& filePath)
 {
-	std::string registerFile = filePath + ".res";
+	const std::string registerFile = filePath + ".res";
 	uint64_t fileSize;
-	char* fileContent = ReadFileContent(registerFile, &fileSize);
+	const char* fileContent = ReadFileContent(registerFile, &fileSize);
 
-	//have read exactly 32 double word registers
+	//have read exactly 32 word registers
 	if (fileSize != 4 * 32)
 	{
 		throw std::runtime_error("File doesn't have the correct length. Length: " + std::to_string(fileSize));
 	}
 
-	uint32_t* registers = char_to_uint32_t(fileContent, fileSize);
+	const uint32_t* registers = char_to_uint32_t(fileContent, fileSize);
 	delete[] fileContent;
 
 	return registers;

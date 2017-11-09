@@ -13,7 +13,7 @@ private:
 	std::vector<uint32_t> Instructions;
 	uint32_t Registers[32];
 
-	void WrongProgramResult(Processor& processor, std::string filepath, bool fromFile);
+	void WrongProgramResult(Processor& processor, const std::string& filepath, bool fromFile);
 
 public:
 	RISCV_Program();
@@ -23,8 +23,6 @@ public:
 	void AddInstruction(uint32_t rawInstruction);
 	void AddInstruction(MultiInstruction mInstruction);
 	void EndProgram();
-	void SaveAndTest(std::string filepath);
-
-	~RISCV_Program();
+	void SaveAndTest(const std::string& filepath);
 };
 

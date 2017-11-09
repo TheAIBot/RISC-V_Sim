@@ -7,7 +7,7 @@
 #include "InstructionEncode.h"
 #include "Register.h"
 
-static void TestEncodeDecodeInstruction(uint32_t encoded, std::string expectedDecoded)
+static void TestEncodeDecodeInstruction(const uint32_t encoded, const std::string& expectedDecoded)
 {
 	Instruction instruction = DecodeInstruction(encoded);
 	std::string actualDecoded = InstructionAsString(instruction);

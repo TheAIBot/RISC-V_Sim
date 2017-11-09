@@ -53,6 +53,6 @@ enum class InstructionType : uint16_t
 	csrrci	= 0b000000'111'1110011
 };
 
-uint32_t InstructionTypeGetOpCode(InstructionType type);
-uint32_t InstructionTypeFunct3(InstructionType type);
-uint32_t InstructionTypeFunct7(InstructionType type);
+uint32_t InstructionTypeGetOpCode(const InstructionType type);
+uint32_t InstructionTypeFunct3(const InstructionType type);
+uint32_t InstructionTypeFunct7(const InstructionType type);

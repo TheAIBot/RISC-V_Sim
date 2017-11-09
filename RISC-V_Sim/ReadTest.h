@@ -3,5 +3,5 @@
 #include <cstdint>
 #include <string>
 
-uint32_t* ReadInstructions(std::string filePath, uint32_t* instructionCount);
-uint32_t* ReadRegisters(std::string filePath);
+const uint32_t* ReadInstructions(const std::string& filePath, uint32_t* instructionCount);
+const uint32_t* ReadRegisters(const std::string& filePath);

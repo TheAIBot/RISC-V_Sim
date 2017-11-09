@@ -179,7 +179,7 @@ Instruction DecodeInstruction(const uint32_t rawInstruction)
 	}
 }
 
-Instruction* DecodeInstructions(const uint32_t* rawInstructions, const uint32_t instructionsCount)
+const Instruction* DecodeInstructions(const uint32_t* rawInstructions, const uint32_t instructionsCount)
 {
 	Instruction* instructions = new Instruction[instructionsCount];
 
@@ -198,7 +198,7 @@ std::string GetProgramAsString(const uint32_t* rawInstructions, const uint32_t i
 	std::string program;
 	for(uint32_t i = 0; i < instructionCount; i++)
 	{
-		const Instruction instruction = DecodeInstruction(rawInstructions[i]);
+		const Instruction& instruction = DecodeInstruction(rawInstructions[i]);
 		program += InstructionAsString(instruction) + "\n";
 	}
 

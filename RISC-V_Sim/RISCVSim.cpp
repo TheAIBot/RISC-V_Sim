@@ -33,10 +33,9 @@ std::string sdf(Processor& processor, const uint32_t* Registers)
 	return registerSum;
 }
 
-void testFile(std::string filePath)
+static void testTask3()
 {
 	uint32_t instructionCount = 95;
-	//const uint32_t* rawInstructions = ReadInstructions(filePath, &instructionCount);
 	const uint32_t rawInstructions[95] = 
 	{
 		0xfd010113,
@@ -135,6 +134,31 @@ void testFile(std::string filePath)
 		0x03010113,
 		0x00008067
 	};
+	const uint32_t* registers = ReadRegisters("tests/task3/loop");
+
+	Processor processor;
+	processor.SetDebugMode(false);
+	processor.Run(rawInstructions, instructionCount);
+	//processor.PrintRegisters();
+	//processor.PrintInstructions(rawInstructions, instructionCount);
+
+	if (!processor.CompareRegisters(registers))
+	{
+		std::cout << sdf(processor, registers);
+		std::cout << "FUCKING FAILED" << std::endl;
+	}
+	else
+	{
+		std::cout << "SUCCESS" << std::endl;
+	}
+
+	delete[] registers;
+}
+
+void testFile(std::string filePath)
+{
+	uint32_t instructionCount;
+	const uint32_t* rawInstructions = ReadInstructions(filePath, &instructionCount);
 	const uint32_t* registers = ReadRegisters(filePath);
 
 	Processor processor;
@@ -154,7 +178,7 @@ void testFile(std::string filePath)
 		std::cout << "SUCCESS" << std::endl;
 	}
 
-	//delete[] rawInstructions;
+	delete[] rawInstructions;
 	delete[] registers;
 }
 
@@ -173,7 +197,7 @@ int main()
 		//testFile("tests/task2/branchcnt");
 		//testFile("tests/task2/branchmany");
 		
-		testFile("tests/task3/loop");
+		//testFile("tests/task3/loop");
 	}
 	catch (std::runtime_error &e)
 	{

@@ -37,7 +37,7 @@ static std::string InstructionToBits(uint64_t n, const uint32_t* sizes)
 	throw std::runtime_error("For some reason index never became 0 or SIZE was 0.");
 }
 
-std::string NumberToBits(uint32_t n)
+std::string NumberToBits(const uint32_t n)
 {
 	const uint32_t sizes[4] = { 8, 8, 8, 8};
 	return InstructionToBits<4, 32>(n, sizes);
@@ -81,7 +81,7 @@ std::string InstructionToBits(const uint32_t n)
 	}
 }
 
-std::string GetNameOfInstructionType(InstructionType type)
+static std::string GetNameOfInstructionType(const InstructionType type)
 {
 	switch (type)
 	{
@@ -184,7 +184,7 @@ std::string GetNameOfInstructionType(InstructionType type)
 	}
 }
 
-std::string InstructionAsString(Instruction instruction)
+std::string InstructionAsString(const Instruction& instruction)
 {
 	char text[50];
 	std::string type = GetNameOfInstructionType(instruction.type);

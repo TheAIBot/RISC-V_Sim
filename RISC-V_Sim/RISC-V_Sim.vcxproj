@@ -146,9 +146,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="Instruction.cpp" />
     <ClCompile Include="InstructionDecode.cpp" />
     <ClCompile Include="InstructionEncode.cpp" />

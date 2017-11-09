@@ -4,7 +4,12 @@ RISC-V simulator
 Complete RISC-V simulator that implements the RV32I instruction set.
 
 # Run on linux
-Simply call make and then run the file RISC_V_Sim.
+From the base folder of this repository, run.
+```
+cd RISC-V_Sim
+make
+./RISC_V_Sim
+```
 
 # Run on windows
 Load up the project with visual studio and you should be set.

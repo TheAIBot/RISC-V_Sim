@@ -19,7 +19,7 @@ static void TestEncodeDecodeInstruction(const uint32_t encoded, const std::strin
 	}
 	else
 	{
-		std::cout << "Test Success!" << std::endl;
+		std::cout << "Test Success: " << expectedDecoded << std::endl;
 	}
 }
 
@@ -340,6 +340,10 @@ void TestAllEncodeDecode()
 	}
 	catch (std::runtime_error& e)
 	{
+		std::cout << "Failed to finish all encode decode tests" << std::endl;
 		std::cout << e.what() << std::endl;
+		return;
 	}
+
+	std::cout << "Successfully finished all encode decode tests\n" << std::endl;
 }

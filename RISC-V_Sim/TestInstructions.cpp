@@ -5,12 +5,13 @@
 #include "Register.h"
 #include "Processor.h"
 #include "InstructionDecode.h"
+#include <string>
 #include "Instruction.h"
 #include "RISCV_Program.h"
 
-static void Success()
+static void Success(const std::string& testName)
 {
-    std::cout << "Test Success!" << std::endl;
+    std::cout << "Test Success: " << testName << std::endl;
 }
 
 static void Test_lb()
@@ -36,7 +37,7 @@ static void Test_lb()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_lb");
 
-	Success();
+	Success("test_lb");
 }
 static void Test_lh()
 {
@@ -61,7 +62,7 @@ static void Test_lh()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_lh");
 
-	Success();
+	Success("test_lh");
 }
 static void Test_lw()
 {
@@ -86,7 +87,7 @@ static void Test_lw()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_lw");
 
-	Success();
+	Success("test_lw");
 }
 static void Test_lbu()
 {
@@ -111,7 +112,7 @@ static void Test_lbu()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_lbu");
 
-	Success();
+	Success("test_lbu");
 }
 static void Test_lhu()
 {
@@ -136,7 +137,7 @@ static void Test_lhu()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_lhu");
 
-	Success();
+	Success("test_lhu");
 }
 static void Test_fence()
 {
@@ -161,7 +162,7 @@ static void Test_addi()
 	program.EndProgram();
     program.SaveAndTest("InstructionTests/test_addi");
 
-    Success();
+	Success("test_addi");
 }
 static void Test_slli()
 {
@@ -176,7 +177,7 @@ static void Test_slli()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_slli");
 
-	Success();
+	Success("test_slli");
 }
 static void Test_slti()
 {
@@ -207,7 +208,7 @@ static void Test_slti()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_slti");
 
-	Success();
+	Success("test_slti");
 }
 static void Test_sltiu()
 {
@@ -238,7 +239,7 @@ static void Test_sltiu()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_sltiu");
 
-	Success();
+	Success("test_sltiu");
 }
 static void Test_xori()
 {
@@ -250,7 +251,7 @@ static void Test_xori()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_xori");
 
-	Success();
+	Success("test_xori");
 }
 static void Test_srli()
 {
@@ -265,7 +266,7 @@ static void Test_srli()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_srli");
 
-	Success();
+	Success("test_srli");
 }
 static void Test_srai()
 {
@@ -287,7 +288,7 @@ static void Test_srai()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_srai");
 
-	Success();
+	Success("test_srai");
 }
 static void Test_ori()
 {
@@ -299,7 +300,7 @@ static void Test_ori()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_ori");
 
-	Success();
+	Success("test_ori");
 }
 static void Test_andi()
 {
@@ -311,7 +312,7 @@ static void Test_andi()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_andi");
 
-	Success();
+	Success("test_andi");
 }
 static void Test_auipc()
 {
@@ -331,7 +332,7 @@ static void Test_auipc()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_auipc");
 
-	Success();
+	Success("test_auipc");
 }
 static void Test_sb()
 {
@@ -351,7 +352,7 @@ static void Test_sb()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_sb");
 
-	Success();
+	Success("test_sb");
 }
 static void Test_sh()
 {
@@ -373,7 +374,7 @@ static void Test_sh()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_sh");
 
-	Success();
+	Success("test_sh");
 }
 static void Test_sw()
 {
@@ -407,7 +408,7 @@ static void Test_sw()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_sw");
 
-	Success();
+	Success("test_sw");
 }
 static void Test_add()
 {
@@ -427,7 +428,7 @@ static void Test_add()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_add");
 
-	Success();
+	Success("test_add");
 }
 static void Test_sub()
 {
@@ -447,7 +448,7 @@ static void Test_sub()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_sub");
 
-	Success();
+	Success("test_sub");
 }
 static void Test_sll()
 {
@@ -464,7 +465,7 @@ static void Test_sll()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_sll");
 
-	Success();
+	Success("test_sll");
 }
 static void Test_slt()
 {
@@ -502,7 +503,7 @@ static void Test_slt()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_slt");
 
-	Success();
+	Success("test_slt");
 }
 static void Test_sltu()
 {
@@ -540,7 +541,7 @@ static void Test_sltu()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_sltu");
 
-	Success();
+	Success("test_sltu");
 }
 static void Test_xor()
 {
@@ -553,7 +554,7 @@ static void Test_xor()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_xor");
 
-	Success();
+	Success("test_xor");
 }
 static void Test_srl()
 {
@@ -570,7 +571,7 @@ static void Test_srl()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_srl");
 
-	Success();
+	Success("test_srl");
 }
 static void Test_sra()
 {
@@ -596,7 +597,7 @@ static void Test_sra()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_sra");
 
-	Success();
+	Success("test_sra");
 }
 static void Test_or()
 {
@@ -609,7 +610,7 @@ static void Test_or()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_or");
 
-	Success();
+	Success("test_or");
 }
 static void Test_and()
 {
@@ -622,7 +623,7 @@ static void Test_and()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_and");
 
-	Success();
+	Success("test_and");
 }
 static void Test_lui()
 {
@@ -636,7 +637,7 @@ static void Test_lui()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_lui");
 
-	Success();
+	Success("test_lui");
 }
 static void Test_beq()
 {
@@ -680,7 +681,7 @@ static void Test_beq()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_beq");
 
-	Success();
+	Success("test_beq");
 }
 static void Test_bne()
 {
@@ -724,7 +725,7 @@ static void Test_bne()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_bne");
 
-	Success();
+	Success("test_bne");
 }
 static void Test_blt()
 {
@@ -768,7 +769,7 @@ static void Test_blt()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_blt");
 
-	Success();
+	Success("test_blt");
 }
 static void Test_bge()
 {
@@ -812,7 +813,7 @@ static void Test_bge()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_bge");
 
-	Success();
+	Success("test_bge");
 }
 static void Test_bltu()
 {
@@ -856,7 +857,7 @@ static void Test_bltu()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_bltu");
 
-	Success();
+	Success("test_bltu");
 }
 static void Test_bgeu()
 {
@@ -900,7 +901,7 @@ static void Test_bgeu()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_bgeu");
 
-	Success();
+	Success("test_bgeu");
 }
 static void Test_jalr()
 {
@@ -921,7 +922,7 @@ static void Test_jalr()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_jalr");
 
-	Success();
+	Success("test_jalr");
 }
 static void Test_jal()
 {
@@ -941,7 +942,7 @@ static void Test_jal()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_jal");
 
-	Success();
+	Success("test_jal");
 }
 static void Test_ecall()
 {
@@ -969,7 +970,7 @@ static void Test_ecall()
 
 	program.SaveAndTest("InstructionTests/test_ecall");
 
-	Success();
+	Success("test_ecall");
 }
 static void Test_ebreak()
 {
@@ -1027,7 +1028,7 @@ static void Test_li()
 	program.EndProgram();
 	program.SaveAndTest("InstructionTests/test_li");
 
-	Success();
+	Success("test_li");
 }
 
 void TestAllInstructions()
@@ -1085,6 +1086,10 @@ void TestAllInstructions()
 	}
 	catch (std::runtime_error& e)
 	{
+		std::cout << "Failed to finish all instruction tests" << std::endl;
 		std::cout << e.what() << std::endl;
+		return;
 	}
+
+	std::cout << "Successfully finished all instruction tests\n" << std::endl;
 }

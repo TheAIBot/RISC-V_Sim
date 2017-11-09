@@ -229,7 +229,7 @@ uint32_t Create_andi(Regs rd, Regs rs1, uint32_t immediate)
 }
 uint32_t Create_auipc(Regs rd, uint32_t immediate)
 {
-	VerifyRange(-524288, 1048575, immediate);
+	VerifyRange(0, 1048575, immediate);
 	return EncodeUType(InstructionType::auipc, rd, immediate << 12);
 }
 uint32_t Create_sb(Regs rs1, Regs rs2, uint32_t immediate)

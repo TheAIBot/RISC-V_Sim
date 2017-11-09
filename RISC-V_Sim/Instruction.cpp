@@ -210,7 +210,7 @@ std::string InstructionAsString(Instruction instruction)
 			sprintf(text, "%s %s %i", type.c_str(), rdText.c_str(), instruction.immediate >> 12);
 			break;
 		case 0b0010'0011:
-			sprintf(text, "%s %s %i(%s)", type.c_str(), rs1Text.c_str(), instruction.immediate, rs2Text.c_str());
+			sprintf(text, "%s %s %i(%s)", type.c_str(), rs2Text.c_str(), instruction.immediate, rs1Text.c_str());
 			break;
 		case 0b0011'0011:
 			sprintf(text, "%s %s %s %s", type.c_str(), rdText.c_str(), rs1Text.c_str(), rs2Text.c_str());

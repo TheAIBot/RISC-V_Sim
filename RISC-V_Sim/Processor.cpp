@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
+#include <algorithm>
 #include "InstructionDecode.h"
 #include "Register.h"
 
@@ -35,6 +36,7 @@ void Processor::Run(const uint32_t* rawInstructions, const uint32_t instructionC
 
 		if (debugEnabled)
 		{
+			std::cout << std::to_string(instructionIndex) + ": " << InstructionAsString(instruction) << std::endl;
 			PrintRegisters();
 			std::cin.get();
 		}
@@ -281,7 +283,13 @@ void Processor::PrintRegisters()
 	uint32_t index = 0;
 	for(Register x : registers)
 	{
-		std::cout << RegisterName(index) << "  " << std::setw(10) << std::to_string(x.word) << "  " << NumberToBits(x.uword) << std::endl;
+		std::cout << std::setw(3) << RegisterName(index) << "  ";
+		std::cout << std::setw(10) << std::to_string(x.word) << "  ";
+		std::cout << NumberToBits(x.uword) << "   ";
+		std::cout << std::setw(3) << std::to_string(index * 4 + 32 * 4 * 0) << ": " << std::setw(10) << GetWordFromMemory(index * 4 + 32 * 4 * 0) << "  ";
+		std::cout << std::setw(3) << std::to_string(index * 4 + 32 * 4 * 1) << ": " << std::setw(10) << GetWordFromMemory(index * 4 + 32 * 4 * 1) << "  ";
+		std::cout << std::setw(3) << std::to_string(index * 4 + 32 * 4 * 2) << ": " << std::setw(10) << GetWordFromMemory(index * 4 + 32 * 4 * 2) << "  ";
+		std::cout << std::setw(3) << std::to_string(index * 4 + 32 * 4 * 3) << ": " << std::setw(10) << GetWordFromMemory(index * 4 + 32 * 4 * 3) << std::endl;
 		index++;
 	}
 	std::cout << std::endl;
@@ -360,10 +368,7 @@ void Processor::SetPC(uint32_t value)
 
 void Processor::Reset()
 {
-	for (uint32_t i = 0; i < Processor::MEMORY_SIZE; i++)
-	{
-		memory[i] = 0;
-	}
+	std::fill(memory, memory + Processor::MEMORY_SIZE, 0);
 	for(uint32_t i = 0; i < 32; i++)
 	{
 		registers[i].word = 0;

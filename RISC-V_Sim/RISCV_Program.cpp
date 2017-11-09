@@ -69,13 +69,15 @@ void RISCV_Program::WrongProgramResult(Processor& processor, std::string filepat
 		//as it isn't checked
 		if (i == static_cast<uint32_t>(Regs::sp))
 		{
-			registerSum += "0 : 0";
+			registerSum += "sp 0 : 0";
 		}
 		else
 		{
-			registerSum += std::to_string(processor.GetRegister(static_cast<Regs>(i)));
-			registerSum += " : ";
+			registerSum += RegisterName(i);
+			registerSum += " ";
 			registerSum += std::to_string(Registers[i]);
+			registerSum += " : ";
+			registerSum += std::to_string(processor.GetRegister(static_cast<Regs>(i)));
 		}
 
 		registerSum += "\n";

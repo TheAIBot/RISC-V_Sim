@@ -8,59 +8,135 @@
 #include "Instruction.h"
 #include "RISCV_Program.h"
 
-static void AssertTrue(bool value)
-{
-    if (!value)
-    {
-        throw std::runtime_error("\nValue was not true.\n");
-    }
-}
-
 static void Success()
 {
     std::cout << "Test Success!" << std::endl;
 }
 
-static bool RunInstruction(Processor& processor, uint32_t rawInstruction)
-{
-	Instruction instruction = DecodeInstruction(rawInstruction);
-	return processor.RunInstruction(instruction);
-}
-
-static bool RunInstruction(Processor& processor, MultiInstruction mInstruction)
-{
-    if (mInstruction.instruction1 != 0)
-    {
-        RunInstruction(processor, mInstruction.instruction1);
-    }
-    if (mInstruction.instruction2 != 0)
-    {
-        return RunInstruction(processor, mInstruction.instruction2);
-    }
-
-    return false;
-	
-}
-
 static void Test_lb()
 {
+	RISCV_Program program;
+	program.SetRegister(Regs::s0, 102);
+	program.AddInstruction(Create_sb(Regs::x0, Regs::s0, 10));
+	program.AddInstruction(Create_lb(Regs::t0, Regs::x0, 10));
+	program.ExpectRegisterValue(Regs::t0, 102);
 
+	program.SetRegister(Regs::s1, 0x80'80'80'80);
+	program.SetRegister(Regs::s2, 39);
+	program.AddInstruction(Create_sb(Regs::s2, Regs::s1, 24));
+	program.AddInstruction(Create_lb(Regs::t1, Regs::s2, 24));
+	program.ExpectRegisterValue(Regs::t1, 0xff'ff'ff'80);
+
+	program.SetRegister(Regs::s3, 0x4f'4f'4f4f);
+	program.SetRegister(Regs::s4, 103);
+	program.AddInstruction(Create_sb(Regs::s4, Regs::s3, 291));
+	program.AddInstruction(Create_lb(Regs::t2, Regs::s4, 291));
+	program.ExpectRegisterValue(Regs::t2, 0x4f);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_lb");
+
+	Success();
 }
 static void Test_lh()
 {
+	RISCV_Program program;
+	program.SetRegister(Regs::s0, 13302);
+	program.AddInstruction(Create_sh(Regs::x0, Regs::s0, 10));
+	program.AddInstruction(Create_lh(Regs::t0, Regs::x0, 10));
+	program.ExpectRegisterValue(Regs::t0, 13302);
 
+	program.SetRegister(Regs::s1, 0x80'80'80'80);
+	program.SetRegister(Regs::s2, 39);
+	program.AddInstruction(Create_sh(Regs::s2, Regs::s1, 24));
+	program.AddInstruction(Create_lh(Regs::t1, Regs::s2, 24));
+	program.ExpectRegisterValue(Regs::t1, 0xff'ff'80'80);
+
+	program.SetRegister(Regs::s3, 0x4f'4f'4f4f);
+	program.SetRegister(Regs::s4, 103);
+	program.AddInstruction(Create_sh(Regs::s4, Regs::s3, 291));
+	program.AddInstruction(Create_lh(Regs::t2, Regs::s4, 291));
+	program.ExpectRegisterValue(Regs::t2, 0x4f'4f);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_lh");
+
+	Success();
 }
 static void Test_lw()
 {
+	RISCV_Program program;
+	program.SetRegister(Regs::s0, 1338802);
+	program.AddInstruction(Create_sw(Regs::x0, Regs::s0, 10));
+	program.AddInstruction(Create_lw(Regs::t0, Regs::x0, 10));
+	program.ExpectRegisterValue(Regs::t0, 1338802);
 
+	program.SetRegister(Regs::s1, 0x80'80'80'80);
+	program.SetRegister(Regs::s2, 39);
+	program.AddInstruction(Create_sw(Regs::s2, Regs::s1, 24));
+	program.AddInstruction(Create_lw(Regs::t1, Regs::s2, 24));
+	program.ExpectRegisterValue(Regs::t1, 0x80'80'80'80);
+
+	program.SetRegister(Regs::s3, 0x4f'4f'4f4f);
+	program.SetRegister(Regs::s4, 103);
+	program.AddInstruction(Create_sw(Regs::s4, Regs::s3, 291));
+	program.AddInstruction(Create_lw(Regs::t2, Regs::s4, 291));
+	program.ExpectRegisterValue(Regs::t2, 0x4f'4f'4f'4f);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_lw");
+
+	Success();
 }
 static void Test_lbu()
 {
+	RISCV_Program program;
+	program.SetRegister(Regs::s0, 102);
+	program.AddInstruction(Create_sb(Regs::x0, Regs::s0, 10));
+	program.AddInstruction(Create_lbu(Regs::t0, Regs::x0, 10));
+	program.ExpectRegisterValue(Regs::t0, 102);
 
+	program.SetRegister(Regs::s1, 0x80'80'80'80);
+	program.SetRegister(Regs::s2, 39);
+	program.AddInstruction(Create_sb(Regs::s2, Regs::s1, 24));
+	program.AddInstruction(Create_lbu(Regs::t1, Regs::s2, 24));
+	program.ExpectRegisterValue(Regs::t1, 0x00'00'0080);
+
+	program.SetRegister(Regs::s3, 0x4f'4f'4f4f);
+	program.SetRegister(Regs::s4, 103);
+	program.AddInstruction(Create_sb(Regs::s4, Regs::s3, 291));
+	program.AddInstruction(Create_lbu(Regs::t2, Regs::s4, 291));
+	program.ExpectRegisterValue(Regs::t2, 0x4f);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_lbu");
+
+	Success();
 }
 static void Test_lhu()
 {
+	RISCV_Program program;
+	program.SetRegister(Regs::s0, 13302);
+	program.AddInstruction(Create_sh(Regs::x0, Regs::s0, 10));
+	program.AddInstruction(Create_lhu(Regs::t0, Regs::x0, 10));
+	program.ExpectRegisterValue(Regs::t0, 13302);
 
+	program.SetRegister(Regs::s1, 0x80'80'80'80);
+	program.SetRegister(Regs::s2, 39);
+	program.AddInstruction(Create_sh(Regs::s2, Regs::s1, 24));
+	program.AddInstruction(Create_lhu(Regs::t1, Regs::s2, 24));
+	program.ExpectRegisterValue(Regs::t1, 0x00'00'80'80);
+
+	program.SetRegister(Regs::s3, 0x4f'4f'4f4f);
+	program.SetRegister(Regs::s4, 103);
+	program.AddInstruction(Create_sh(Regs::s4, Regs::s3, 291));
+	program.AddInstruction(Create_lhu(Regs::t2, Regs::s4, 291));
+	program.ExpectRegisterValue(Regs::t2, 0x4f'4f);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_lhu");
+
+	Success();
 }
 static void Test_fence()
 {
@@ -84,581 +160,816 @@ static void Test_addi()
 
 	program.EndProgram();
     program.SaveAndTest("InstructionTests/test_addi");
-	
-
-    Processor processor; 
-	RunInstruction(processor, Create_addi(Regs::t1, Regs::x0, 125));
-    AssertTrue(processor.CompareRegister(Regs::t1, 125));
-
-	RunInstruction(processor, Create_addi(Regs::t2, Regs::t1, 35));
-    AssertTrue(processor.CompareRegister(Regs::t2, 160));
-
-	RunInstruction(processor, Create_addi(Regs::t3, Regs::t2, -100));
-    AssertTrue(processor.CompareRegister(Regs::t3, 60));
 
     Success();
 }
 static void Test_slli()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 0x0f'00'ff'00);
-	RunInstruction(processor, Create_slli(Regs::t1, Regs::t0, 4));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0xf0'0f'f0'00));
+	RISCV_Program program;
+	program.SetRegister(Regs::t0, 0x0f'00'ff'00);
+	program.AddInstruction(Create_slli(Regs::t1, Regs::t0, 4));
+	program.ExpectRegisterValue(Regs::t1, 0xf0'0f'f0'00);
 
-	RunInstruction(processor, Create_slli(Regs::t1, Regs::t0, 16));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0xff'00'00'00));
+	program.AddInstruction(Create_slli(Regs::t2, Regs::t0, 16));
+	program.ExpectRegisterValue(Regs::t2, 0xff'00'00'00);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_slli");
 
 	Success();
 }
 static void Test_slti()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 20);
-	RunInstruction(processor, Create_slti(Regs::t1, Regs::t0, 21));
-	AssertTrue(processor.CompareRegister(Regs::t1, 1));
+	RISCV_Program program;
+	program.SetRegister(Regs::t0, 20);
+	program.AddInstruction(Create_slti(Regs::t1, Regs::t0, 21));
+	program.ExpectRegisterValue(Regs::t1, 1);
 
-	RunInstruction(processor, Create_slti(Regs::t1, Regs::t0, 20));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0));
+	program.AddInstruction(Create_slti(Regs::t2, Regs::t0, 20));
+	program.ExpectRegisterValue(Regs::t2, 0);
 
-	RunInstruction(processor, Create_slti(Regs::t1, Regs::t0, 19));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0));
+	program.AddInstruction(Create_slti(Regs::t3, Regs::t0, 19));
+	program.ExpectRegisterValue(Regs::t3, 0);
 
-	RunInstruction(processor, Create_slti(Regs::t1, Regs::t0, -19));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0));
+	program.AddInstruction(Create_slti(Regs::t4, Regs::t0, -19));
+	program.ExpectRegisterValue(Regs::t4, 0);
 
-	processor.SetRegister(Regs::t0, -20);
-	RunInstruction(processor, Create_slti(Regs::t1, Regs::t0, -19));
-	AssertTrue(processor.CompareRegister(Regs::t1, 1));
+	program.SetRegister(Regs::t0, -20);
+	program.AddInstruction(Create_slti(Regs::t5, Regs::t0, -19));
+	program.ExpectRegisterValue(Regs::t5, 1);
 
-	RunInstruction(processor, Create_slti(Regs::t1, Regs::t0, -20));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0));
+	program.AddInstruction(Create_slti(Regs::t6, Regs::t0, -20));
+	program.ExpectRegisterValue(Regs::t6, 0);
 
-	RunInstruction(processor, Create_slti(Regs::t1, Regs::t0, -21));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0));
+	program.AddInstruction(Create_slti(Regs::s1, Regs::t0, -21));
+	program.ExpectRegisterValue(Regs::s1, 0);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_slti");
 
 	Success();
 }
 static void Test_sltiu()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 20);
-	RunInstruction(processor, Create_sltiu(Regs::t1, Regs::t0, 21));
-	AssertTrue(processor.CompareRegister(Regs::t1, 1));
+	RISCV_Program program;
+	program.SetRegister(Regs::t0, 20);
+	program.AddInstruction(Create_sltiu(Regs::t1, Regs::t0, 21));
+	program.ExpectRegisterValue(Regs::t1, 1);
 
-	RunInstruction(processor, Create_sltiu(Regs::t1, Regs::t0, 20));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0));
+	program.AddInstruction(Create_sltiu(Regs::t2, Regs::t0, 20));
+	program.ExpectRegisterValue(Regs::t2, 0);
 
-	RunInstruction(processor, Create_sltiu(Regs::t1, Regs::t0, 19));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0));
+	program.AddInstruction(Create_sltiu(Regs::t3, Regs::t0, 19));
+	program.ExpectRegisterValue(Regs::t3, 0);
 
-	RunInstruction(processor, Create_sltiu(Regs::t1, Regs::t0, -19));
-	AssertTrue(processor.CompareRegister(Regs::t1, 1));
+	program.AddInstruction(Create_sltiu(Regs::t4, Regs::t0, -19));
+	program.ExpectRegisterValue(Regs::t4, 1);
 
-	processor.SetRegister(Regs::t0, -20);
-	RunInstruction(processor, Create_sltiu(Regs::t1, Regs::t0, -19));
-	AssertTrue(processor.CompareRegister(Regs::t1, 1));
+	program.SetRegister(Regs::t0, -20);
+	program.AddInstruction(Create_sltiu(Regs::t5, Regs::t0, -19));
+	program.ExpectRegisterValue(Regs::t5, 1);
 
-	RunInstruction(processor, Create_sltiu(Regs::t1, Regs::t0, -20));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0));
+	program.AddInstruction(Create_sltiu(Regs::t6, Regs::t0, -20));
+	program.ExpectRegisterValue(Regs::t6, 0);
 
-	RunInstruction(processor, Create_sltiu(Regs::t1, Regs::t0, -21));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0));
+	program.AddInstruction(Create_sltiu(Regs::s1, Regs::t0, -21));
+	program.ExpectRegisterValue(Regs::s1, 0);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_sltiu");
 
 	Success();
 }
 static void Test_xori()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 0x0f'00'ff'f0);
-	RunInstruction(processor, Create_xori(Regs::t1, Regs::t0, 0x00'00'07'0f));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0x0f'00'f8'ff));
+	RISCV_Program program;
+	program.SetRegister(Regs::t0, 0x0f'00'ff'f0);
+	program.AddInstruction(Create_xori(Regs::t1, Regs::t0, 0x00'00'07'0f));
+	program.ExpectRegisterValue(Regs::t1, 0x0f'00'f8'ff);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_xori");
 
 	Success();
 }
 static void Test_srli()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 0xf0'ff'00'f0);
-	RunInstruction(processor, Create_srli(Regs::t1, Regs::t0, 4));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0x0f'0f'f0'0f));
+	RISCV_Program program;
+	program.SetRegister(Regs::t0, 0xf0'ff'00'f0);
+	program.AddInstruction(Create_srli(Regs::t1, Regs::t0, 4));
+	program.ExpectRegisterValue(Regs::t1, 0x0f'0f'f0'0f);
 
-	RunInstruction(processor, Create_srli(Regs::t1, Regs::t0, 12));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0x00'0f'0f'f0));
+	program.AddInstruction(Create_srli(Regs::t2, Regs::t0, 12));
+	program.ExpectRegisterValue(Regs::t2, 0x00'0f'0f'f0);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_srli");
 
 	Success();
 }
 static void Test_srai()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 0xf0'ff'00'f0);
-	RunInstruction(processor, Create_srai(Regs::t1, Regs::t0, 4));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0xff'0f'f0'0f));
+	RISCV_Program program;
+	program.SetRegister(Regs::t0, 0xf0'ff'00'f0);
+	program.AddInstruction(Create_srai(Regs::t1, Regs::t0, 4));
+	program.ExpectRegisterValue(Regs::t1, 0xff'0f'f0'0f);
 
-	RunInstruction(processor, Create_srai(Regs::t1, Regs::t0, 12));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0xff'ff'0f'f0));
+	program.AddInstruction(Create_srai(Regs::t2, Regs::t0, 12));
+	program.ExpectRegisterValue(Regs::t2, 0xff'ff'0f'f0);
 
-	processor.SetRegister(Regs::t0, 0x00'f0'ff'f0);
-	RunInstruction(processor, Create_srai(Regs::t1, Regs::t0, 4));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0x00'0f'0f'ff));
+	program.SetRegister(Regs::t0, 0x00'f0'ff'f0);
+	program.AddInstruction(Create_srai(Regs::t3, Regs::t0, 4));
+	program.ExpectRegisterValue(Regs::t3, 0x00'0f'0f'ff);
 
-	RunInstruction(processor, Create_srai(Regs::t1, Regs::t0, 12));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0x00'00'0f'0f));
+	program.AddInstruction(Create_srai(Regs::t4, Regs::t0, 12));
+	program.ExpectRegisterValue(Regs::t4, 0x00'00'0f'0f);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_srai");
 
 	Success();
 }
 static void Test_ori()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 0x8f'00'ff'f1);
-	RunInstruction(processor, Create_ori(Regs::t1, Regs::t0, 0x00'00'07'00));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0x8f'00'ff'f1));
+	RISCV_Program program;
+	program.SetRegister(Regs::t0, 0x8f'00'ff'f1);
+	program.AddInstruction(Create_ori(Regs::t1, Regs::t0, 0x00'00'07'00));
+	program.ExpectRegisterValue(Regs::t1, 0x8f'00'ff'f1);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_ori");
 
 	Success();
 }
 static void Test_andi()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 0x0f'00'ff'f1);
-	RunInstruction(processor, Create_andi(Regs::t1, Regs::t0, 0x00'00'07'01));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0x00'00'07'01));
+	RISCV_Program program;
+	program.SetRegister(Regs::t0, 0x0f'00'ff'f1);
+	program.AddInstruction(Create_andi(Regs::t1, Regs::t0, 0x00'00'07'01));
+	program.ExpectRegisterValue(Regs::t1, 0x00'00'07'01);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_andi");
 
 	Success();
 }
 static void Test_auipc()
 {
-	Processor processor;
-	RunInstruction(processor, Create_auipc(Regs::t0, 0x00'00'04'00));
-	AssertTrue(processor.CompareRegister(Regs::t0,   0x00'00'04'00 << 12));
+	RISCV_Program program;
+	program.AddInstruction(Create_auipc(Regs::t0, 0x00'00'04'00));
+	program.ExpectRegisterValue(Regs::t0, 0x00'00'04'00 << 12);
 
-	processor.SetPC(256 << 12);
-	RunInstruction(processor, Create_auipc(Regs::t0, -64));
-	AssertTrue(processor.CompareRegister(Regs::t0, 192 << 12));
+	program.AddInstruction(Create_auipc(Regs::t1, 0x00'00'04'00));
+	program.ExpectRegisterValue(Regs::t1, (0x00'00'04'00 << 12) + 4);
+
+	program.AddInstruction(Create_auipc(Regs::t2, 0x00'07'04'00));
+	program.ExpectRegisterValue(Regs::t2, (0x00'07'04'00 << 12) + 8);
+
+	program.AddInstruction(Create_auipc(Regs::t3, 0));
+	program.ExpectRegisterValue(Regs::t3, 12);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_auipc");
 
 	Success();
 }
 static void Test_sb()
 {
+	//has already been tested in the lb tests
+	RISCV_Program program;
+	program.SetRegister(Regs::s0, 102);
+	program.AddInstruction(Create_sb(Regs::x0, Regs::s0, 10));
+	program.AddInstruction(Create_lb(Regs::t0, Regs::x0, 10));
+	program.ExpectRegisterValue(Regs::t0, 102);
 
+	program.SetRegister(Regs::s2, 102);
+	program.SetRegister(Regs::s1, 50);
+	program.AddInstruction(Create_sb(Regs::s1, Regs::s2, -23));
+	program.AddInstruction(Create_lb(Regs::t1, Regs::s1, -23));
+	program.ExpectRegisterValue(Regs::t1, 102);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_sb");
+
+	Success();
 }
 static void Test_sh()
 {
+	RISCV_Program program;
+	program.SetRegister(Regs::s0, 0xce'2d);
+	program.AddInstruction(Create_sh(Regs::x0, Regs::s0, 10));
 
+	program.AddInstruction(Create_lb(Regs::t0, Regs::x0, 10));
+	program.AddInstruction(Create_lb(Regs::t1, Regs::x0, 11));
+	program.ExpectRegisterValue(Regs::t0, 0x2d);
+	program.ExpectRegisterValue(Regs::t1, 0xff'ff'ff'ce);
+
+	program.SetRegister(Regs::s2, 10232);
+	program.SetRegister(Regs::s1, 50);
+	program.AddInstruction(Create_sh(Regs::s1, Regs::s2, -23));
+	program.AddInstruction(Create_lh(Regs::t1, Regs::s1, -23));
+	program.ExpectRegisterValue(Regs::t1, 10232);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_sh");
+
+	Success();
 }
 static void Test_sw()
 {
+	RISCV_Program program;
+	program.SetRegister(Regs::s0, 0x3a'74'ce'2d);
+	program.AddInstruction(Create_sw(Regs::x0, Regs::s0, 10));
 
+	program.AddInstruction(Create_lb(Regs::t0, Regs::x0, 10));
+	program.AddInstruction(Create_lb(Regs::t1, Regs::x0, 11));
+	program.AddInstruction(Create_lb(Regs::t2, Regs::x0, 12));
+	program.AddInstruction(Create_lb(Regs::t3, Regs::x0, 13));
+	program.ExpectRegisterValue(Regs::t0, 0x2d);
+	program.ExpectRegisterValue(Regs::t1, 0xff'ff'ff'ce);
+	program.ExpectRegisterValue(Regs::t2, 0x74);
+	program.ExpectRegisterValue(Regs::t3, 0x3a);
+
+	program.AddInstruction(Create_lh(Regs::t4, Regs::x0, 10));
+	program.AddInstruction(Create_lh(Regs::t5, Regs::x0, 12));
+	program.ExpectRegisterValue(Regs::t4, 0xff'ff'ce'2d);
+	program.ExpectRegisterValue(Regs::t5, 0x3a'74);
+
+	program.AddInstruction(Create_lh(Regs::t6, Regs::x0, 11));
+	program.ExpectRegisterValue(Regs::t6, 0x74'ce);
+
+	program.SetRegister(Regs::s2, 10232);
+	program.SetRegister(Regs::s1, 50);
+	program.AddInstruction(Create_sw(Regs::s1, Regs::s2, -23));
+	program.AddInstruction(Create_lw(Regs::s3, Regs::s1, -23));
+	program.ExpectRegisterValue(Regs::s3, 10232);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_sw");
+
+	Success();
 }
 static void Test_add()
 {
-	Processor processor; 
-	processor.SetRegister(Regs::t0, 125);
-	RunInstruction(processor, Create_add(Regs::t1, Regs::x0, Regs::t0));
-	AssertTrue(processor.CompareRegister(Regs::t1, 125));
+	RISCV_Program program;
+	program.SetRegister(Regs::t0, 125);
+	program.AddInstruction(Create_add(Regs::t1, Regs::x0, Regs::t0));
+	program.ExpectRegisterValue(Regs::t1, 125);
 
-	processor.SetRegister(Regs::t0, 35);
-	RunInstruction(processor, Create_add(Regs::t2, Regs::t1, Regs::t0));
-	AssertTrue(processor.CompareRegister(Regs::t2, 160));
+	program.SetRegister(Regs::t0, 35);
+	program.AddInstruction(Create_add(Regs::t2, Regs::t1, Regs::t0));
+	program.ExpectRegisterValue(Regs::t2, 160);
 
-	processor.SetRegister(Regs::t0, -100);
-	RunInstruction(processor, Create_add(Regs::t3, Regs::t2, Regs::t0));
-	AssertTrue(processor.CompareRegister(Regs::t3, 60));
+	program.SetRegister(Regs::t0, -100);
+	program.AddInstruction(Create_add(Regs::t3, Regs::t2, Regs::t0));
+	program.ExpectRegisterValue(Regs::t3, 60);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_add");
 
 	Success();
 }
 static void Test_sub()
 {
-	Processor processor; 
-	processor.SetRegister(Regs::t0, 125);
-	RunInstruction(processor, Create_sub(Regs::t1, Regs::x0, Regs::t0));
-	AssertTrue(processor.CompareRegister(Regs::t1, -125));
+	RISCV_Program program;
+	program.SetRegister(Regs::t0, 125);
+	program.AddInstruction(Create_sub(Regs::t1, Regs::x0, Regs::t0));
+	program.ExpectRegisterValue(Regs::t1, -125);
 
-	processor.SetRegister(Regs::t0, 35);
-	RunInstruction(processor, Create_sub(Regs::t2, Regs::t1, Regs::t0));
-	AssertTrue(processor.CompareRegister(Regs::t2, -160));
+	program.SetRegister(Regs::t0, 35);
+	program.AddInstruction(Create_sub(Regs::t2, Regs::t1, Regs::t0));
+	program.ExpectRegisterValue(Regs::t2, -160);
 
-	processor.SetRegister(Regs::t0, -100);
-	RunInstruction(processor, Create_sub(Regs::t3, Regs::t2, Regs::t0));
-	AssertTrue(processor.CompareRegister(Regs::t3, -60));
+	program.SetRegister(Regs::t0, -100);
+	program.AddInstruction(Create_sub(Regs::t3, Regs::t2, Regs::t0));
+	program.ExpectRegisterValue(Regs::t3, -60);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_sub");
 
 	Success();
 }
 static void Test_sll()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 0x0f'00'ff'00);
-	processor.SetRegister(Regs::t1, 4);
-	RunInstruction(processor, Create_sll(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0xf0'0f'f0'00));
+	RISCV_Program program;
+	program.SetRegister(Regs::t0, 0x0f'00'ff'00);
+	program.SetRegister(Regs::s0, 4);
+	program.AddInstruction(Create_sll(Regs::t1, Regs::t0, Regs::s0));
+	program.ExpectRegisterValue(Regs::t1, 0xf0'0f'f0'00);
 
-	processor.SetRegister(Regs::t1, 16);
-	RunInstruction(processor, Create_sll(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0xff'00'00'00));
+	program.SetRegister(Regs::s0, 16);
+	program.AddInstruction(Create_sll(Regs::t2, Regs::t0, Regs::s0));
+	program.ExpectRegisterValue(Regs::t2, 0xff'00'00'00);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_sll");
 
 	Success();
 }
 static void Test_slt()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 20);
-	processor.SetRegister(Regs::t1, 21);
-	RunInstruction(processor, Create_slt(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 1));
+	RISCV_Program program;
+	program.SetRegister(Regs::t0, 20);
+	program.SetRegister(Regs::a0, 21);
+	program.AddInstruction(Create_slt(Regs::t1, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::t1, 1);
 
-	processor.SetRegister(Regs::t1, 20);
-	RunInstruction(processor, Create_slt(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0));
+	program.SetRegister(Regs::a0, 20);
+	program.AddInstruction(Create_slt(Regs::t2, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::t2, 0);
 
-	processor.SetRegister(Regs::t1, 19);
-	RunInstruction(processor, Create_slt(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0));
+	program.SetRegister(Regs::a0, 19);
+	program.AddInstruction(Create_slt(Regs::t3, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::t3, 0);
 
-	processor.SetRegister(Regs::t1, -19);
-	RunInstruction(processor, Create_slt(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0));
+	program.SetRegister(Regs::a0, -19);
+	program.AddInstruction(Create_slt(Regs::t4, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::t4, 0);
 
-	processor.SetRegister(Regs::t0, -20);
-	processor.SetRegister(Regs::t1, -19);
-	RunInstruction(processor, Create_slt(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 1));
+	program.SetRegister(Regs::t0, -20);
+	program.SetRegister(Regs::a0, -19);
+	program.AddInstruction(Create_slt(Regs::t5, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::t5, 1);
 
-	processor.SetRegister(Regs::t1, -20);
-	RunInstruction(processor, Create_slt(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0));
+	program.SetRegister(Regs::a0, -20);
+	program.AddInstruction(Create_slt(Regs::t6, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::t6, 0);
 
-	processor.SetRegister(Regs::t1, -21);
-	RunInstruction(processor, Create_slt(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0));
+	program.SetRegister(Regs::a0, -21);
+	program.AddInstruction(Create_slt(Regs::s1, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::s1, 0);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_slt");
 
 	Success();
 }
 static void Test_sltu()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 20);
-	processor.SetRegister(Regs::t1, 21);
-	RunInstruction(processor, Create_sltu(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 1));
+	RISCV_Program program;
+	program.SetRegister(Regs::t0, 20);
+	program.SetRegister(Regs::a0, 21);
+	program.AddInstruction(Create_sltu(Regs::t1, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::t1, 1);
 
-	processor.SetRegister(Regs::t1, 20);
-	RunInstruction(processor, Create_sltu(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0));
+	program.SetRegister(Regs::a0, 20);
+	program.AddInstruction(Create_sltu(Regs::t2, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::t2, 0);
 
-	processor.SetRegister(Regs::t1, 19);
-	RunInstruction(processor, Create_sltu(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0));
+	program.SetRegister(Regs::a0, 19);
+	program.AddInstruction(Create_sltu(Regs::t3, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::t3, 0);
 
-	processor.SetRegister(Regs::t1, -19);
-	RunInstruction(processor, Create_sltu(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 1));
+	program.SetRegister(Regs::a0, -19);
+	program.AddInstruction(Create_sltu(Regs::t4, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::t4, 1);
 
-	processor.SetRegister(Regs::t0, -20);
-	processor.SetRegister(Regs::t1, -19);
-	RunInstruction(processor, Create_sltu(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 1));
+	program.SetRegister(Regs::t0, -20);
+	program.SetRegister(Regs::a0, -19);
+	program.AddInstruction(Create_sltu(Regs::t5, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::t5, 1);
 
-	processor.SetRegister(Regs::t1, -20);
-	RunInstruction(processor, Create_sltu(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0));
+	program.SetRegister(Regs::a0, -20);
+	program.AddInstruction(Create_sltu(Regs::t6, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::t6, 0);
 
-	processor.SetRegister(Regs::t1, -21);
-	RunInstruction(processor, Create_sltu(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0));
+	program.SetRegister(Regs::a0, -21);
+	program.AddInstruction(Create_sltu(Regs::s1, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::s1, 0);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_sltu");
 
 	Success();
 }
 static void Test_xor()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 0x0f'00'ff'f0);
-	processor.SetRegister(Regs::t1, 0x00'00'07'0f);
-	RunInstruction(processor, Create_xor(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0x0f'00'f8'ff));
+	RISCV_Program program;
+	program.SetRegister(Regs::t0, 0x0f'00'ff'f0);
+	program.SetRegister(Regs::t1, 0x00'00'07'0f);
+	program.AddInstruction(Create_xor(Regs::t2, Regs::t0, Regs::t1));
+	program.ExpectRegisterValue(Regs::t2, 0x0f'00'f8'ff);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_xor");
 
 	Success();
 }
 static void Test_srl()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 0xf0'ff'00'f0);
-	processor.SetRegister(Regs::t1, 4);
-	RunInstruction(processor, Create_srl(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0x0f'0f'f0'0f));
+	RISCV_Program program;
+	program.SetRegister(Regs::t0, 0xf0'ff'00'f0);
+	program.SetRegister(Regs::a0, 4);
+	program.AddInstruction(Create_srl(Regs::t1, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::t1, 0x0f'0f'f0'0f);
 
-	processor.SetRegister(Regs::t1, 12);
-	RunInstruction(processor, Create_srl(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0x00'0f'0f'f0));
+	program.SetRegister(Regs::a0, 12);
+	program.AddInstruction(Create_srl(Regs::t2, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::t2, 0x00'0f'0f'f0);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_srl");
 
 	Success();
 }
 static void Test_sra()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 0xf0'ff'00'f0);
-	processor.SetRegister(Regs::t1, 4);
-	RunInstruction(processor, Create_sra(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0xff'0f'f0'0f));
+	RISCV_Program program;
+	program.SetRegister(Regs::t0, 0xf0'ff'00'f0);
+	program.SetRegister(Regs::a0, 4);
+	program.AddInstruction(Create_sra(Regs::t1, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::t1, 0xff'0f'f0'0f);
 
-	processor.SetRegister(Regs::t1, 12);
-	RunInstruction(processor, Create_sra(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0xff'ff'0f'f0));
+	program.SetRegister(Regs::a0, 12);
+	program.AddInstruction(Create_sra(Regs::t2, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::t2, 0xff'ff'0f'f0);
 
-	processor.SetRegister(Regs::t0, 0x00'f0'ff'f0);
-	processor.SetRegister(Regs::t1, 4);
-	RunInstruction(processor, Create_sra(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0x00'0f'0f'ff));
+	program.SetRegister(Regs::t0, 0x00'f0'ff'f0);
+	program.SetRegister(Regs::a0, 4);
+	program.AddInstruction(Create_sra(Regs::t3, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::t3, 0x00'0f'0f'ff);
 
-	processor.SetRegister(Regs::t1, 12);
-	RunInstruction(processor, Create_sra(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0x00'00'0f'0f));
+	program.SetRegister(Regs::a0, 12);
+	program.AddInstruction(Create_sra(Regs::t4, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::t4, 0x00'00'0f'0f);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_sra");
 
 	Success();
 }
 static void Test_or()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 0x8f'00'ff'f1);
-	processor.SetRegister(Regs::t1, 0x00'00'07'00);
-	RunInstruction(processor, Create_or(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0x8f'00'ff'f1));
+	RISCV_Program program;
+	program.SetRegister(Regs::t0, 0x8f'00'ff'f1);
+	program.SetRegister(Regs::a0, 0x00'00'07'00);
+	program.AddInstruction(Create_or(Regs::t1, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::t1, 0x8f'00'ff'f1);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_or");
 
 	Success();
 }
 static void Test_and()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 0x0f'00'ff'f1);
-	processor.SetRegister(Regs::t1, 0x00'00'07'01);
-	RunInstruction(processor, Create_and(Regs::t1, Regs::t0, Regs::t1));
-	AssertTrue(processor.CompareRegister(Regs::t1, 0x00'00'07'01));
+	RISCV_Program program;
+	program.SetRegister(Regs::t0, 0x0f'00'ff'f1);
+	program.SetRegister(Regs::a0, 0x00'00'07'01);
+	program.AddInstruction(Create_and(Regs::t1, Regs::t0, Regs::a0));
+	program.ExpectRegisterValue(Regs::t1, 0x00'00'07'01);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_and");
 
 	Success();
 }
 static void Test_lui()
 {
-	Processor processor;
-	RunInstruction(processor, Create_lui(Regs::t0, 0x00'00'04'00));
-	AssertTrue(processor.CompareRegister(Regs::t0, 0x00'00'04'00 << 12));
+	RISCV_Program program;
+	program.AddInstruction(Create_lui(Regs::t0, 0x00'00'04'00));
+	program.ExpectRegisterValue(Regs::t0, 0x00'00'04'00 << 12);
 
-	RunInstruction(processor, Create_lui(Regs::t0, -64));
-	AssertTrue(processor.CompareRegister(Regs::t0, -64 << 12));
+	program.AddInstruction(Create_lui(Regs::t1, -64));
+	program.ExpectRegisterValue(Regs::t1, -64 << 12);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_lui");
 
 	Success();
 }
 static void Test_beq()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 5);
-	processor.SetRegister(Regs::t1, 10);
-	RunInstruction(processor, Create_beq(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 4);
-	
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, 5);
-	processor.SetRegister(Regs::t1, 5);
-	RunInstruction(processor, Create_beq(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 52);
+	RISCV_Program program;
+	program.SetRegister(Regs::s0, 1);
+	program.SetRegister(Regs::s1, 1);
+	program.SetRegister(Regs::s2, 1);
+	program.SetRegister(Regs::s3, 1);
+	program.SetRegister(Regs::s4, 1);
+	program.ExpectRegisterValue(Regs::s0, 0);
+	program.ExpectRegisterValue(Regs::s1, 1);
+	program.ExpectRegisterValue(Regs::s2, 0);
+	program.ExpectRegisterValue(Regs::s3, 0);
+	program.ExpectRegisterValue(Regs::s4, 0);
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, 10);
-	processor.SetRegister(Regs::t1, 5);
-	RunInstruction(processor, Create_beq(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 4);
+	program.SetRegister(Regs::t0, 5);
+	program.SetRegister(Regs::t1, 10);
+	program.AddInstruction(Create_beq(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s0, 0));
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, -5);
-	processor.SetRegister(Regs::t1, 10);
-	RunInstruction(processor, Create_beq(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 4);
+	program.SetRegister(Regs::t0, 5);
+	program.SetRegister(Regs::t1, 5);
+	program.AddInstruction(Create_beq(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s1, 0));
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, 5);
-	processor.SetRegister(Regs::t1, -10);
-	RunInstruction(processor, Create_beq(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 4);
+	program.SetRegister(Regs::t0, 10);
+	program.SetRegister(Regs::t1, 5);
+	program.AddInstruction(Create_beq(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s2, 0));
+
+	program.SetRegister(Regs::t0, -5);
+	program.SetRegister(Regs::t1, 10);
+	program.AddInstruction(Create_beq(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s3, 0));
+
+	program.SetRegister(Regs::t0, 5);
+	program.SetRegister(Regs::t1, -10);
+	program.AddInstruction(Create_beq(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s4, 0));
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_beq");
 
 	Success();
 }
 static void Test_bne()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 5);
-	processor.SetRegister(Regs::t1, 10);
-	RunInstruction(processor, Create_bne(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 52);
+	RISCV_Program program;
+	program.SetRegister(Regs::s0, 1);
+	program.SetRegister(Regs::s1, 1);
+	program.SetRegister(Regs::s2, 1);
+	program.SetRegister(Regs::s3, 1);
+	program.SetRegister(Regs::s4, 1);
+	program.ExpectRegisterValue(Regs::s0, 1);
+	program.ExpectRegisterValue(Regs::s1, 0);
+	program.ExpectRegisterValue(Regs::s2, 1);
+	program.ExpectRegisterValue(Regs::s3, 1);
+	program.ExpectRegisterValue(Regs::s4, 1);
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, 5);
-	processor.SetRegister(Regs::t1, 5);
-	RunInstruction(processor, Create_bne(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 4);
+	program.SetRegister(Regs::t0, 5);
+	program.SetRegister(Regs::t1, 10);
+	program.AddInstruction(Create_bne(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s0, 0));
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, 10);
-	processor.SetRegister(Regs::t1, 5);
-	RunInstruction(processor, Create_bne(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 52);
+	program.SetRegister(Regs::t0, 5);
+	program.SetRegister(Regs::t1, 5);
+	program.AddInstruction(Create_bne(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s1, 0));
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, -5);
-	processor.SetRegister(Regs::t1, 10);
-	RunInstruction(processor, Create_bne(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 52);
+	program.SetRegister(Regs::t0, 10);
+	program.SetRegister(Regs::t1, 5);
+	program.AddInstruction(Create_bne(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s2, 0));
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, 5);
-	processor.SetRegister(Regs::t1, -10);
-	RunInstruction(processor, Create_bne(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 52);
+	program.SetRegister(Regs::t0, -5);
+	program.SetRegister(Regs::t1, 10);
+	program.AddInstruction(Create_bne(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s3, 0));
+
+	program.SetRegister(Regs::t0, 5);
+	program.SetRegister(Regs::t1, -10);
+	program.AddInstruction(Create_bne(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s4, 0));
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_bne");
 
 	Success();
 }
 static void Test_blt()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 5);
-	processor.SetRegister(Regs::t1, 10);
-	RunInstruction(processor, Create_blt(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 52);
+	RISCV_Program program;
+	program.SetRegister(Regs::s0, 1);
+	program.SetRegister(Regs::s1, 1);
+	program.SetRegister(Regs::s2, 1);
+	program.SetRegister(Regs::s3, 1);
+	program.SetRegister(Regs::s4, 1);
+	program.ExpectRegisterValue(Regs::s0, 1);
+	program.ExpectRegisterValue(Regs::s1, 0);
+	program.ExpectRegisterValue(Regs::s2, 0);
+	program.ExpectRegisterValue(Regs::s3, 1);
+	program.ExpectRegisterValue(Regs::s4, 0);
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, 5);
-	processor.SetRegister(Regs::t1, 5);
-	RunInstruction(processor, Create_blt(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 4);
+	program.SetRegister(Regs::t0, 5);
+	program.SetRegister(Regs::t1, 10);
+	program.AddInstruction(Create_blt(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s0, 0));
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, 10);
-	processor.SetRegister(Regs::t1, 5);
-	RunInstruction(processor, Create_blt(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 4);
+	program.SetRegister(Regs::t0, 5);
+	program.SetRegister(Regs::t1, 5);
+	program.AddInstruction(Create_blt(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s1, 0));
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, -5);
-	processor.SetRegister(Regs::t1, 10);
-	RunInstruction(processor, Create_blt(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 52);
+	program.SetRegister(Regs::t0, 10);
+	program.SetRegister(Regs::t1, 5);
+	program.AddInstruction(Create_blt(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s2, 0));
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, 5);
-	processor.SetRegister(Regs::t1, -10);
-	RunInstruction(processor, Create_blt(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 4);
+	program.SetRegister(Regs::t0, -5);
+	program.SetRegister(Regs::t1, 10);
+	program.AddInstruction(Create_blt(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s3, 0));
+
+	program.SetRegister(Regs::t0, 5);
+	program.SetRegister(Regs::t1, -10);
+	program.AddInstruction(Create_blt(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s4, 0));
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_blt");
 
 	Success();
 }
 static void Test_bge()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 5);
-	processor.SetRegister(Regs::t1, 10);
-	RunInstruction(processor, Create_bge(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 4);
+	RISCV_Program program;
+	program.SetRegister(Regs::s0, 1);
+	program.SetRegister(Regs::s1, 1);
+	program.SetRegister(Regs::s2, 1);
+	program.SetRegister(Regs::s3, 1);
+	program.SetRegister(Regs::s4, 1);
+	program.ExpectRegisterValue(Regs::s0, 0);
+	program.ExpectRegisterValue(Regs::s1, 1);
+	program.ExpectRegisterValue(Regs::s2, 1);
+	program.ExpectRegisterValue(Regs::s3, 0);
+	program.ExpectRegisterValue(Regs::s4, 1);
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, 5);
-	processor.SetRegister(Regs::t1, 5);
-	RunInstruction(processor, Create_bge(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 52);
+	program.SetRegister(Regs::t0, 5);
+	program.SetRegister(Regs::t1, 10);
+	program.AddInstruction(Create_bge(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s0, 0));
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, 10);
-	processor.SetRegister(Regs::t1, 5);
-	RunInstruction(processor, Create_bge(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 52);
+	program.SetRegister(Regs::t0, 5);
+	program.SetRegister(Regs::t1, 5);
+	program.AddInstruction(Create_bge(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s1, 0));
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, -5);
-	processor.SetRegister(Regs::t1, 10);
-	RunInstruction(processor, Create_bge(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 4);
+	program.SetRegister(Regs::t0, 10);
+	program.SetRegister(Regs::t1, 5);
+	program.AddInstruction(Create_bge(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s2, 0));
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, 5);
-	processor.SetRegister(Regs::t1, -10);
-	RunInstruction(processor, Create_bge(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 52);
+	program.SetRegister(Regs::t0, -5);
+	program.SetRegister(Regs::t1, 10);
+	program.AddInstruction(Create_bge(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s3, 0));
+
+	program.SetRegister(Regs::t0, 5);
+	program.SetRegister(Regs::t1, -10);
+	program.AddInstruction(Create_bge(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s4, 0));
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_bge");
 
 	Success();
 }
 static void Test_bltu()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 5);
-	processor.SetRegister(Regs::t1, 10);
-	RunInstruction(processor, Create_bltu(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 52);
+	RISCV_Program program;
+	program.SetRegister(Regs::s0, 1);
+	program.SetRegister(Regs::s1, 1);
+	program.SetRegister(Regs::s2, 1);
+	program.SetRegister(Regs::s3, 1);
+	program.SetRegister(Regs::s4, 1);
+	program.ExpectRegisterValue(Regs::s0, 1);
+	program.ExpectRegisterValue(Regs::s1, 0);
+	program.ExpectRegisterValue(Regs::s2, 0);
+	program.ExpectRegisterValue(Regs::s3, 0);
+	program.ExpectRegisterValue(Regs::s4, 1);
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, 5);
-	processor.SetRegister(Regs::t1, 5);
-	RunInstruction(processor, Create_bltu(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 4);
+	program.SetRegister(Regs::t0, 5);
+	program.SetRegister(Regs::t1, 10);
+	program.AddInstruction(Create_bltu(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s0, 0));
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, 10);
-	processor.SetRegister(Regs::t1, 5);
-	RunInstruction(processor, Create_bltu(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 4);
-	
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, -5);
-	processor.SetRegister(Regs::t1, 10);
-	RunInstruction(processor, Create_bltu(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 4);
+	program.SetRegister(Regs::t0, 5);
+	program.SetRegister(Regs::t1, 5);
+	program.AddInstruction(Create_bltu(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s1, 0));
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, 5);
-	processor.SetRegister(Regs::t1, -10);
-	RunInstruction(processor, Create_bltu(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 52);
+	program.SetRegister(Regs::t0, 10);
+	program.SetRegister(Regs::t1, 5);
+	program.AddInstruction(Create_bltu(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s2, 0));
+
+	program.SetRegister(Regs::t0, -5);
+	program.SetRegister(Regs::t1, 10);
+	program.AddInstruction(Create_bltu(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s3, 0));
+
+	program.SetRegister(Regs::t0, 5);
+	program.SetRegister(Regs::t1, -10);
+	program.AddInstruction(Create_bltu(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s4, 0));
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_bltu");
 
 	Success();
 }
 static void Test_bgeu()
 {
-	Processor processor;
-	processor.SetRegister(Regs::t0, 5);
-	processor.SetRegister(Regs::t1, 10);
-	RunInstruction(processor, Create_bgeu(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 4);
+	RISCV_Program program;
+	program.SetRegister(Regs::s0, 1);
+	program.SetRegister(Regs::s1, 1);
+	program.SetRegister(Regs::s2, 1);
+	program.SetRegister(Regs::s3, 1);
+	program.SetRegister(Regs::s4, 1);
+	program.ExpectRegisterValue(Regs::s0, 0);
+	program.ExpectRegisterValue(Regs::s1, 1);
+	program.ExpectRegisterValue(Regs::s2, 1);
+	program.ExpectRegisterValue(Regs::s3, 1);
+	program.ExpectRegisterValue(Regs::s4, 0);
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, 5);
-	processor.SetRegister(Regs::t1, 5);
-	RunInstruction(processor, Create_bgeu(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 52);
+	program.SetRegister(Regs::t0, 5);
+	program.SetRegister(Regs::t1, 10);
+	program.AddInstruction(Create_bgeu(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s0, 0));
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, 10);
-	processor.SetRegister(Regs::t1, 5);
-	RunInstruction(processor, Create_bgeu(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 52);
+	program.SetRegister(Regs::t0, 5);
+	program.SetRegister(Regs::t1, 5);
+	program.AddInstruction(Create_bgeu(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s1, 0));
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, -5);
-	processor.SetRegister(Regs::t1, 10);
-	RunInstruction(processor, Create_bgeu(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 52);
+	program.SetRegister(Regs::t0, 10);
+	program.SetRegister(Regs::t1, 5);
+	program.AddInstruction(Create_bgeu(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s2, 0));
 
-	processor.SetPC(0);
-	processor.SetRegister(Regs::t0, 5);
-	processor.SetRegister(Regs::t1, -10);
-	RunInstruction(processor, Create_bgeu(Regs::t0, Regs::t1, 52));
-	AssertTrue(processor.GetPC() == 4);
+	program.SetRegister(Regs::t0, -5);
+	program.SetRegister(Regs::t1, 10);
+	program.AddInstruction(Create_bgeu(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s3, 0));
+
+	program.SetRegister(Regs::t0, 5);
+	program.SetRegister(Regs::t1, -10);
+	program.AddInstruction(Create_bgeu(Regs::t0, Regs::t1, 8));
+	program.AddInstruction(Create_li(Regs::s4, 0));
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_bgeu");
 
 	Success();
 }
 static void Test_jalr()
 {
+	RISCV_Program program;
+	program.AddInstruction(Create_jalr(Regs::t0, Regs::x0, 8));
+	program.ExpectRegisterValue(Regs::t0, 4);
+	program.AddInstruction(Create_li(Regs::s0, -1));
+	program.SetRegister(Regs::s0, 1);
+	program.ExpectRegisterValue(Regs::s0, 1);
 
+	program.SetRegister(Regs::a0, -4);
+	program.AddInstruction(Create_jalr(Regs::t1, Regs::a0, 28));
+	program.ExpectRegisterValue(Regs::t1, 20);
+	program.AddInstruction(Create_li(Regs::s0, -1));
+	program.SetRegister(Regs::s1, 1);
+	program.ExpectRegisterValue(Regs::s1, 1);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_jalr");
+
+	Success();
 }
 static void Test_jal()
 {
+	RISCV_Program program;
+	program.AddInstruction(Create_jal(Regs::t0, 8));
+	program.ExpectRegisterValue(Regs::t0, 4);
+	program.AddInstruction(Create_li(Regs::s0, -1));
+	program.SetRegister(Regs::s0, 1);
+	program.ExpectRegisterValue(Regs::s0, 1);
 
+	program.AddInstruction(Create_jal(Regs::t1, 8));
+	program.ExpectRegisterValue(Regs::t1, 16);
+	program.AddInstruction(Create_li(Regs::s0, -1));
+	program.SetRegister(Regs::s1, 1);
+	program.ExpectRegisterValue(Regs::s1, 1);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_jal");
+
+	Success();
 }
 static void Test_ecall()
 {
+	RISCV_Program program;
+	program.SetRegister(Regs::a1, 10);
+	program.AddInstruction(Create_ecall());
+	program.SetRegister(Regs::s0, 1);
+	program.ExpectRegisterValue(Regs::s0, 1);
 
+	program.SetRegister(Regs::a0, 9);
+	program.AddInstruction(Create_ecall());
+	program.SetRegister(Regs::s1, 1);
+	program.ExpectRegisterValue(Regs::s1, 1);
+
+	program.SetRegister(Regs::a0, 11);
+	program.AddInstruction(Create_ecall());
+	program.SetRegister(Regs::s2, 1);
+	program.ExpectRegisterValue(Regs::s2, 1);
+
+	program.SetRegister(Regs::a0, 10);
+	program.SetRegister(Regs::s3, -1);
+	program.AddInstruction(Create_ecall());
+	program.SetRegister(Regs::s3, 1);
+	program.ExpectRegisterValue(Regs::s3, -1);
+
+	program.SaveAndTest("InstructionTests/test_ecall");
+
+	Success();
 }
 static void Test_ebreak()
 {
@@ -690,28 +1001,31 @@ static void Test_csrrci()
 }
 static void Test_li()
 {
-	Processor processor;
-	RunInstruction(processor, Create_li(Regs::t0,  0xff'ff'ff'ff));
-	AssertTrue(processor.CompareRegister(Regs::t0, 0xff'ff'ff'ff));
+	RISCV_Program program;
+	program.AddInstruction(Create_li(Regs::s0, 0xff'ff'ff'ff));
+	program.ExpectRegisterValue(     Regs::s0, 0xff'ff'ff'ff);
 
-	RunInstruction(processor, Create_li(Regs::t0,  29'154'821));
-	AssertTrue(processor.CompareRegister(Regs::t0, 29'154'821));
+	program.AddInstruction(Create_li(Regs::s1, 29'154'821));
+	program.ExpectRegisterValue(     Regs::s1, 29'154'821);
 
-	RunInstruction(processor, Create_li(Regs::t0,  2'993'781'092));
-	AssertTrue(processor.CompareRegister(Regs::t0, 2'993'781'092));
+	program.AddInstruction(Create_li(Regs::s2, 2'993'781'092));
+	program.ExpectRegisterValue(     Regs::s2, 2'993'781'092);
 
-	RunInstruction(processor, Create_li(Regs::t0,  -12));
-	AssertTrue(processor.CompareRegister(Regs::t0, -12));
+	program.AddInstruction(Create_li(Regs::s3, -12));
+	program.ExpectRegisterValue(     Regs::s3, -12);
 
-	RunInstruction(processor, Create_li(Regs::t0,  -1'125'213'234));
-	AssertTrue(processor.CompareRegister(Regs::t0, -1'125'213'234));
+	program.AddInstruction(Create_li(Regs::s4, -1'125'213'234));
+	program.ExpectRegisterValue(     Regs::s4, -1'125'213'234);
 
-	RunInstruction(processor, Create_li(Regs::t0,  0xff'00'00'00));
-	AssertTrue(processor.CompareRegister(Regs::t0, 0xff'00'00'00));
+	program.AddInstruction(Create_li(Regs::s5, 0xff'00'00'00));
+	program.ExpectRegisterValue(     Regs::s5, 0xff'00'00'00);
 
-	processor.SetRegister(Regs::t0, 10);
-	RunInstruction(processor, Create_li(Regs::t0,  0));
-	AssertTrue(processor.CompareRegister(Regs::t0, 0));
+	program.SetRegister(Regs::s6, 10);
+	program.AddInstruction(Create_li(Regs::s6, 0));
+	program.ExpectRegisterValue(     Regs::s6, 0);
+
+	program.EndProgram();
+	program.SaveAndTest("InstructionTests/test_li");
 
 	Success();
 }

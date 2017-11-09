@@ -118,26 +118,26 @@ static void Test_andi()
 static void Test_auipc()
 {
 	TestEncodeDecodeInstruction(Create_auipc(Regs::t1,  1282), "auipc t1 1282");
-	TestEncodeDecodeInstruction(Create_auipc(Regs::s6, -1546), "auipc s6 -1546");
+	TestEncodeDecodeInstruction(Create_auipc(Regs::s6, 14546), "auipc s6 14546");
 	TestEncodeDecodeInstruction(Create_auipc(Regs::s1,     2), "auipc s1 2");
 }
 static void Test_sb()
 {
-	TestEncodeDecodeInstruction(Create_sb(Regs::a0, Regs::a1,   11), "sb a0 11(a1)");
-	TestEncodeDecodeInstruction(Create_sb(Regs::t1, Regs::s3, -123), "sb t1 -123(s3)");
-	TestEncodeDecodeInstruction(Create_sb(Regs::s1, Regs::t5, 1342), "sb s1 1342(t5)");
+	TestEncodeDecodeInstruction(Create_sb(Regs::a0, Regs::a1,   11), "sb a1 11(a0)");
+	TestEncodeDecodeInstruction(Create_sb(Regs::t1, Regs::s3, -123), "sb s3 -123(t1)");
+	TestEncodeDecodeInstruction(Create_sb(Regs::s1, Regs::t5, 1342), "sb t5 1342(s1)");
 }
 static void Test_sh()
 {
-	TestEncodeDecodeInstruction(Create_sh(Regs::a0, Regs::a1,   11), "sh a0 11(a1)");
-	TestEncodeDecodeInstruction(Create_sh(Regs::t1, Regs::s3, -123), "sh t1 -123(s3)");
-	TestEncodeDecodeInstruction(Create_sh(Regs::s1, Regs::t5, 1342), "sh s1 1342(t5)");
+	TestEncodeDecodeInstruction(Create_sh(Regs::a0, Regs::a1,   11), "sh a1 11(a0)");
+	TestEncodeDecodeInstruction(Create_sh(Regs::t1, Regs::s3, -123), "sh s3 -123(t1)");
+	TestEncodeDecodeInstruction(Create_sh(Regs::s1, Regs::t5, 1342), "sh t5 1342(s1)");
 }
 static void Test_sw()
 {
-	TestEncodeDecodeInstruction(Create_sw(Regs::a0, Regs::a1,   11), "sw a0 11(a1)");
-	TestEncodeDecodeInstruction(Create_sw(Regs::t1, Regs::s3, -123), "sw t1 -123(s3)");
-	TestEncodeDecodeInstruction(Create_sw(Regs::s1, Regs::t5, 1342), "sw s1 1342(t5)");
+	TestEncodeDecodeInstruction(Create_sw(Regs::a0, Regs::a1,   11), "sw a1 11(a0)");
+	TestEncodeDecodeInstruction(Create_sw(Regs::t1, Regs::s3, -123), "sw s3 -123(t1)");
+	TestEncodeDecodeInstruction(Create_sw(Regs::s1, Regs::t5, 1342), "sw t5 1342(s1)");
 }
 static void Test_add()
 {

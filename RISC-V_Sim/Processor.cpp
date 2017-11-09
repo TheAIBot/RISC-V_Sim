@@ -28,12 +28,12 @@ void Processor::Run(const uint32_t* rawInstructions, const uint32_t instructionC
 			throw std::runtime_error("Index out of bounds.\nTried to access instruction: " + std::to_string(instructionIndex));
 		}
 
-		const Instruction instruction = instructions[pc / 4];
+		const Instruction& instruction = instructions[instructionIndex];
 		const bool stopProgram = RunInstruction(instruction);
 
 		if (printExecutedInstruction || debugEnabled)
 		{
-			std::cout << std::to_string(instructionIndex) + ": " << InstructionAsString(instruction) << std::endl;
+			std::cout << std::to_string(instructionIndex) << ": " << InstructionAsString(instruction) << std::endl;
 		}
 		if (debugEnabled)
 		{

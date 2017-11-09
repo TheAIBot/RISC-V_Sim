@@ -29,14 +29,14 @@ void Processor::Run(const uint32_t* rawInstructions, const uint32_t instructionC
 		}
 
 		const Instruction instruction = instructions[pc / 4];
+		const bool stopProgram = RunInstruction(instruction);
 
-		//std::cout << std::to_string(instructionIndex) + ": " << InstructionAsString(instruction) << std::endl;
-
-		bool stopProgram = RunInstruction(instruction);
-
-		if (debugEnabled)
+		if (printExecutedInstruction || debugEnabled)
 		{
 			std::cout << std::to_string(instructionIndex) + ": " << InstructionAsString(instruction) << std::endl;
+		}
+		if (debugEnabled)
+		{
 			PrintRegisters();
 			std::cin.get();
 		}
@@ -266,6 +266,10 @@ uint32_t Processor::GetRegister(const Regs reg)
 void Processor::SetDebugMode(const bool useDebugMode)
 {
 	debugEnabled = useDebugMode;
+}
+void Processor::SetPrintExecutedInstruction(const bool value)
+{
+	printExecutedInstruction = value;
 }
 
 void Processor::PrintRegisters()

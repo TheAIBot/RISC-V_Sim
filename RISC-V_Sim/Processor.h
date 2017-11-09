@@ -13,6 +13,7 @@ private:
 	Register registers[32];
 	uint8_t* memory;
 	bool debugEnabled = false;
+	bool printExecutedInstruction = false;
 
 	void VerifyMemorySpace(const int32_t index, const int32_t size);
 	uint8_t  GetByteFromMemory    (const int32_t index);
@@ -30,6 +31,7 @@ public:
 	void PrintInstructions(const uint32_t* rawInstructions, const uint32_t instructionCount);
 	void PrintRegisters();
 	void SetDebugMode(const bool useDebugMode);
+	void SetPrintExecutedInstruction(const bool value);
 	bool CompareRegisters(const uint32_t* compareWith);
 	uint32_t GetRegister(const Regs reg);
 	void Reset();

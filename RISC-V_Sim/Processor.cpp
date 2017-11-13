@@ -113,8 +113,8 @@ bool Processor::RunInstruction(const Instruction& instruction)
 			registers[instruction.rd].word = registers[instruction.rs1].word & instruction.immediate;
 			pc += 4;
 			break;
-		case InstructionType::auipc:
-			registers[instruction.rd].uword = pc + instruction.immediate;
+		case InstructionType::auipc: // cast not needed but it helps to clarify that the immediate is unsigned for u type instructions
+			registers[instruction.rd].uword = pc + static_cast<uint32_t>(instruction.immediate);
 			pc += 4;
 			break;
 		case InstructionType::sb:

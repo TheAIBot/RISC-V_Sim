@@ -3,6 +3,7 @@
 #include <string>
 #include <stdexcept>
 #include <fstream>
+#include <memory>
 
 static const char* ReadFileContent(const std::string filename, uint64_t* fileSize)
 {
@@ -80,4 +81,13 @@ const uint32_t* ReadRegisters(const std::string& filePath)
 	delete[] fileContent;
 
 	return registers;
+}
+
+std::unique_ptr<Test> LoadTest(const std::string& filePath)
+{
+	uint32_t instructionCount;
+	const uint32_t* rawInstructions = ReadInstructions(filePath, &instructionCount);
+	const uint32_t* registers = ReadRegisters(filePath);
+
+	return std::make_unique<Test>(rawInstructions, registers, instructionCount);
 }

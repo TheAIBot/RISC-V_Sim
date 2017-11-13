@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <memory>
 #include "Processor.h"
 #include "TestEncodeDecode.h"
 #include "TestInstructions.h"
@@ -35,29 +36,24 @@ std::string sdf(Processor& processor, const uint32_t* Registers)
 
 void testFile(std::string filePath)
 {
-	uint32_t instructionCount;
-	const uint32_t* rawInstructions = ReadInstructions(filePath, &instructionCount);
-	const uint32_t* registers = ReadRegisters(filePath);
+	const std::unique_ptr<Test> test = LoadTest(filePath);
 
 	Processor processor;
 	processor.SetDebugMode(false);
-	processor.Run(rawInstructions, instructionCount);
+	processor.Run(test->instructions, test->instructionCount);
 	//processor.PrintRegisters();
-	processor.PrintInstructions(rawInstructions, instructionCount);
+	processor.PrintInstructions(test->instructions, test->instructionCount);
 
-	if (!processor.CompareRegisters(registers))
+	if (!processor.CompareRegisters(test->registers))
 	{
 		//processor.PrintRegisters();
-		std::cout << sdf(processor, registers);
+		std::cout << sdf(processor, test->registers);
 		std::cout << "FUCKING FAILED" << std::endl;
 	}
 	else
 	{
 		std::cout << "SUCCESS" << std::endl;
 	}
-
-	delete[] rawInstructions;
-	delete[] registers;
 }
 
 int main()
@@ -75,9 +71,9 @@ int main()
 		//testFile("tests/task2/branchcnt");
 		//testFile("tests/task2/branchmany");
 		
-		testFile("tests/task3/loop");
+		//testFile("tests/task3/loop");
 	}
-	catch (std::runtime_error &e)
+	catch (std::runtime_error& e)
 	{
 		std::cout << e.what() << std::endl;
 		std::cin.get();

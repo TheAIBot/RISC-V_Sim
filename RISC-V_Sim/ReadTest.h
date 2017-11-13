@@ -2,6 +2,25 @@
 
 #include <cstdint>
 #include <string>
+#include <memory>
 
-const uint32_t* ReadInstructions(const std::string& filePath, uint32_t* instructionCount);
-const uint32_t* ReadRegisters(const std::string& filePath);
+struct Test
+{
+	const uint32_t* instructions;
+	const uint32_t* registers;
+	const uint32_t instructionCount;
+
+	Test(const uint32_t* instruc, const uint32_t* regs, const uint32_t instrucCount) : 
+		instructions(instruc), 
+		registers(regs), 
+		instructionCount(instrucCount)
+	{ }
+
+	~Test()
+	{
+		delete[] instructions;
+		delete[] registers;
+	}
+};
+
+std::unique_ptr<Test> LoadTest(const std::string& filePath);

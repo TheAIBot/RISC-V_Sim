@@ -1,6 +1,7 @@
 #include "RISCV_Program.h"
 #include <stdexcept>
 #include <fstream>
+#include <memory>
 #include "InstructionEncode.h"
 #include "InstructionDecode.h"
 #include "Processor.h"
@@ -114,20 +115,15 @@ void RISCV_Program::SaveAndTest(const std::string& filepath)
 
 	//now load program from the file we just wrote
 	//and verify that the result is the same
-	uint32_t instructionCount;
-	const uint32_t* rawInstructions = ReadInstructions(filepath, &instructionCount);
-	const uint32_t* registers = ReadRegisters(filepath);
+	const std::unique_ptr<Test> test = LoadTest(filepath);
 
 	processor.Reset();
-	processor.Run(rawInstructions, instructionCount);
+	processor.Run(test->instructions, test->instructionCount);
 	//verify what registers and Registers are the same
 	//and that the program gave the correct result
-	if (!processor.CompareRegisters(registers) && 
+	if (!processor.CompareRegisters(test->registers) && 
 		!processor.CompareRegisters(Registers))
 	{
 		WrongProgramResult(processor, filepath, true);
 	}
-
-	delete[] rawInstructions;
-	delete[] registers;
 }

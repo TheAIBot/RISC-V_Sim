@@ -71,17 +71,17 @@ static uint32_t EncodeRType(const InstructionType type, const Regs rd, const Reg
 
 static uint32_t EncodeIType(const InstructionType type, const Regs rd, const Regs rs1, const uint32_t immediate)
 {
-	UIType iType = { 0 };
-	iType.type.opcode = InstructionTypeGetOpCode(type);
-	iType.type.rd = static_cast<uint32_t>(rd);
-	iType.type.funct3 = InstructionTypeFunct3(type);
-	iType.type.rs1 = static_cast<uint32_t>(rs1);
+	IType iType;
+	iType.opcode = InstructionTypeGetOpCode(type);
+	iType.rd = static_cast<uint32_t>(rd);
+	iType.funct3 = InstructionTypeFunct3(type);
+	iType.rs1 = static_cast<uint32_t>(rs1);
 	//if there is something in the funct7 then it has to be added to the
 	//instruction as it's needed to identify the instruction.
 	//Otherwise use the immediate value given.
-	iType.type.immediate = (InstructionTypeFunct7(type) << 5) | immediate;
+	iType.immediate = (InstructionTypeFunct7(type) << 5) | immediate;
 
-	return iType.rawInstruction;
+	return iType.ToRawInstruction();
 }
 
 static uint32_t EncodeSType(const InstructionType type, const Regs rs1, const Regs rs2, const uint32_t immediate)

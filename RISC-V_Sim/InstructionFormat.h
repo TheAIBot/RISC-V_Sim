@@ -46,11 +46,11 @@ struct RType
 
 	const uint32_t ToRawInstruction() const
 	{
-		return (opcode << opcode_shift) ||
-			   (rd     << rd_shift    ) ||
-			   (funct3 << funct3_shift) ||
-			   (rs1    << rs1_shift   ) ||
-			   (rs2    << rs2_shift   ) ||
+		return (opcode << opcode_shift) |
+			   (rd     << rd_shift    ) |
+			   (funct3 << funct3_shift) |
+			   (rs1    << rs1_shift   ) |
+			   (rs2    << rs2_shift   ) |
 			   (funct7 << funct7_shift);
 	}
 };

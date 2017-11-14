@@ -58,15 +58,15 @@ union UUJImmediate
 
 static uint32_t EncodeRType(const InstructionType type, const Regs rd, const Regs rs1, const Regs rs2)
 {
-	URType rType = { 0 };
-	rType.type.opcode = InstructionTypeGetOpCode(type);
-	rType.type.rd = static_cast<uint32_t>(rd);
-	rType.type.funct3 = InstructionTypeFunct3(type);
-	rType.type.rs1 = static_cast<uint32_t>(rs1);
-	rType.type.rs2 = static_cast<uint32_t>(rs2);
-	rType.type.funct7 = InstructionTypeFunct7(type);
+	RType rType;
+	rType.opcode = InstructionTypeGetOpCode(type);
+	rType.rd = static_cast<uint32_t>(rd);
+	rType.funct3 = InstructionTypeFunct3(type);
+	rType.rs1 = static_cast<uint32_t>(rs1);
+	rType.rs2 = static_cast<uint32_t>(rs2);
+	rType.funct7 = InstructionTypeFunct7(type);
 
-	return rType.rawInstruction;
+	return rType.ToRawInstruction();
 }
 
 static uint32_t EncodeIType(const InstructionType type, const Regs rd, const Regs rs1, const uint32_t immediate)

@@ -63,13 +63,12 @@ static int32_t SignExtend_uint20_t(int32_t toExtend)
 
 static Instruction DecodeRType(const uint32_t rawInstruction)
 {
-	const URType rType = { rawInstruction };
-
-	Instruction decoded = { 0 };
-	decoded.rd = rType.type.rd;
-	decoded.rs1 = rType.type.rs1;
-	decoded.rs2 = rType.type.rs2;
-	decoded.type = GetInstructionType(rType.type.opcode, rType.type.funct3, rType.type.funct7);
+	RType rType(rawInstruction);
+	Instruction decoded;
+	decoded.rd = rType.rd;
+	decoded.rs1 = rType.rs1;
+	decoded.rs2 = rType.rs2;
+	decoded.type = GetInstructionType(rType.opcode, rType.funct3, rType.funct7);
 
 	return decoded;
 }

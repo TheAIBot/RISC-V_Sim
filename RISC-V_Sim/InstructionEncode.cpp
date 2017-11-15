@@ -88,12 +88,12 @@ static uint32_t EncodeSType(const InstructionType type, const Regs rs1, const Re
 {
 	SType sType = { 0 };
 	const USImmediate sImmediate = { immediate };
-	sType.opcode = InstructionTypeGetOpCode(type);
-	sType.immediate1 = sImmediate.splitted.immediate1;
-	sType.funct3 = InstructionTypeFunct3(type);
-	sType.rs1 = static_cast<uint32_t>(rs1);
-	sType.rs2 = static_cast<uint32_t>(rs2);
-	sType.immediate2 = sImmediate.splitted.immediate2;
+	sType.opcode    .FromInt(InstructionTypeGetOpCode(type));
+	sType.immediate1.FromInt(sImmediate.splitted.immediate1);
+	sType.funct3    .FromInt(InstructionTypeFunct3(type));
+	sType.rs1       .FromInt(static_cast<uint32_t>(rs1));
+	sType.rs2       .FromInt(static_cast<uint32_t>(rs2));
+	sType.immediate2.FromInt(sImmediate.splitted.immediate2);
 
 	return sType.ToRawInstruction();
 }
@@ -102,41 +102,41 @@ static uint32_t EncodeSBType(const InstructionType type, const Regs rs1, const R
 {
 	SBType sbType = { 0 };
 	const USBImmediate sbImmediate = { immediate };
-	sbType.opcode = InstructionTypeGetOpCode(type);
-	sbType.immediate1 = sbImmediate.splitted.immediate3;
-	sbType.immediate2 = sbImmediate.splitted.immediate1;
-	sbType.funct3 = InstructionTypeFunct3(type);
-	sbType.rs1 = static_cast<uint32_t>(rs1);
-	sbType.rs2 = static_cast<uint32_t>(rs2);
-	sbType.immediate3 = sbImmediate.splitted.immediate2;
-	sbType.immediate4 = sbImmediate.splitted.immediate4;
+	sbType.opcode.FromInt(InstructionTypeGetOpCode(type));
+	sbType.immediate1.FromInt(sbImmediate.splitted.immediate3);
+	sbType.immediate2.FromInt(sbImmediate.splitted.immediate1);
+	sbType.funct3    .FromInt(InstructionTypeFunct3(type));
+	sbType.rs1       .FromInt(static_cast<uint32_t>(rs1));
+	sbType.rs2       .FromInt(static_cast<uint32_t>(rs2));
+	sbType.immediate3.FromInt(sbImmediate.splitted.immediate2);
+	sbType.immediate4.FromInt(sbImmediate.splitted.immediate4);
 
 	return sbType.ToRawInstruction();
 }
 
-static uint32_t EncodeUType(const InstructionType type, const Regs rd, const uint32_t immediate)
-{
-	UUType uType = { 0 };
-	const UUImmediate uImmediate = { immediate };
-	uType.type.opcode = InstructionTypeGetOpCode(type);
-	uType.type.rd = static_cast<uint32_t>(rd);
-	uType.type.immediate = uImmediate.splitted.immediate1;
-
-	return uType.rawInstruction;
-}
-
 static uint32_t EncodeUJType(const InstructionType type, const Regs rd, const uint32_t immediate)
 {
-	UUJType ujType = { 0 };
+	UJType ujType = { 0 };
 	const UUJImmediate ujImmediate = { immediate };
-	ujType.type.opcode = InstructionTypeGetOpCode(type);
-	ujType.type.rd = static_cast<uint32_t>(rd);
-	ujType.type.immediate1 = ujImmediate.splitted.immediate3;
-	ujType.type.immediate2 = ujImmediate.splitted.immediate2;
-	ujType.type.immediate3 = ujImmediate.splitted.immediate1;
-	ujType.type.immediate4 = ujImmediate.splitted.immediate4;
+	ujType.opcode    .FromInt(InstructionTypeGetOpCode(type));
+	ujType.rd        .FromInt(static_cast<uint32_t>(rd));
+	ujType.immediate1.FromInt(ujImmediate.splitted.immediate3);
+	ujType.immediate2.FromInt(ujImmediate.splitted.immediate2);
+	ujType.immediate3.FromInt(ujImmediate.splitted.immediate1);
+	ujType.immediate4.FromInt(ujImmediate.splitted.immediate4);
 
-	return ujType.rawInstruction;
+	return ujType.ToRawInstruction();
+}
+
+static uint32_t EncodeUType(const InstructionType type, const Regs rd, const uint32_t immediate)
+{
+	UType uType = { 0 };
+	const UUImmediate uImmediate = { immediate };
+	uType.opcode   .FromInt(InstructionTypeGetOpCode(type));
+	uType.rd       .FromInt(static_cast<uint32_t>(rd));
+	uType.immediate.FromInt(uImmediate.splitted.immediate1);
+
+	return uType.ToRawInstruction();
 }
 
 static void VerifyRange(const int32_t min, const int32_t max, const int32_t x)

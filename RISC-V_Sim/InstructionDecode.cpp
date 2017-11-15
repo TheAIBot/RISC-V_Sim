@@ -75,48 +75,48 @@ static Instruction DecodeRType(const uint32_t rawInstruction)
 
 static Instruction DecodeIType(const uint32_t rawInstruction)
 {
-	const UIType iType = { rawInstruction };
+	const IType iType(rawInstruction);
 
 	Instruction decoded = { 0 };
-	decoded.rd = iType.type.rd;
-	decoded.rs1 = iType.type.rs1;
-	decoded.immediate = SignExtend_uint12_t(iType.type.immediate);
-	decoded.type = GetInstructionType(iType.type.opcode, iType.type.funct3, iType.type.immediate >> 5);
-	decoded.immediate &= GetImmediateMask((iType.type.funct3 << 7) | iType.type.opcode);
+	decoded.rd = iType.rd;
+	decoded.rs1 = iType.rs1;
+	decoded.immediate = SignExtend_uint12_t(iType.immediate);
+	decoded.type = GetInstructionType(iType.opcode, iType.funct3, iType.immediate >> 5);
+	decoded.immediate &= GetImmediateMask((iType.funct3 << 7) | iType.opcode);
 
 	return decoded;
 }
 
 static Instruction DecodeSType(const uint32_t rawInstruction)
 {
-	const USType sType = { rawInstruction };
+	const SType sType(rawInstruction);
 
 	Instruction decoded = { 0 };
-	decoded.rs1 = sType.type.rs1;
-	decoded.rs2 = sType.type.rs2;
-	decoded.immediate = (sType.type.immediate2 << 5) |
-		(sType.type.immediate1 << 0);
+	decoded.rs1 = sType.rs1;
+	decoded.rs2 = sType.rs2;
+	decoded.immediate = (sType.immediate2 << 5) |
+		(sType.immediate1 << 0);
 	decoded.immediate = SignExtend_uint12_t(decoded.immediate);
-	decoded.type = GetInstructionType(sType.type.opcode, sType.type.funct3, 0);
+	decoded.type = GetInstructionType(sType.opcode, sType.funct3, 0);
 
 	return decoded;
 }
 
 static Instruction DecodeSBType(const uint32_t rawInstruction)
 {
-	const USBType sbType = { rawInstruction };
+	const SBType sbType(rawInstruction);
 
 	Instruction decoded = { 0 };
-	decoded.rs1 = sbType.type.rs1;
-	decoded.rs2 = sbType.type.rs2;
-	decoded.immediate = (sbType.type.immediate1 << 11) |
-		(sbType.type.immediate2 <<  1) |
-		(sbType.type.immediate3 <<  5) |
-		(sbType.type.immediate4 << 12);
+	decoded.rs1 = sbType.rs1;
+	decoded.rs2 = sbType.rs2;
+	decoded.immediate = (sbType.immediate1 << 11) |
+		(sbType.immediate2 <<  1) |
+		(sbType.immediate3 <<  5) |
+		(sbType.immediate4 << 12);
 	decoded.immediate >>= 1;
 	decoded.immediate = SignExtend_uint12_t(decoded.immediate);
 	decoded.immediate <<= 1;
-	decoded.type = GetInstructionType(sbType.type.opcode, sbType.type.funct3, 0);
+	decoded.type = GetInstructionType(sbType.opcode, sbType.funct3, 0);
 
 	return decoded;
 }

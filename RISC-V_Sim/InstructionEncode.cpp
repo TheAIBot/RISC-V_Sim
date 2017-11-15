@@ -86,32 +86,32 @@ static uint32_t EncodeIType(const InstructionType type, const Regs rd, const Reg
 
 static uint32_t EncodeSType(const InstructionType type, const Regs rs1, const Regs rs2, const uint32_t immediate)
 {
-	USType sType = { 0 };
+	SType sType = { 0 };
 	const USImmediate sImmediate = { immediate };
-	sType.type.opcode = InstructionTypeGetOpCode(type);
-	sType.type.immediate1 = sImmediate.splitted.immediate1;
-	sType.type.funct3 = InstructionTypeFunct3(type);
-	sType.type.rs1 = static_cast<uint32_t>(rs1);
-	sType.type.rs2 = static_cast<uint32_t>(rs2);
-	sType.type.immediate2 = sImmediate.splitted.immediate2;
+	sType.opcode = InstructionTypeGetOpCode(type);
+	sType.immediate1 = sImmediate.splitted.immediate1;
+	sType.funct3 = InstructionTypeFunct3(type);
+	sType.rs1 = static_cast<uint32_t>(rs1);
+	sType.rs2 = static_cast<uint32_t>(rs2);
+	sType.immediate2 = sImmediate.splitted.immediate2;
 
-	return sType.rawInstruction;
+	return sType.ToRawInstruction();
 }
 
 static uint32_t EncodeSBType(const InstructionType type, const Regs rs1, const Regs rs2, const uint32_t immediate)
 {
-	USBType sbType = { 0 };
+	SBType sbType = { 0 };
 	const USBImmediate sbImmediate = { immediate };
-	sbType.type.opcode = InstructionTypeGetOpCode(type);
-	sbType.type.immediate1 = sbImmediate.splitted.immediate3;
-	sbType.type.immediate2 = sbImmediate.splitted.immediate1;
-	sbType.type.funct3 = InstructionTypeFunct3(type);
-	sbType.type.rs1 = static_cast<uint32_t>(rs1);
-	sbType.type.rs2 = static_cast<uint32_t>(rs2);
-	sbType.type.immediate3 = sbImmediate.splitted.immediate2;
-	sbType.type.immediate4 = sbImmediate.splitted.immediate4;
+	sbType.opcode = InstructionTypeGetOpCode(type);
+	sbType.immediate1 = sbImmediate.splitted.immediate3;
+	sbType.immediate2 = sbImmediate.splitted.immediate1;
+	sbType.funct3 = InstructionTypeFunct3(type);
+	sbType.rs1 = static_cast<uint32_t>(rs1);
+	sbType.rs2 = static_cast<uint32_t>(rs2);
+	sbType.immediate3 = sbImmediate.splitted.immediate2;
+	sbType.immediate4 = sbImmediate.splitted.immediate4;
 
-	return sbType.rawInstruction;
+	return sbType.ToRawInstruction();
 }
 
 static uint32_t EncodeUType(const InstructionType type, const Regs rd, const uint32_t immediate)

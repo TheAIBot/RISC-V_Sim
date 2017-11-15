@@ -59,12 +59,12 @@ union UUJImmediate
 static uint32_t EncodeRType(const InstructionType type, const Regs rd, const Regs rs1, const Regs rs2)
 {
 	RType rType;
-	rType.opcode = InstructionTypeGetOpCode(type);
-	rType.rd = static_cast<uint32_t>(rd);
-	rType.funct3 = InstructionTypeFunct3(type);
-	rType.rs1 = static_cast<uint32_t>(rs1);
-	rType.rs2 = static_cast<uint32_t>(rs2);
-	rType.funct7 = InstructionTypeFunct7(type);
+	rType.opcode.FromInt(InstructionTypeGetOpCode(type));
+	rType.rd    .FromInt(static_cast<uint32_t>(rd));
+	rType.funct3.FromInt(InstructionTypeFunct3(type));
+	rType.rs1   .FromInt(static_cast<uint32_t>(rs1));
+	rType.rs2   .FromInt(static_cast<uint32_t>(rs2));
+	rType.funct7.FromInt(InstructionTypeFunct7(type));
 
 	return rType.ToRawInstruction();
 }
@@ -72,14 +72,14 @@ static uint32_t EncodeRType(const InstructionType type, const Regs rd, const Reg
 static uint32_t EncodeIType(const InstructionType type, const Regs rd, const Regs rs1, const uint32_t immediate)
 {
 	IType iType;
-	iType.opcode = InstructionTypeGetOpCode(type);
-	iType.rd = static_cast<uint32_t>(rd);
-	iType.funct3 = InstructionTypeFunct3(type);
-	iType.rs1 = static_cast<uint32_t>(rs1);
+	iType.opcode.FromInt(InstructionTypeGetOpCode(type));
+	iType.rd    .FromInt(static_cast<uint32_t>(rd));
+	iType.funct3.FromInt(InstructionTypeFunct3(type));
+	iType.rs1   .FromInt(static_cast<uint32_t>(rs1));
 	//if there is something in the funct7 then it has to be added to the
 	//instruction as it's needed to identify the instruction.
 	//Otherwise use the immediate value given.
-	iType.immediate = (InstructionTypeFunct7(type) << 5) | immediate;
+	iType.immediate.FromInt((InstructionTypeFunct7(type) << 5) | immediate);
 
 	return iType.ToRawInstruction();
 }

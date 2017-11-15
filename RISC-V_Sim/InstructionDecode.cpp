@@ -65,10 +65,10 @@ static Instruction DecodeRType(const uint32_t rawInstruction)
 {
 	RType rType(rawInstruction);
 	Instruction decoded;
-	decoded.rd = rType.rd;
-	decoded.rs1 = rType.rs1;
-	decoded.rs2 = rType.rs2;
-	decoded.type = GetInstructionType(rType.opcode, rType.funct3, rType.funct7);
+	decoded.rd   = rType.rd.GetAsInt();
+	decoded.rs1  = rType.rs1.GetAsInt();
+	decoded.rs2  = rType.rs2.GetAsInt();
+	decoded.type = GetInstructionType(rType.opcode.GetAsInt(), rType.funct3.GetAsInt(), rType.funct7.GetAsInt());
 
 	return decoded;
 }
@@ -78,11 +78,11 @@ static Instruction DecodeIType(const uint32_t rawInstruction)
 	const IType iType(rawInstruction);
 
 	Instruction decoded = { 0 };
-	decoded.rd = iType.rd;
-	decoded.rs1 = iType.rs1;
-	decoded.immediate = SignExtend_uint12_t(iType.immediate);
-	decoded.type = GetInstructionType(iType.opcode, iType.funct3, iType.immediate >> 5);
-	decoded.immediate &= GetImmediateMask((iType.funct3 << 7) | iType.opcode);
+	decoded.rd = iType.rd.GetAsInt();
+	decoded.rs1 = iType.rs1.GetAsInt();
+	decoded.immediate = SignExtend_uint12_t(iType.immediate.GetAsInt());
+	decoded.type = GetInstructionType(iType.opcode.GetAsInt(), iType.funct3.GetAsInt(), iType.immediate.GetAsInt() >> 5);
+	decoded.immediate &= GetImmediateMask((iType.funct3.GetAsInt() << 7) | iType.opcode.GetAsInt());
 
 	return decoded;
 }

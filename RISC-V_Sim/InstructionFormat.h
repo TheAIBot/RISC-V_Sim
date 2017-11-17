@@ -5,7 +5,7 @@
 template<uint32_t MASK>
 constexpr uint32_t Shift_From_Mask()
 {
-	if constexpr (MASK & 1 || MASK == 0)
+	if (MASK & 1 || MASK == 0)
 	{
 		return 0;
 	}

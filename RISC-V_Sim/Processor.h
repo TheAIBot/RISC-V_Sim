@@ -7,7 +7,7 @@
 class Processor
 {
 private:
-	const static uint32_t MEMORY_SIZE = 0x00'00'7f'ff;
+	const static int32_t MEMORY_SIZE = 0x00'00'7f'ff;
 
 	uint32_t pc = 0;
 	Register registers[32];

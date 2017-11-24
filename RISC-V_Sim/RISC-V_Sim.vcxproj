@@ -105,6 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <EnablePREfast>false</EnablePREfast>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -159,6 +160,8 @@
     <ClCompile Include="TestInstructions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BitField.h" />
+    <ClInclude Include="ImmediateFormat.h" />
     <ClInclude Include="Instruction.h" />
     <ClInclude Include="InstructionDecode.h" />
     <ClInclude Include="InstructionEncode.h" />

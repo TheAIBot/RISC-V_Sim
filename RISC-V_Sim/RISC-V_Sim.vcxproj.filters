@@ -83,5 +83,11 @@
     <ClInclude Include="ReadTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BitField.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImmediateFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

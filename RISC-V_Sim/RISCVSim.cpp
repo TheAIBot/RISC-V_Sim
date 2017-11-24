@@ -42,7 +42,7 @@ void testFile(std::string filePath)
 	processor.SetDebugMode(false);
 	processor.Run(test->instructions, test->instructionCount);
 	//processor.PrintRegisters();
-	processor.PrintInstructions(test->instructions, test->instructionCount);
+	//processor.PrintInstructions(test->instructions, test->instructionCount);
 
 	if (!processor.CompareRegisters(test->registers))
 	{
@@ -63,13 +63,13 @@ int main()
 	try
 	{
 		
-		//testFile("tests/task1/addlarge");
-		//testFile("tests/task1/addneg");
-		//testFile("tests/task1/addpos");
-		//testFile("tests/task1/shift");
+		testFile("tests/task1/addlarge");
+		testFile("tests/task1/addneg");
+		testFile("tests/task1/addpos");
+		testFile("tests/task1/shift");
 
-		//testFile("tests/task2/branchcnt");
-		//testFile("tests/task2/branchmany");
+		testFile("tests/task2/branchcnt");
+		testFile("tests/task2/branchmany");
 		
 		//testFile("tests/task3/loop");
 	}

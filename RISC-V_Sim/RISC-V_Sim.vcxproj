@@ -160,6 +160,8 @@
     <ClCompile Include="TestInstructions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BitField.h" />
+    <ClInclude Include="ImmediateFormat.h" />
     <ClInclude Include="Instruction.h" />
     <ClInclude Include="InstructionDecode.h" />
     <ClInclude Include="InstructionEncode.h" />

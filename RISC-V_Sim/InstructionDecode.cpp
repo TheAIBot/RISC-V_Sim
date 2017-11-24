@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include "Instruction.h"
 #include "InstructionFormat.h"
+#include "ImmediateFormat.h"
 
 static uint32_t GetImmediateMask(uint16_t instructionIdentifier)
 {
@@ -52,15 +53,6 @@ static InstructionType GetInstructionType(const uint32_t opcode, const uint32_t 
 	return static_cast<InstructionType>(instructionType);
 }
 
-int32_t SignExtend_uint12_t(int32_t toExtend)
-{
-	return (toExtend << 20) >> 20;
-}
-static int32_t SignExtend_uint20_t(int32_t toExtend)
-{
-	return (toExtend << 12) >> 12;
-}
-
 static Instruction DecodeRType(const uint32_t rawInstruction)
 {
 	RType rType(rawInstruction);
@@ -80,7 +72,7 @@ static Instruction DecodeIType(const uint32_t rawInstruction)
 	Instruction decoded = { 0 };
 	decoded.rd         = iType.rd.GetAsInt();
 	decoded.rs1        = iType.rs1.GetAsInt();
-	decoded.immediate  = SignExtend_uint12_t(iType.immediate.GetAsInt());
+	decoded.immediate  = SignExtend<12>(iType.immediate.GetAsInt());
 	decoded.type       = GetInstructionType(iType.opcode.GetAsInt(), iType.funct3.GetAsInt(), iType.immediate.GetAsInt() >> 5);
 	decoded.immediate &= GetImmediateMask((iType.funct3.GetAsInt() << 7) | iType.opcode.GetAsInt());
 
@@ -91,12 +83,14 @@ static Instruction DecodeSType(const uint32_t rawInstruction)
 {
 	const SType sType(rawInstruction);
 
+	SImmediate sImmediate;
+	sImmediate.immediate1.FromInt(sType.immediate1.GetAsInt());
+	sImmediate.immediate2.FromInt(sType.immediate2.GetAsInt());
+
 	Instruction decoded = { 0 };
 	decoded.rs1 = sType.rs1.GetAsInt();
 	decoded.rs2 = sType.rs2.GetAsInt();
-	decoded.immediate = (sType.immediate2.GetAsInt() << 5) |
-						(sType.immediate1.GetAsInt() << 0);
-	decoded.immediate = SignExtend_uint12_t(decoded.immediate);
+	decoded.immediate = sImmediate.ToImmediate();
 	decoded.type = GetInstructionType(sType.opcode.GetAsInt(), sType.funct3.GetAsInt(), 0);
 
 	return decoded;
@@ -106,16 +100,16 @@ static Instruction DecodeSBType(const uint32_t rawInstruction)
 {
 	const SBType sbType(rawInstruction);
 
+	SBImmediate sbImmediate;
+	sbImmediate.immediate1.FromInt(sbType.immediate2.GetAsInt());
+	sbImmediate.immediate2.FromInt(sbType.immediate3.GetAsInt());
+	sbImmediate.immediate3.FromInt(sbType.immediate1.GetAsInt());
+	sbImmediate.immediate4.FromInt(sbType.immediate4.GetAsInt());
+
 	Instruction decoded = { 0 };
 	decoded.rs1 = sbType.rs1.GetAsInt();
 	decoded.rs2 = sbType.rs2.GetAsInt();
-	decoded.immediate = (sbType.immediate1.GetAsInt() << 11) |
-						(sbType.immediate2.GetAsInt() <<  1) |
-						(sbType.immediate3.GetAsInt() <<  5) |
-						(sbType.immediate4.GetAsInt() << 12);
-	decoded.immediate >>= 1;
-	decoded.immediate = SignExtend_uint12_t(decoded.immediate);
-	decoded.immediate <<= 1;
+	decoded.immediate = sbImmediate.ToImmediate();
 	decoded.type = GetInstructionType(sbType.opcode.GetAsInt(), sbType.funct3.GetAsInt(), 0);
 
 	return decoded;
@@ -125,13 +119,15 @@ static Instruction DecodeUJType(const uint32_t rawInstruction)
 {
 	const UJType ujType(rawInstruction);
 
+	UJImmediate ujImmediate;
+	ujImmediate.immediate1.FromInt(ujType.immediate3.GetAsInt());
+	ujImmediate.immediate2.FromInt(ujType.immediate2.GetAsInt());
+	ujImmediate.immediate3.FromInt(ujType.immediate1.GetAsInt());
+	ujImmediate.immediate4.FromInt(ujType.immediate4.GetAsInt());
+
 	Instruction decoded = { 0 };
 	decoded.rd = ujType.rd.GetAsInt();
-	decoded.immediate = (ujType.immediate1.GetAsInt() << 12) |
-						(ujType.immediate2.GetAsInt() << 11) |
-						(ujType.immediate3.GetAsInt() <<  1) |
-						(ujType.immediate4.GetAsInt() << 20);
-	decoded.immediate = SignExtend_uint20_t(decoded.immediate);
+	decoded.immediate = ujImmediate.ToImmediate();
 	decoded.type = GetInstructionType(ujType.opcode.GetAsInt(), 0, 0);
 
 	return decoded;
@@ -141,9 +137,12 @@ static Instruction DecodeUType(const uint32_t rawInstruction)
 {
 	const UType uType(rawInstruction);
 
+	UImmediate uImmediate;
+	uImmediate.immediate1.FromInt(uType.immediate.GetAsInt());
+
 	Instruction decoded = { 0 };
 	decoded.rd = uType.rd.GetAsInt();
-	decoded.immediate = uType.immediate.GetAsInt() << 12;
+	decoded.immediate = uImmediate.ToImmediate();
 	decoded.type = GetInstructionType(uType.opcode.GetAsInt(), 0, 0);
 
 	return decoded;

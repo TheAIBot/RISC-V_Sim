@@ -1,45 +1,7 @@
 #pragma once
 
 #include <cstdint>
-
-template<uint32_t MASK>
-constexpr uint32_t Shift_From_Mask()
-{
-	if (MASK & 1 || MASK == 0)
-	{
-		return 0;
-	}
-	const uint32_t newMask = MASK >> 1;
-	return Shift_From_Mask<newMask>() + 1;
-}
-
-template<uint32_t MASK>
-class BitField
-{
-private:
-	uint32_t field;
-
-public:
-	void FromRawInstruction(const uint32_t rawInstruction)
-	{
-		field = rawInstruction & MASK;
-	}
-
-	void FromInt(const uint32_t value)
-	{
-		field = (value << Shift_From_Mask<MASK>()) & MASK;
-	}
-
-	uint32_t GetField() const
-	{
-		return field;
-	}
-
-	uint32_t GetAsInt() const
-	{
-		return field >> Shift_From_Mask<MASK>();
-	}
-};
+#include "BitField.h"
 
 struct RType
 {
@@ -52,23 +14,23 @@ struct RType
 
 	RType(const uint32_t rawInstruction)
 	{
-		opcode.FromRawInstruction(rawInstruction);
-		rd    .FromRawInstruction(rawInstruction);
-		funct3.FromRawInstruction(rawInstruction);
-		rs1   .FromRawInstruction(rawInstruction);
-		rs2   .FromRawInstruction(rawInstruction);
-		funct7.FromRawInstruction(rawInstruction);
+		opcode.FromField(rawInstruction);
+		rd    .FromField(rawInstruction);
+		funct3.FromField(rawInstruction);
+		rs1   .FromField(rawInstruction);
+		rs2   .FromField(rawInstruction);
+		funct7.FromField(rawInstruction);
 	}
 	RType()
 	{ }
 
-	const uint32_t ToRawInstruction() const
+	uint32_t ToRawInstruction() const
 	{
 		return opcode.GetField() | 
-			   rd.GetField()     | 
+			   rd    .GetField() | 
 			   funct3.GetField() | 
-			   rs1.GetField()    | 
-			   rs2.GetField()    | 
+			   rs1   .GetField() | 
+			   rs2   .GetField() | 
 			   funct7.GetField();
 	}
 };
@@ -83,21 +45,21 @@ struct IType
 
 	IType(const uint32_t rawInstruction)
 	{
-		opcode   .FromRawInstruction(rawInstruction);
-		rd       .FromRawInstruction(rawInstruction);
-		funct3   .FromRawInstruction(rawInstruction);
-		rs1      .FromRawInstruction(rawInstruction);
-		immediate.FromRawInstruction(rawInstruction);
+		opcode   .FromField(rawInstruction);
+		rd       .FromField(rawInstruction);
+		funct3   .FromField(rawInstruction);
+		rs1      .FromField(rawInstruction);
+		immediate.FromField(rawInstruction);
 	}
 	IType()
 	{ }
 
-	const uint32_t ToRawInstruction() const
+	uint32_t ToRawInstruction() const
 	{
-		return opcode.GetField() | 
-			   rd.GetField()     | 
-			   funct3.GetField() | 
-			   rs1.GetField()    | 
+		return opcode   .GetField() | 
+			   rd       .GetField() | 
+			   funct3   .GetField() | 
+			   rs1      .GetField() | 
 			   immediate.GetField();
 	}
 };
@@ -113,23 +75,23 @@ struct SType
 
 	SType(const uint32_t rawInstruction)
 	{
-		opcode    .FromRawInstruction(rawInstruction);
-		immediate1.FromRawInstruction(rawInstruction);
-		funct3    .FromRawInstruction(rawInstruction);
-		rs1       .FromRawInstruction(rawInstruction);
-		rs2       .FromRawInstruction(rawInstruction);
-		immediate2.FromRawInstruction(rawInstruction);
+		opcode    .FromField(rawInstruction);
+		immediate1.FromField(rawInstruction);
+		funct3    .FromField(rawInstruction);
+		rs1       .FromField(rawInstruction);
+		rs2       .FromField(rawInstruction);
+		immediate2.FromField(rawInstruction);
 	}
 	SType()
 	{ }
 
-	const uint32_t ToRawInstruction() const
+	uint32_t ToRawInstruction() const
 	{
-		return opcode.GetField()     | 
+		return opcode    .GetField() | 
 			   immediate1.GetField() | 
-			   funct3.GetField()     | 
-			   rs1.GetField()        | 
-			   rs2.GetField()        | 
+			   funct3    .GetField() | 
+			   rs1       .GetField() | 
+			   rs2       .GetField() | 
 			   immediate2.GetField();
 	}
 };
@@ -147,26 +109,26 @@ struct SBType
 
 	SBType(const uint32_t rawInstruction)
 	{
-		opcode    .FromRawInstruction(rawInstruction);
-		immediate1.FromRawInstruction(rawInstruction);
-		immediate2.FromRawInstruction(rawInstruction);
-		funct3    .FromRawInstruction(rawInstruction);
-		rs1       .FromRawInstruction(rawInstruction);
-		rs2       .FromRawInstruction(rawInstruction);
-		immediate3.FromRawInstruction(rawInstruction);
-		immediate4.FromRawInstruction(rawInstruction);
+		opcode    .FromField(rawInstruction);
+		immediate1.FromField(rawInstruction);
+		immediate2.FromField(rawInstruction);
+		funct3    .FromField(rawInstruction);
+		rs1       .FromField(rawInstruction);
+		rs2       .FromField(rawInstruction);
+		immediate3.FromField(rawInstruction);
+		immediate4.FromField(rawInstruction);
 	}
 	SBType()
 	{ }
 
-	const uint32_t ToRawInstruction() const
+	uint32_t ToRawInstruction() const
 	{
-		return opcode.GetField()     | 
+		return opcode    .GetField() | 
 			   immediate1.GetField() | 
 			   immediate2.GetField() | 
-			   funct3.GetField()     | 
-			   rs1.GetField()        | 
-			   rs2.GetField()        | 
+			   funct3    .GetField() | 
+			   rs1       .GetField() | 
+			   rs2       .GetField() | 
 			   immediate3.GetField() | 
 			   immediate4.GetField();
 	}
@@ -183,20 +145,20 @@ struct UJType
 
 	UJType(const uint32_t rawInstruction)
 	{
-		opcode    .FromRawInstruction(rawInstruction);
-		rd        .FromRawInstruction(rawInstruction);
-		immediate1.FromRawInstruction(rawInstruction);
-		immediate2.FromRawInstruction(rawInstruction);
-		immediate3.FromRawInstruction(rawInstruction);
-		immediate4.FromRawInstruction(rawInstruction);
+		opcode    .FromField(rawInstruction);
+		rd        .FromField(rawInstruction);
+		immediate1.FromField(rawInstruction);
+		immediate2.FromField(rawInstruction);
+		immediate3.FromField(rawInstruction);
+		immediate4.FromField(rawInstruction);
 	}
 	UJType()
 	{ }
 
-	const uint32_t ToRawInstruction() const
+	uint32_t ToRawInstruction() const
 	{
-		return opcode.GetField()     | 
-			   rd.GetField()         | 
+		return opcode    .GetField() | 
+			   rd        .GetField() | 
 			   immediate1.GetField() | 
 			   immediate2.GetField() | 
 			   immediate3.GetField() | 
@@ -212,17 +174,17 @@ struct UType
 
 	UType(const uint32_t rawInstruction)
 	{
-		opcode   .FromRawInstruction(rawInstruction);
-		rd       .FromRawInstruction(rawInstruction);
-		immediate.FromRawInstruction(rawInstruction);
+		opcode   .FromField(rawInstruction);
+		rd       .FromField(rawInstruction);
+		immediate.FromField(rawInstruction);
 	}
 	UType()
 	{ }
 
-	const uint32_t ToRawInstruction() const
+	uint32_t ToRawInstruction() const
 	{
-		return opcode.GetField() | 
-			   rd.GetField()     | 
+		return opcode   .GetField() | 
+			   rd       .GetField() | 
 			   immediate.GetField();
 	}
 };

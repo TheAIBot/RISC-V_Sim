@@ -5,56 +5,8 @@
 #include "InstructionFormat.h"
 #include "InstructionType.h"
 #include "InstructionDecode.h"
+#include "ImmediateFormat.h"
 
-struct SImmediate
-{
-	uint32_t immediate1 : 5;
-	uint32_t immediate2 : 7;
-};
-union USImmediate
-{
-	uint32_t immediate;
-	SImmediate splitted;
-};
-
-struct SBImmediate
-{
-	uint32_t : 1;
-	uint32_t immediate1 : 4;
-	uint32_t immediate2 : 6;
-	uint32_t immediate3 : 1;
-	uint32_t immediate4 : 1;
-};
-union USBImmediate
-{
-	uint32_t immediate;
-	SBImmediate splitted;
-};
-
-struct UImmediate
-{
-	uint32_t : 12;
-	uint32_t immediate1 : 20;
-};
-union UUImmediate
-{
-	uint32_t immediate;
-	UImmediate splitted;
-};
-
-struct UJImmediate
-{
-	uint32_t : 1;
-	uint32_t immediate1 : 10;
-	uint32_t immediate2 :  1;
-	uint32_t immediate3 :  8;
-	uint32_t immediate4 :  1;
-};
-union UUJImmediate
-{
-	uint32_t immediate;
-	UJImmediate splitted;
-};
 
 static uint32_t EncodeRType(const InstructionType type, const Regs rd, const Regs rs1, const Regs rs2)
 {
@@ -87,13 +39,13 @@ static uint32_t EncodeIType(const InstructionType type, const Regs rd, const Reg
 static uint32_t EncodeSType(const InstructionType type, const Regs rs1, const Regs rs2, const uint32_t immediate)
 {
 	SType sType = { 0 };
-	const USImmediate sImmediate = { immediate };
+	const SImmediate sImmediate(immediate);
 	sType.opcode    .FromInt(InstructionTypeGetOpCode(type));
-	sType.immediate1.FromInt(sImmediate.splitted.immediate1);
+	sType.immediate1.FromInt(sImmediate.immediate1.GetAsInt());
 	sType.funct3    .FromInt(InstructionTypeFunct3(type));
 	sType.rs1       .FromInt(static_cast<uint32_t>(rs1));
 	sType.rs2       .FromInt(static_cast<uint32_t>(rs2));
-	sType.immediate2.FromInt(sImmediate.splitted.immediate2);
+	sType.immediate2.FromInt(sImmediate.immediate2.GetAsInt());
 
 	return sType.ToRawInstruction();
 }
@@ -101,15 +53,15 @@ static uint32_t EncodeSType(const InstructionType type, const Regs rs1, const Re
 static uint32_t EncodeSBType(const InstructionType type, const Regs rs1, const Regs rs2, const uint32_t immediate)
 {
 	SBType sbType = { 0 };
-	const USBImmediate sbImmediate = { immediate };
+	const SBImmediate sbImmediate(immediate);
 	sbType.opcode.FromInt(InstructionTypeGetOpCode(type));
-	sbType.immediate1.FromInt(sbImmediate.splitted.immediate3);
-	sbType.immediate2.FromInt(sbImmediate.splitted.immediate1);
+	sbType.immediate1.FromInt(sbImmediate.immediate3.GetAsInt());
+	sbType.immediate2.FromInt(sbImmediate.immediate1.GetAsInt());
 	sbType.funct3    .FromInt(InstructionTypeFunct3(type));
 	sbType.rs1       .FromInt(static_cast<uint32_t>(rs1));
 	sbType.rs2       .FromInt(static_cast<uint32_t>(rs2));
-	sbType.immediate3.FromInt(sbImmediate.splitted.immediate2);
-	sbType.immediate4.FromInt(sbImmediate.splitted.immediate4);
+	sbType.immediate3.FromInt(sbImmediate.immediate2.GetAsInt());
+	sbType.immediate4.FromInt(sbImmediate.immediate4.GetAsInt());
 
 	return sbType.ToRawInstruction();
 }
@@ -117,13 +69,13 @@ static uint32_t EncodeSBType(const InstructionType type, const Regs rs1, const R
 static uint32_t EncodeUJType(const InstructionType type, const Regs rd, const uint32_t immediate)
 {
 	UJType ujType = { 0 };
-	const UUJImmediate ujImmediate = { immediate };
+	const UJImmediate ujImmediate(immediate);
 	ujType.opcode    .FromInt(InstructionTypeGetOpCode(type));
 	ujType.rd        .FromInt(static_cast<uint32_t>(rd));
-	ujType.immediate1.FromInt(ujImmediate.splitted.immediate3);
-	ujType.immediate2.FromInt(ujImmediate.splitted.immediate2);
-	ujType.immediate3.FromInt(ujImmediate.splitted.immediate1);
-	ujType.immediate4.FromInt(ujImmediate.splitted.immediate4);
+	ujType.immediate1.FromInt(ujImmediate.immediate3.GetAsInt());
+	ujType.immediate2.FromInt(ujImmediate.immediate2.GetAsInt());
+	ujType.immediate3.FromInt(ujImmediate.immediate1.GetAsInt());
+	ujType.immediate4.FromInt(ujImmediate.immediate4.GetAsInt());
 
 	return ujType.ToRawInstruction();
 }
@@ -131,10 +83,10 @@ static uint32_t EncodeUJType(const InstructionType type, const Regs rd, const ui
 static uint32_t EncodeUType(const InstructionType type, const Regs rd, const uint32_t immediate)
 {
 	UType uType = { 0 };
-	const UUImmediate uImmediate = { immediate };
+	const UImmediate uImmediate = { immediate };
 	uType.opcode   .FromInt(InstructionTypeGetOpCode(type));
 	uType.rd       .FromInt(static_cast<uint32_t>(rd));
-	uType.immediate.FromInt(uImmediate.splitted.immediate1);
+	uType.immediate.FromInt(uImmediate.immediate1.GetAsInt());
 
 	return uType.ToRawInstruction();
 }
@@ -365,7 +317,7 @@ uint32_t Create_csrrci()
 }
 MultiInstruction Create_li(const Regs rd, const uint32_t immediate)
 {
-	const uint32_t addiImmediate = SignExtend_uint12_t(immediate & 0x0f'ff);
+	const uint32_t addiImmediate = SignExtend<12>(immediate & 0x0f'ff);
 	const uint32_t leftover = immediate - addiImmediate;
 
 	MultiInstruction mInstruction;

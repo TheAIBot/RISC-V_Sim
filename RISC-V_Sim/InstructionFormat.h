@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include "BitField.h"
+#include "ImmediateFormat.h"
 
 struct RType
 {
@@ -85,6 +86,21 @@ struct SType
 	SType()
 	{ }
 
+	int32_t GetImmediate() const
+	{
+		SImmediate immediate;
+		immediate.immediate1.FromInt(immediate1.GetAsInt());
+		immediate.immediate2.FromInt(immediate2.GetAsInt());
+
+		return immediate.ToImmediate();
+	}
+	void SetImmediate(const uint32_t value)
+	{
+		SImmediate immediate(value);
+		immediate1.FromInt(immediate.immediate1.GetAsInt());
+		immediate2.FromInt(immediate.immediate2.GetAsInt());
+	}
+
 	uint32_t ToRawInstruction() const
 	{
 		return opcode    .GetField() | 
@@ -121,6 +137,25 @@ struct SBType
 	SBType()
 	{ }
 
+	int32_t GetImmediate() const
+	{
+		SBImmediate immediate;
+		immediate.immediate1.FromInt(immediate2.GetAsInt());
+		immediate.immediate2.FromInt(immediate3.GetAsInt());
+		immediate.immediate3.FromInt(immediate1.GetAsInt());
+		immediate.immediate4.FromInt(immediate4.GetAsInt());
+
+		return immediate.ToImmediate();
+	}
+	void SetImmediate(const uint32_t value)
+	{
+		const SBImmediate immediate(value);
+		immediate1.FromInt(immediate.immediate3.GetAsInt());
+		immediate2.FromInt(immediate.immediate1.GetAsInt());
+		immediate3.FromInt(immediate.immediate2.GetAsInt());
+		immediate4.FromInt(immediate.immediate4.GetAsInt());
+	}
+
 	uint32_t ToRawInstruction() const
 	{
 		return opcode    .GetField() | 
@@ -155,6 +190,25 @@ struct UJType
 	UJType()
 	{ }
 
+	int32_t GetImmediate() const
+	{
+		UJImmediate immediate;
+		immediate.immediate1.FromInt(immediate3.GetAsInt());
+		immediate.immediate2.FromInt(immediate2.GetAsInt());
+		immediate.immediate3.FromInt(immediate1.GetAsInt());
+		immediate.immediate4.FromInt(immediate4.GetAsInt());
+
+		return immediate.ToImmediate();
+	}
+	void SetImmediate(const uint32_t value)
+	{
+		const UJImmediate ujImmediate(value);
+		immediate1.FromInt(ujImmediate.immediate3.GetAsInt());
+		immediate2.FromInt(ujImmediate.immediate2.GetAsInt());
+		immediate3.FromInt(ujImmediate.immediate1.GetAsInt());
+		immediate4.FromInt(ujImmediate.immediate4.GetAsInt());
+	}
+
 	uint32_t ToRawInstruction() const
 	{
 		return opcode    .GetField() | 
@@ -180,6 +234,19 @@ struct UType
 	}
 	UType()
 	{ }
+
+	int32_t GetImmediate() const
+	{
+		UImmediate uImmediate;
+		uImmediate.immediate1.FromInt(immediate.GetAsInt());
+
+		return uImmediate.ToImmediate();
+	}
+	void SetImmediate(const uint32_t value)
+	{
+		const UImmediate uImmediate(value);
+		immediate.FromInt(uImmediate.immediate1.GetAsInt());
+	}
 
 	uint32_t ToRawInstruction() const
 	{

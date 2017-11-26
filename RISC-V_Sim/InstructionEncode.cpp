@@ -39,13 +39,11 @@ static uint32_t EncodeIType(const InstructionType type, const Regs rd, const Reg
 static uint32_t EncodeSType(const InstructionType type, const Regs rs1, const Regs rs2, const uint32_t immediate)
 {
 	SType sType = { 0 };
-	const SImmediate sImmediate(immediate);
 	sType.opcode    .FromInt(InstructionTypeGetOpCode(type));
-	sType.immediate1.FromInt(sImmediate.immediate1.GetAsInt());
 	sType.funct3    .FromInt(InstructionTypeFunct3(type));
 	sType.rs1       .FromInt(static_cast<uint32_t>(rs1));
 	sType.rs2       .FromInt(static_cast<uint32_t>(rs2));
-	sType.immediate2.FromInt(sImmediate.immediate2.GetAsInt());
+	sType.SetImmediate(immediate);
 
 	return sType.ToRawInstruction();
 }
@@ -53,15 +51,11 @@ static uint32_t EncodeSType(const InstructionType type, const Regs rs1, const Re
 static uint32_t EncodeSBType(const InstructionType type, const Regs rs1, const Regs rs2, const uint32_t immediate)
 {
 	SBType sbType = { 0 };
-	const SBImmediate sbImmediate(immediate);
 	sbType.opcode.FromInt(InstructionTypeGetOpCode(type));
-	sbType.immediate1.FromInt(sbImmediate.immediate3.GetAsInt());
-	sbType.immediate2.FromInt(sbImmediate.immediate1.GetAsInt());
 	sbType.funct3    .FromInt(InstructionTypeFunct3(type));
 	sbType.rs1       .FromInt(static_cast<uint32_t>(rs1));
 	sbType.rs2       .FromInt(static_cast<uint32_t>(rs2));
-	sbType.immediate3.FromInt(sbImmediate.immediate2.GetAsInt());
-	sbType.immediate4.FromInt(sbImmediate.immediate4.GetAsInt());
+	sbType.SetImmediate(immediate);
 
 	return sbType.ToRawInstruction();
 }
@@ -69,13 +63,9 @@ static uint32_t EncodeSBType(const InstructionType type, const Regs rs1, const R
 static uint32_t EncodeUJType(const InstructionType type, const Regs rd, const uint32_t immediate)
 {
 	UJType ujType = { 0 };
-	const UJImmediate ujImmediate(immediate);
 	ujType.opcode    .FromInt(InstructionTypeGetOpCode(type));
 	ujType.rd        .FromInt(static_cast<uint32_t>(rd));
-	ujType.immediate1.FromInt(ujImmediate.immediate3.GetAsInt());
-	ujType.immediate2.FromInt(ujImmediate.immediate2.GetAsInt());
-	ujType.immediate3.FromInt(ujImmediate.immediate1.GetAsInt());
-	ujType.immediate4.FromInt(ujImmediate.immediate4.GetAsInt());
+	ujType.SetImmediate(immediate);
 
 	return ujType.ToRawInstruction();
 }
@@ -83,10 +73,9 @@ static uint32_t EncodeUJType(const InstructionType type, const Regs rd, const ui
 static uint32_t EncodeUType(const InstructionType type, const Regs rd, const uint32_t immediate)
 {
 	UType uType = { 0 };
-	const UImmediate uImmediate = { immediate };
 	uType.opcode   .FromInt(InstructionTypeGetOpCode(type));
 	uType.rd       .FromInt(static_cast<uint32_t>(rd));
-	uType.immediate.FromInt(uImmediate.immediate1.GetAsInt());
+	uType.SetImmediate(immediate);
 
 	return uType.ToRawInstruction();
 }

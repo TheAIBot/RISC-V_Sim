@@ -244,23 +244,20 @@ void Processor::EnvironmentCall(bool* stopProgram)
 	}
 }
 
-bool Processor::CompareRegisters(const uint32_t* compareWith)
+void Processor::CopyRegistersTo(uint32_t* copyTo)
 {
 	for (uint32_t i = 0; i < 32; i++)
 	{
-		//don't compare stack pointer because the correct is wrong
-		if (registers[i].uword != compareWith[i] && i != static_cast<uint32_t>(Regs::sp))
+		//don't copy stack pointer because the correct is wrong
+		if (i != static_cast<uint32_t>(Regs::sp))
 		{
-			return false;
+			copyTo[i] = registers[i].uword;
+		}
+		else 
+		{
+			copyTo[i] = 0;
 		}
 	}
-
-	return true;
-}
-
-uint32_t Processor::GetRegister(const Regs reg)
-{
-	return registers[static_cast<uint32_t>(reg)].uword;
 }
 
 void Processor::SetDebugMode(const bool useDebugMode)

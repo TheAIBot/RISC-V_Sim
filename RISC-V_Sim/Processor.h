@@ -32,8 +32,7 @@ public:
 	void PrintRegisters();
 	void SetDebugMode(const bool useDebugMode);
 	void SetPrintExecutedInstruction(const bool value);
-	bool CompareRegisters(const uint32_t* compareWith);
-	uint32_t GetRegister(const Regs reg);
+	void CopyRegistersTo(uint32_t* copyTo);
 	void Reset();
 
 	~Processor();

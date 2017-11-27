@@ -44,12 +44,6 @@ int runAllTests()
 	return 0;
 }
 
-/*
---testAll run all tests
---run file to run
--o output file
-test that loop works correctly once more
-*/
 int main(int argc, char* argv[])
 {	
 	//if no arguments then run all tests

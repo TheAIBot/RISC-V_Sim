@@ -45,7 +45,7 @@
     <ClCompile Include="RISCV_Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ReadTest.cpp">
+    <ClCompile Include="ReadProgram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,13 +80,13 @@
     <ClInclude Include="RISCV_Program.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ReadTest.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="BitField.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ImmediateFormat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ReadProgram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

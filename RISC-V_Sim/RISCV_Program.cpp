@@ -5,14 +5,16 @@
 #include "InstructionEncode.h"
 #include "InstructionDecode.h"
 #include "Processor.h"
-#include "ReadTest.h"
+#include "ReadProgram.h"
 
 
-RISCV_Program::RISCV_Program()
+RISCV_Program::RISCV_Program(const std::string name)
 {
+	ProgramName = name;
     for(uint32_t i = 0; i < 32; i++)
     {
-        Registers[i] = 0;
+        ExpectedRegisters[i] = 0;
+		ActualRegisters[i] = 0;
     }
 }
 void RISCV_Program::SetRegister(Regs reg, uint32_t value)
@@ -24,7 +26,7 @@ void RISCV_Program::SetRegister(Regs reg, uint32_t value)
 
 void RISCV_Program::ExpectRegisterValue(Regs reg, uint32_t expected)
 {
-    Registers[static_cast<uint32_t>(reg)] = expected;
+    ExpectedRegisters[static_cast<uint32_t>(reg)] = expected;
 }
 
 void RISCV_Program::AddInstruction(uint32_t rawInstruction)
@@ -50,18 +52,7 @@ void RISCV_Program::EndProgram()
 	AddInstruction(Create_ecall());
 }
 
-static void WriteFile(const std::string& filepath, const char* toWrite, uint32_t size)
-{
-    std::ofstream file(filepath.c_str(), std::ios::binary);
-	if (!file)
-	{
-		throw std::runtime_error("Failed to create file: " + filepath);
-	}
-    file.write(toWrite, size);
-    file.close(); 
-}
-
-void RISCV_Program::WrongProgramResult(Processor& processor, const std::string& filepath, bool fromFile)
+static std::string RegistersToString(const uint32_t* regs1, const uint32_t* regs2)
 {
 	std::string registerSum = "";
 	for(uint32_t i = 0; i < 32; i++)
@@ -76,54 +67,101 @@ void RISCV_Program::WrongProgramResult(Processor& processor, const std::string& 
 		{
 			registerSum += RegisterName(i);
 			registerSum += " ";
-			registerSum += std::to_string(Registers[i]);
+			registerSum += std::to_string(regs1[i]);
 			registerSum += " : ";
-			registerSum += std::to_string(processor.GetRegister(static_cast<Regs>(i)));
+			registerSum += std::to_string(regs2[i]);
 		}
 
 		registerSum += "\n";
 	}
-	if (!fromFile)
-	{
-		throw std::runtime_error("Incorrect program result for " + filepath + ".\nExpected : Actual\n" + registerSum);
-	}
-	else
-	{
-		throw std::runtime_error("Incorrect program result from loaded program: " + filepath + ".\nExpected : Actual\n" + registerSum);
-	}
 
+	return registerSum;
 }
 
-void RISCV_Program::SaveAndTest(const std::string& filepath)
+static bool CompareRegisters(const uint32_t* regs1, const uint32_t* regs2)
 {
-    const std::string binFile      = filepath + ".bin";
-    const std::string registerFile = filepath + ".res";
-    const std::string assemblyFile = filepath + ".s";
-
-    WriteFile(binFile     , reinterpret_cast<char*>(&Instructions[0]), sizeof(uint32_t) * Instructions.size());
-    WriteFile(registerFile, reinterpret_cast<char*>(&Registers[0])   , sizeof(uint32_t) * 32);
-
-    const std::string programAsText = GetProgramAsString(&Instructions[0], Instructions.size());
-    WriteFile(assemblyFile, programAsText.c_str(), programAsText.length());
-
-    Processor processor;
-    processor.Run(&Instructions[0], Instructions.size());
-    if (!processor.CompareRegisters(Registers))
-    {
-		WrongProgramResult(processor, filepath, false);
-    }
-
-	//now load program from the file we just wrote
-	//and verify that the result is the same
-	const std::unique_ptr<Test> test = LoadTest(filepath);
-
-	processor.Reset();
-	processor.Run(test->instructions, test->instructionCount);
-	//verify what registers and Registers are the same
-	//and that the program gave the correct result
-	if (!processor.CompareRegisters(test->registers) && 
-		!processor.CompareRegisters(Registers))
+	for(uint32_t i = 0; i < 32; i++)
 	{
-		WrongProgramResult(processor, filepath, true);
+		if (regs1[i] != regs2[i])
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+std::string RISCV_Program::GetRegisterComparison()
+{
+	return RegistersToString(ExpectedRegisters, ActualRegisters);
+}
+
+bool RISCV_Program::CheckProgramResult()
+{
+	return CompareRegisters(ExpectedRegisters, ActualRegisters);
+}
+
+void RISCV_Program::Test()
+{
+	Processor processor;
+	processor.Run(&Instructions[0], Instructions.size());
+	processor.CopyRegistersTo(ActualRegisters);
+	if (!CheckProgramResult())
+	{
+		std::string registersDiff = GetRegisterComparison();
+		throw std::runtime_error("Incorrect program result for " + ProgramName + ".\nExpected : Actual\n" + registersDiff);
+	}
+}
+
+static void WriteFile(const std::string& filepath, const char* toWrite, const uint32_t size)
+{
+	std::ofstream file(filepath.c_str(), std::ios::binary);
+	if (!file)
+	{
+		throw std::runtime_error("Failed to create file: " + filepath);
+	}
+	file.write(toWrite, size);
+	file.close(); 
+}
+
+void RISCV_Program::Save(const std::string& filepath) const
+{
+	const std::string binFile      = filepath + ".bin";
+	const std::string registerFile = filepath + ".res";
+	const std::string assemblyFile = filepath + ".s";
+
+	WriteFile(binFile     , reinterpret_cast<const char*>(&Instructions[0]) , sizeof(uint32_t) * Instructions.size());
+	WriteFile(registerFile, reinterpret_cast<const char*>(ExpectedRegisters), sizeof(uint32_t) * 32);
+
+	const std::string programAsText = GetProgramAsString(&Instructions[0], Instructions.size());
+	WriteFile(assemblyFile, programAsText.c_str(), programAsText.length());
+}
+
+void RISCV_Program::SaveProgramResult(const std::string& filepath) const
+{
+	const std::string registerFile = filepath + ".res";
+	WriteFile(registerFile, reinterpret_cast<const char*>(ActualRegisters)   , sizeof(uint32_t) * 32);
+}
+
+std::string RISCV_Program::GetProgramName() const
+{
+	return ProgramName;
+}
+
+const uint32_t* RISCV_Program::GetProgramResult() const
+{
+	return ActualRegisters;
+}
+
+void CompareRISCVPrograms(RISCV_Program& p1, std::unique_ptr<RISCV_Program>& p2)
+{
+	const uint32_t* regs1 = p1.GetProgramResult();
+	const uint32_t* regs2 = p2->GetProgramResult();
+	if (!CompareRegisters(regs1, regs2))
+	{
+		const std::string p1Name = p1.GetProgramName();
+		const std::string p2Name = p2->GetProgramName();
+		const std::string registersDiff = RegistersToString(regs1, regs2);
+
+		throw std::runtime_error("Program " + p1Name + " and " + p2Name + " does not give the same result.\n" + registersDiff);
 	}
 }

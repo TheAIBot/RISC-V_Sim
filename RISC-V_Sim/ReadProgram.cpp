@@ -1,4 +1,4 @@
-#include "ReadTest.h"
+#include "ReadProgram.h"
 #include <iostream>
 #include <string>
 #include <stdexcept>
@@ -46,7 +46,7 @@ static uint32_t* char_to_uint32_t(const char* chars, const uint64_t fileSize)
 	return uints;
 }
 
-const uint32_t* ReadInstructions(const std::string& filePath, uint32_t* instructionCount)
+static const uint32_t* ReadInstructions(const std::string& filePath, uint32_t* instructionCount)
 {
 	const std::string instructionsFile = filePath + ".bin";
 	uint64_t fileSize;
@@ -65,7 +65,7 @@ const uint32_t* ReadInstructions(const std::string& filePath, uint32_t* instruct
 	return instructions;
 }
 
-const uint32_t* ReadRegisters(const std::string& filePath)
+static const uint32_t* ReadRegisters(const std::string& filePath)
 {
 	const std::string registerFile = filePath + ".res";
 	uint64_t fileSize;
@@ -83,11 +83,24 @@ const uint32_t* ReadRegisters(const std::string& filePath)
 	return registers;
 }
 
-std::unique_ptr<Test> LoadTest(const std::string& filePath)
+std::unique_ptr<RISCV_Program> LoadProgram(const std::string& filePath)
 {
 	uint32_t instructionCount;
 	const uint32_t* rawInstructions = ReadInstructions(filePath, &instructionCount);
 	const uint32_t* registers = ReadRegisters(filePath);
+	std::unique_ptr<RISCV_Program> program = std::make_unique<RISCV_Program>(filePath);
 
-	return std::make_unique<Test>(rawInstructions, registers, instructionCount);
+	for (size_t i = 0; i < instructionCount; i++)
+	{
+		program->AddInstruction(rawInstructions[i]);
+	}
+	for (size_t i = 0; i < 32; i++)
+	{
+		program->ExpectRegisterValue(static_cast<Regs>(i), registers[i]);
+	}
+
+	delete[] rawInstructions;
+	delete[] registers;
+
+	return program;
 }

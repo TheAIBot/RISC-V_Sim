@@ -47,7 +47,7 @@ int runAllTests()
 int main(int argc, char* argv[])
 {	
 	//if no arguments then run all tests
-	if (argc == 1)
+	if (argc <= 1)
 	{
 		return runAllTests();
 	}

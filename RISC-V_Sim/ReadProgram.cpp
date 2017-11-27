@@ -39,9 +39,9 @@ static uint32_t* char_to_uint32_t(const char* chars, const uint64_t fileSize)
 		const uint32_t t3 = static_cast<uint32_t>(static_cast<uint8_t>(chars[i + 2]));
 		const uint32_t t4 = static_cast<uint32_t>(static_cast<uint8_t>(chars[i + 3]));
 		uints[i / 4] = (t1 <<  0) |
-			(t2 <<  8) |
-			(t3 << 16) |
-			(t4 << 24);
+					   (t2 <<  8) |
+					   (t3 << 16) |
+					   (t4 << 24);
 	}
 	return uints;
 }
@@ -55,6 +55,7 @@ static const uint32_t* ReadInstructions(const std::string& filePath, uint32_t* i
 	//make sure file can be converted to integer array
 	if (fileSize % 4 != 0 || fileSize  == 0)
 	{
+		delete[] fileContent;
 		throw std::runtime_error("File doesn't have the correct length. Length: " + std::to_string(fileSize));
 	}
 
@@ -74,6 +75,7 @@ static const uint32_t* ReadRegisters(const std::string& filePath)
 	//have read exactly 32 word registers
 	if (fileSize != 4 * 32)
 	{
+		delete[] fileContent;
 		throw std::runtime_error("File doesn't have the correct length. Length: " + std::to_string(fileSize));
 	}
 
@@ -85,22 +87,32 @@ static const uint32_t* ReadRegisters(const std::string& filePath)
 
 std::unique_ptr<RISCV_Program> LoadProgram(const std::string& filePath)
 {
-	uint32_t instructionCount;
-	const uint32_t* rawInstructions = ReadInstructions(filePath, &instructionCount);
-	const uint32_t* registers = ReadRegisters(filePath);
 	std::unique_ptr<RISCV_Program> program = std::make_unique<RISCV_Program>(filePath);
 
+	uint32_t instructionCount;
+	const uint32_t* rawInstructions = ReadInstructions(filePath, &instructionCount);
 	for (size_t i = 0; i < instructionCount; i++)
 	{
 		program->AddInstruction(rawInstructions[i]);
 	}
-	for (size_t i = 0; i < 32; i++)
-	{
-		program->ExpectRegisterValue(static_cast<Regs>(i), registers[i]);
-	}
-
 	delete[] rawInstructions;
-	delete[] registers;
+
+
+	try
+	{
+		//no need to clean up the pointer if the method 
+		//crashes as it shouldn't have allocated anything
+		const uint32_t* registers = ReadRegisters(filePath);
+		for (size_t i = 0; i < 32; i++)
+		{
+			program->ExpectRegisterValue(static_cast<Regs>(i), registers[i]);
+		}
+		delete[] registers;
+	}
+	catch (const std::exception& e)
+	{
+		std::cout << "Warning: No register file found" << std::endl;
+	}
 
 	return program;
 }

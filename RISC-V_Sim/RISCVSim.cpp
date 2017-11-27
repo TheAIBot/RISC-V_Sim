@@ -47,17 +47,17 @@ int runAllTests()
 int main(int argc, char* argv[])
 {	
 	//if no arguments then run all tests
-	if (argc == 0)
+	if (argc == 1)
 	{
 		return runAllTests();
 	}
 	//or if the arguments was to run all tests
-	else if (std::string("--testAll").compare(argv[0]))
+	else if ("--testAll" == std::string(argv[1]))
 	{
 		return runAllTests();
 	}
 	
-	//for this next part atleast two argumentsd
+	//for this next part atleast two arguments
 	//are rquired
 	if (argc <= 1)
 	{
@@ -71,9 +71,9 @@ int main(int argc, char* argv[])
 
 	//first argument has to be this
 	//and second has to be a valid riscv program file path
-	if (std::string("--testFile").compare(argv[0]))
+	if ("--run" == std::string(argv[1]))
 	{
-		input = std::string(argv[1]);
+		input = std::string(argv[2]);
 	}
 	else
 	{
@@ -83,9 +83,9 @@ int main(int argc, char* argv[])
 
 	//if another output file was specified then
 	//change the default to the specified file
-	if (argc == 4 && std::string("-o").compare(argv[2]))
+	if (argc == 5 && "-o" == std::string(argv[3]))
 	{
-		output = std::string(argv[3]);
+		output = std::string(argv[4]);
 	}
 
 	try
@@ -93,6 +93,7 @@ int main(int argc, char* argv[])
 		std::unique_ptr<RISCV_Program> program = LoadProgram(input);
 		program->Test();
 		program->SaveProgramResult(output);
+		std::cout << "Program ran sucessfully" << std::endl;
 	}
 	catch (const std::runtime_error& e)
 	{

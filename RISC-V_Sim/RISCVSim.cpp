@@ -91,7 +91,7 @@ int main(int argc, char* argv[])
 	try
 	{
 		std::unique_ptr<RISCV_Program> program = LoadProgram(input);
-		program->Test();
+		program->Run();
 		program->SaveProgramResult(output);
 		std::cout << "Program ran sucessfully" << std::endl;
 	}

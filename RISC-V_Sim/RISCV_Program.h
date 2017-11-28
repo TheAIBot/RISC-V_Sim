@@ -28,6 +28,7 @@ public:
 	void AddInstruction(MultiInstruction mInstruction);
 	void EndProgram();
 
+	void Run();
 	void Test();
 	void Save(const std::string& filepath) const;
 	void SaveProgramResult(const std::string& filepath) const;

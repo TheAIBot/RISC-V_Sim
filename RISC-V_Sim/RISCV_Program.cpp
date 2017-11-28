@@ -100,11 +100,16 @@ bool RISCV_Program::CheckProgramResult()
 	return CompareRegisters(ExpectedRegisters, ActualRegisters);
 }
 
-void RISCV_Program::Test()
+void RISCV_Program::Run()
 {
 	Processor processor;
 	processor.Run(&Instructions[0], Instructions.size());
 	processor.CopyRegistersTo(ActualRegisters);
+}
+
+void RISCV_Program::Test()
+{
+	Run();
 	if (!CheckProgramResult())
 	{
 		std::string registersDiff = GetRegisterComparison();

@@ -132,22 +132,22 @@ Instruction DecodeInstruction(const uint32_t rawInstruction)
 
 	switch (opcode)
 	{
-		case 0b00000011:
-		case 0b00001111:
-		case 0b00010011:
-		case 0b01100111:
-		case 0b01110011:
+		case 0b0000011:
+		case 0b0001111:
+		case 0b0010011:
+		case 0b1100111:
+		case 0b1110011:
 			return DecodeIType(rawInstruction);
-		case 0b00010111:
-		case 0b00110111:
+		case 0b0010111:
+		case 0b0110111:
 			return DecodeUType(rawInstruction);
-		case 0b00100011:
+		case 0b0100011:
 			return DecodeSType(rawInstruction);
-		case 0b00110011:
+		case 0b0110011:
 			return DecodeRType(rawInstruction);
-		case 0b01100011:
+		case 0b1100011:
 			return DecodeSBType(rawInstruction);
-		case 0b01101111:
+		case 0b1101111:
 			return DecodeUJType(rawInstruction);
 		default:
 			throw std::runtime_error("Invalid opcode. opcode: " + std::to_string(opcode));
@@ -162,7 +162,6 @@ const Instruction* DecodeInstructions(const uint32_t* rawInstructions, const uin
 	{
 		const uint32_t rawInstruction = rawInstructions[i];
 		instructions[i] = DecodeInstruction(rawInstruction);
-		//PrintInstruction(instructions[i]);
 	}
 
 	return instructions;

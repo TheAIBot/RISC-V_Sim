@@ -50,7 +50,16 @@ enum class InstructionType : uint16_t
 	csrrc	= 0b000000'011'1110011,
 	csrrwi	= 0b000000'101'1110011,
 	csrrsi	= 0b000000'110'1110011,
-	csrrci	= 0b000000'111'1110011
+	csrrci	= 0b000000'111'1110011,
+
+	mul     = 0b000001'000'0110011,
+	mulh    = 0b000001'001'0110011,
+	mulhsu	= 0b000001'010'0110011,
+	mulhu   = 0b000001'011'0110011,
+	div	    = 0b000001'100'0110011,
+	divu	= 0b000001'101'0110011,
+	rem		= 0b000001'110'0110011,
+	remu	= 0b000001'111'0110011
 };
 
 uint32_t InstructionTypeGetOpCode(const InstructionType type);

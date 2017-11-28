@@ -304,6 +304,39 @@ uint32_t Create_csrrci()
 {
 	throw std::runtime_error("Instruction encoding not implemented for this instruction.");
 }
+uint32_t Create_mul(const Regs rd, const Regs rs1, const Regs rs2)
+{
+	return EncodeRType(InstructionType::mul, rd, rs1, rs2);
+}
+uint32_t Create_mulh(const Regs rd, const Regs rs1, const Regs rs2)
+{
+	return EncodeRType(InstructionType::mulh, rd, rs1, rs2);
+}
+uint32_t Create_mulhsu(const Regs rd, const Regs rs1, const Regs rs2)
+{
+	return EncodeRType(InstructionType::mulhsu, rd, rs1, rs2);
+}
+uint32_t Create_mulhu(const Regs rd, const Regs rs1, const Regs rs2)
+{
+	return EncodeRType(InstructionType::mulhu, rd, rs1, rs2);
+}
+uint32_t Create_div(const Regs rd, const Regs rs1, const Regs rs2)
+{
+	return EncodeRType(InstructionType::div, rd, rs1, rs2);
+}
+uint32_t Create_divu(const Regs rd, const Regs rs1, const Regs rs2)
+{
+	return EncodeRType(InstructionType::divu, rd, rs1, rs2);
+}
+uint32_t Create_rem(const Regs rd, const Regs rs1, const Regs rs2)
+{
+	return EncodeRType(InstructionType::rem, rd, rs1, rs2);
+}
+uint32_t Create_remu(const Regs rd, const Regs rs1, const Regs rs2)
+{
+	return EncodeRType(InstructionType::remu, rd, rs1, rs2);
+}
+
 MultiInstruction Create_li(const Regs rd, const uint32_t immediate)
 {
 	const uint32_t addiImmediate = SignExtend<12>(immediate & 0x0f'ff);

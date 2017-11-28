@@ -179,6 +179,22 @@ static std::string GetNameOfInstructionType(const InstructionType type)
 			return "csrrsi";
 		case InstructionType::csrrci:
 			return "csrrci";
+		case InstructionType::mul:
+			return "mul";
+		case InstructionType::mulh:
+			return "mulh";
+		case InstructionType::mulhsu:
+			return "mulhsu";
+		case InstructionType::mulhu:
+			return "mulhu";
+		case InstructionType::div:
+			return "div";
+		case InstructionType::divu:
+			return "divu";
+		case InstructionType::rem:
+			return "rem";
+		case InstructionType::remu:
+			return "remu";
 		default:
 			throw std::runtime_error("Invalid instruction type. Type: " + NumberToBits(static_cast<uint32_t>(type)));
 	}
@@ -192,7 +208,7 @@ std::string InstructionAsString(const Instruction& instruction)
 	std::string rs1Text = RegisterName(instruction.rs1);
 	std::string rs2Text = RegisterName(instruction.rs2);
 
-	switch (static_cast<uint16_t>(instruction.type) & 127)
+	switch (InstructionTypeGetOpCode(instruction.type))
 	{
 		case 0b0000'0011:
 			sprintf(text, "%s %s %i(%s)", type.c_str(), rdText.c_str(), instruction.immediate, rs1Text.c_str());

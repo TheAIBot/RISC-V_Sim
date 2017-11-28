@@ -285,6 +285,54 @@ static void Test_csrrci()
 {
 
 }
+static void Test_mul()
+{
+	TestEncodeDecodeInstruction(Create_mul(Regs::a0, Regs::s5, Regs::s10), "mul a0 s5 s10");
+	TestEncodeDecodeInstruction(Create_mul(Regs::s2, Regs::t4, Regs::s11), "mul s2 t4 s11");
+	TestEncodeDecodeInstruction(Create_mul(Regs::t5, Regs::s10, Regs::t1), "mul t5 s10 t1");
+}
+static void Test_mulh()
+{
+	TestEncodeDecodeInstruction(Create_mulh(Regs::a0, Regs::s5, Regs::s10), "mulh a0 s5 s10");
+	TestEncodeDecodeInstruction(Create_mulh(Regs::s2, Regs::t4, Regs::s11), "mulh s2 t4 s11");
+	TestEncodeDecodeInstruction(Create_mulh(Regs::t5, Regs::s10, Regs::t1), "mulh t5 s10 t1");
+}
+static void Test_mulhsu()
+{
+	TestEncodeDecodeInstruction(Create_mulhsu(Regs::a0, Regs::s5, Regs::s10), "mulhsu a0 s5 s10");
+	TestEncodeDecodeInstruction(Create_mulhsu(Regs::s2, Regs::t4, Regs::s11), "mulhsu s2 t4 s11");
+	TestEncodeDecodeInstruction(Create_mulhsu(Regs::t5, Regs::s10, Regs::t1), "mulhsu t5 s10 t1");
+}
+static void Test_mulhu()
+{
+	TestEncodeDecodeInstruction(Create_mulhu(Regs::a0, Regs::s5, Regs::s10), "mulhu a0 s5 s10");
+	TestEncodeDecodeInstruction(Create_mulhu(Regs::s2, Regs::t4, Regs::s11), "mulhu s2 t4 s11");
+	TestEncodeDecodeInstruction(Create_mulhu(Regs::t5, Regs::s10, Regs::t1), "mulhu t5 s10 t1");
+}
+static void Test_div()
+{
+	TestEncodeDecodeInstruction(Create_div(Regs::a0, Regs::s5, Regs::s10), "div a0 s5 s10");
+	TestEncodeDecodeInstruction(Create_div(Regs::s2, Regs::t4, Regs::s11), "div s2 t4 s11");
+	TestEncodeDecodeInstruction(Create_div(Regs::t5, Regs::s10, Regs::t1), "div t5 s10 t1");
+}
+static void Test_divu()
+{
+	TestEncodeDecodeInstruction(Create_divu(Regs::a0, Regs::s5, Regs::s10), "divu a0 s5 s10");
+	TestEncodeDecodeInstruction(Create_divu(Regs::s2, Regs::t4, Regs::s11), "divu s2 t4 s11");
+	TestEncodeDecodeInstruction(Create_divu(Regs::t5, Regs::s10, Regs::t1), "divu t5 s10 t1");
+}
+static void Test_rem()
+{
+	TestEncodeDecodeInstruction(Create_rem(Regs::a0, Regs::s5, Regs::s10), "rem a0 s5 s10");
+	TestEncodeDecodeInstruction(Create_rem(Regs::s2, Regs::t4, Regs::s11), "rem s2 t4 s11");
+	TestEncodeDecodeInstruction(Create_rem(Regs::t5, Regs::s10, Regs::t1), "rem t5 s10 t1");
+}
+static void Test_remu()
+{
+	TestEncodeDecodeInstruction(Create_remu(Regs::a0, Regs::s5, Regs::s10), "remu a0 s5 s10");
+	TestEncodeDecodeInstruction(Create_remu(Regs::s2, Regs::t4, Regs::s11), "remu s2 t4 s11");
+	TestEncodeDecodeInstruction(Create_remu(Regs::t5, Regs::s10, Regs::t1), "remu t5 s10 t1");
+}
 
 void TestAllEncodeDecode()
 {
@@ -337,6 +385,14 @@ void TestAllEncodeDecode()
 		Test_csrrwi();
 		Test_csrrsi();
 		Test_csrrci();
+		Test_mul();
+		Test_mulh();
+		Test_mulhsu();
+		Test_mulhu();
+		Test_div();
+		Test_divu();
+		Test_rem();
+		Test_remu();
 	}
 	catch (std::runtime_error& e)
 	{

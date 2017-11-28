@@ -85,10 +85,8 @@ static const uint32_t* ReadRegisters(const std::string& filePath)
 	return registers;
 }
 
-std::unique_ptr<RISCV_Program> LoadProgram(const std::string& filePath)
+static void AddInstructionsToProgram(std::unique_ptr<RISCV_Program>& program, const std::string& filePath)
 {
-	std::unique_ptr<RISCV_Program> program = std::make_unique<RISCV_Program>(filePath);
-
 	uint32_t instructionCount;
 	const uint32_t* rawInstructions = ReadInstructions(filePath, &instructionCount);
 	for (size_t i = 0; i < instructionCount; i++)
@@ -96,8 +94,9 @@ std::unique_ptr<RISCV_Program> LoadProgram(const std::string& filePath)
 		program->AddInstruction(rawInstructions[i]);
 	}
 	delete[] rawInstructions;
-
-
+}
+static void AddRegistersToProgram(std::unique_ptr<RISCV_Program>& program, const std::string& filePath)
+{
 	try
 	{
 		//no need to clean up the pointer if the method 
@@ -111,8 +110,17 @@ std::unique_ptr<RISCV_Program> LoadProgram(const std::string& filePath)
 	}
 	catch (const std::exception& e)
 	{
+		//it's not exactly an error that there isn't a register file
+		//but atleast notify the user about it
 		std::cout << "Warning: No register file found" << std::endl;
 	}
+}
+
+std::unique_ptr<RISCV_Program> LoadProgram(const std::string& filePath)
+{
+	std::unique_ptr<RISCV_Program> program = std::make_unique<RISCV_Program>(filePath);
+	AddInstructionsToProgram(program, filePath);
+	AddRegistersToProgram(program, filePath);
 
 	return program;
 }

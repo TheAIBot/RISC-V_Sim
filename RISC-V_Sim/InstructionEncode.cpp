@@ -130,7 +130,7 @@ uint32_t Create_addi(const Regs rd, const Regs rs1, const uint32_t immediate)
 }
 uint32_t Create_slli(const Regs rd, const Regs rs1, const uint32_t immediate)
 {
-	VerifyRange(0, 32, immediate);
+	VerifyRange(0, 31, immediate);
 	return EncodeIType(InstructionType::slli, rd, rs1, immediate);
 }
 uint32_t Create_slti(const Regs rd, const Regs rs1, const uint32_t immediate)
@@ -150,12 +150,12 @@ uint32_t Create_xori(const Regs rd, const Regs rs1, const uint32_t immediate)
 }
 uint32_t Create_srli(const Regs rd, const Regs rs1, const uint32_t immediate)
 {
-	VerifyRange(0, 32, immediate);
+	VerifyRange(0, 31, immediate);
 	return EncodeIType(InstructionType::srli, rd, rs1, immediate);
 }
 uint32_t Create_srai(const Regs rd, const Regs rs1, const uint32_t immediate)
 {
-	VerifyRange(0, 32, immediate);
+	VerifyRange(0, 31, immediate);
 	return EncodeIType(InstructionType::srai, rd, rs1, immediate);
 }
 uint32_t Create_ori(const Regs rd, const Regs rs1, const uint32_t immediate)

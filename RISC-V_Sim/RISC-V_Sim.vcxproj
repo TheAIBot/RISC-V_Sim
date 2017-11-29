@@ -105,7 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <EnablePREfast>false</EnablePREfast>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -158,6 +158,8 @@
     <ClCompile Include="RISCV_Program.cpp" />
     <ClCompile Include="TestEncodeDecode.cpp" />
     <ClCompile Include="TestInstructions.cpp" />
+    <ClCompile Include="TestRandomInstructions.cpp" />
+    <ClCompile Include="TSrandom.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitField.h" />
@@ -173,6 +175,8 @@
     <ClInclude Include="RISCV_Program.h" />
     <ClInclude Include="TestEncodeDecode.h" />
     <ClInclude Include="TestInstructions.h" />
+    <ClInclude Include="TestRandomInstructions.h" />
+    <ClInclude Include="TSrandom.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

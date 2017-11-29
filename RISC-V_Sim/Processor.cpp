@@ -3,6 +3,8 @@
 #include <string>
 #include <iomanip>
 #include <algorithm>
+#include <memory>
+#include <vector>
 #include "InstructionDecode.h"
 #include "Register.h"
 
@@ -15,7 +17,8 @@ Processor::Processor()
 
 void Processor::Run(const uint32_t* rawInstructions, const uint32_t instructionCount)
 {
-	const Instruction* instructions = DecodeInstructions(rawInstructions, instructionCount);
+	Reset();
+	const std::unique_ptr<std::vector<Instruction>> instructions = DecodeInstructions(rawInstructions, instructionCount);
 
 	//set stack pointer
 	registers[static_cast<uint32_t>(Regs::sp)].word = Processor::MEMORY_SIZE;
@@ -28,7 +31,7 @@ void Processor::Run(const uint32_t* rawInstructions, const uint32_t instructionC
 			throw std::runtime_error("Index out of bounds.\nTried to access instruction: " + std::to_string(instructionIndex));
 		}
 
-		const Instruction& instruction = instructions[instructionIndex];
+		const Instruction& instruction = instructions->at(instructionIndex);
 		const bool stopProgram = RunInstruction(instruction);
 
 		if (printExecutedInstruction || debugEnabled)
@@ -215,6 +218,66 @@ bool Processor::RunInstruction(const Instruction& instruction)
 		case InstructionType::csrrsi:
 		case InstructionType::csrrci:
 			throw std::runtime_error("Instruction not implemented yet.");
+		case InstructionType::mul:
+			registers[instruction.rd].word = registers[instruction.rs1].word * registers[instruction.rs2].word;
+			pc += 4;
+			break;
+		case InstructionType::mulh:
+			registers[instruction.rd].word = static_cast<int32_t>((static_cast<int64_t>(registers[instruction.rs1].word) * static_cast<int64_t>(registers[instruction.rs2].word)) >> 32);
+			pc += 4;
+			break;
+		case InstructionType::mulhsu:
+			registers[instruction.rd].uword = static_cast<uint32_t>((static_cast<int64_t>(registers[instruction.rs1].word) * static_cast<uint64_t>(registers[instruction.rs2].uword)) >> 32);
+			pc += 4;
+			break;
+		case InstructionType::mulhu:
+			registers[instruction.rd].uword = static_cast<uint32_t>((static_cast<uint64_t>(registers[instruction.rs1].uword) * static_cast<uint64_t>(registers[instruction.rs2].uword)) >> 32);
+			pc += 4;
+			break;
+		case InstructionType::div:
+			if (registers[instruction.rs2].word == 0)
+			{
+				registers[instruction.rd].word = -1;
+			}
+			else
+			{
+				registers[instruction.rd].word = registers[instruction.rs1].word / registers[instruction.rs2].word;
+			}
+			pc += 4;
+			break;
+		case InstructionType::divu:
+			if (registers[instruction.rs2].word == 0)
+			{
+				registers[instruction.rd].uword = registers[instruction.rs1].uword;
+			}
+			else
+			{
+				registers[instruction.rd].uword = registers[instruction.rs1].uword / registers[instruction.rs2].uword;
+			}
+			pc += 4;
+			break;
+		case InstructionType::rem:
+			if (registers[instruction.rs2].word == 0)
+			{
+				registers[instruction.rd].word = registers[instruction.rs1].word;
+			}
+			else
+			{
+				registers[instruction.rd].word = registers[instruction.rs1].word % registers[instruction.rs2].word;
+			}
+			pc += 4;
+			break;
+		case InstructionType::remu:
+			if (registers[instruction.rs2].uword == 0)
+			{
+				registers[instruction.rd].uword = registers[instruction.rs1].uword;
+			}
+			else
+			{
+				registers[instruction.rd].uword = registers[instruction.rs1].uword % registers[instruction.rs2].uword;
+			}
+			pc += 4;
+			break;
 		default:
 			throw std::runtime_error("instruction identifier not recognized. iid: " + NumberToBits(static_cast<uint32_t>(instruction.type)));
 			break;
@@ -228,10 +291,10 @@ bool Processor::RunInstruction(const Instruction& instruction)
 
 void Processor::PrintInstructions(const uint32_t* rawInstructions, const uint32_t instructionCount)
 {
-	const Instruction* instructions = DecodeInstructions(rawInstructions, instructionCount);
+	const std::unique_ptr<std::vector<Instruction>> instructions = DecodeInstructions(rawInstructions, instructionCount);
 	for (uint32_t i = 0; i < instructionCount; i++)
 	{
-		const Instruction instruction = instructions[i];
+		const Instruction instruction = instructions->at(i);
 		std::cout << std::setw(32 + 6) << InstructionToBits(rawInstructions[i]) << "  " << InstructionAsString(instruction) << std::endl;
 	}
 }

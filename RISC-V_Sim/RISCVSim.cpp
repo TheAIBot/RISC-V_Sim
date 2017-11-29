@@ -8,6 +8,7 @@
 #include "TestInstructions.h"
 #include "ReadProgram.h"
 #include "RISCV_Program.h"
+#include "TestRandomInstructions.h"
 
 void testFile(std::string filePath)
 {
@@ -19,8 +20,9 @@ void testFile(std::string filePath)
 
 int runAllTests()
 {
-	TestAllEncodeDecode();
-	TestAllInstructions();
+	//TestAllEncodeDecode();
+	//TestAllInstructions();
+	TestRandomArithmeticInstructions();
 	try
 	{
 

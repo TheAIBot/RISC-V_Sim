@@ -45,6 +45,11 @@ void RISCV_Program::AddInstruction(MultiInstruction mInstruction)
     }
 }
 
+void RISCV_Program::RemoveLatestsInstruction()
+{
+	Instructions.pop_back();
+}
+
 void RISCV_Program::EndProgram()
 {
 	SetRegister(Regs::a0, 10);
@@ -155,6 +160,14 @@ std::string RISCV_Program::GetProgramName() const
 const uint32_t* RISCV_Program::GetProgramResult() const
 {
 	return ActualRegisters;
+}
+
+void RISCV_Program::ActualToExpectedRegisters()
+{
+	for(uint32_t i = 0; i < 32; i++)
+	{
+		ExpectedRegisters[i] = ActualRegisters[i];
+	}
 }
 
 void CompareRISCVPrograms(RISCV_Program& p1, std::unique_ptr<RISCV_Program>& p2)

@@ -65,55 +65,55 @@ static void Test_addi()
 {
 	TestEncodeDecodeInstruction(Create_addi(Regs::a3, Regs::a5,   411), "addi a3 a5 411");
 	TestEncodeDecodeInstruction(Create_addi(Regs::s6, Regs::x0, -1241), "addi s6 x0 -1241");
-	TestEncodeDecodeInstruction(Create_addi(Regs::t3, Regs::qp,     2), "addi t3 qp 2");
+	TestEncodeDecodeInstruction(Create_addi(Regs::t3, Regs::gp,     2), "addi t3 gp 2");
 }
 static void Test_slli()
 {
 	TestEncodeDecodeInstruction(Create_slli(Regs::a3, Regs::a5,  1), "slli a3 a5 1");
 	TestEncodeDecodeInstruction(Create_slli(Regs::s6, Regs::x0, 21), "slli s6 x0 21");
-	TestEncodeDecodeInstruction(Create_slli(Regs::t3, Regs::qp,  0), "slli t3 qp 0");
+	TestEncodeDecodeInstruction(Create_slli(Regs::t3, Regs::gp,  0), "slli t3 gp 0");
 }
 static void Test_slti()
 {
 	TestEncodeDecodeInstruction(Create_slti(Regs::a3, Regs::a5,   411), "slti a3 a5 411");
 	TestEncodeDecodeInstruction(Create_slti(Regs::s6, Regs::x0, -1241), "slti s6 x0 -1241");
-	TestEncodeDecodeInstruction(Create_slti(Regs::t3, Regs::qp,     2), "slti t3 qp 2");
+	TestEncodeDecodeInstruction(Create_slti(Regs::t3, Regs::gp,     2), "slti t3 gp 2");
 }
 static void Test_sltiu()
 {
 	TestEncodeDecodeInstruction(Create_sltiu(Regs::a3, Regs::a5,   411), "sltiu a3 a5 411");
 	TestEncodeDecodeInstruction(Create_sltiu(Regs::s6, Regs::x0, -1241), "sltiu s6 x0 -1241");
-	TestEncodeDecodeInstruction(Create_sltiu(Regs::t3, Regs::qp,     2), "sltiu t3 qp 2");
+	TestEncodeDecodeInstruction(Create_sltiu(Regs::t3, Regs::gp,     2), "sltiu t3 gp 2");
 }
 static void Test_xori()
 {
 	TestEncodeDecodeInstruction(Create_xori(Regs::a3, Regs::a5,   411), "xori a3 a5 411");
 	TestEncodeDecodeInstruction(Create_xori(Regs::s6, Regs::x0, -1241), "xori s6 x0 -1241");
-	TestEncodeDecodeInstruction(Create_xori(Regs::t3, Regs::qp,     2), "xori t3 qp 2");
+	TestEncodeDecodeInstruction(Create_xori(Regs::t3, Regs::gp,     2), "xori t3 gp 2");
 }
 static void Test_srli()
 {
 	TestEncodeDecodeInstruction(Create_srli(Regs::a3, Regs::a5,  1), "srli a3 a5 1");
 	TestEncodeDecodeInstruction(Create_srli(Regs::s6, Regs::x0, 21), "srli s6 x0 21");
-	TestEncodeDecodeInstruction(Create_srli(Regs::t3, Regs::qp,  0), "srli t3 qp 0");
+	TestEncodeDecodeInstruction(Create_srli(Regs::t3, Regs::gp,  0), "srli t3 gp 0");
 }
 static void Test_srai()
 {
 	TestEncodeDecodeInstruction(Create_srai(Regs::a3, Regs::a5,  1), "srai a3 a5 1");
 	TestEncodeDecodeInstruction(Create_srai(Regs::s6, Regs::x0, 21), "srai s6 x0 21");
-	TestEncodeDecodeInstruction(Create_srai(Regs::t3, Regs::qp,  0), "srai t3 qp 0");
+	TestEncodeDecodeInstruction(Create_srai(Regs::t3, Regs::gp,  0), "srai t3 gp 0");
 }
 static void Test_ori()
 {
 	TestEncodeDecodeInstruction(Create_ori(Regs::a3, Regs::a5,   411), "ori a3 a5 411");
 	TestEncodeDecodeInstruction(Create_ori(Regs::s6, Regs::x0, -1241), "ori s6 x0 -1241");
-	TestEncodeDecodeInstruction(Create_ori(Regs::t3, Regs::qp,     2), "ori t3 qp 2");
+	TestEncodeDecodeInstruction(Create_ori(Regs::t3, Regs::gp,     2), "ori t3 gp 2");
 }
 static void Test_andi()
 {
 	TestEncodeDecodeInstruction(Create_andi(Regs::a3, Regs::a5,   411), "andi a3 a5 411");
 	TestEncodeDecodeInstruction(Create_andi(Regs::s6, Regs::x0, -1241), "andi s6 x0 -1241");
-	TestEncodeDecodeInstruction(Create_andi(Regs::t3, Regs::qp,     2), "andi t3 qp 2");
+	TestEncodeDecodeInstruction(Create_andi(Regs::t3, Regs::gp,     2), "andi t3 gp 2");
 }
 static void Test_auipc()
 {
@@ -143,61 +143,61 @@ static void Test_add()
 {
 	TestEncodeDecodeInstruction(Create_add(Regs::a3, Regs::a5, Regs::sp), "add a3 a5 sp");
 	TestEncodeDecodeInstruction(Create_add(Regs::s6, Regs::x0, Regs::s7), "add s6 x0 s7");
-	TestEncodeDecodeInstruction(Create_add(Regs::t3, Regs::qp, Regs::tp), "add t3 qp tp");
+	TestEncodeDecodeInstruction(Create_add(Regs::t3, Regs::gp, Regs::tp), "add t3 gp tp");
 }
 static void Test_sub()
 {
 	TestEncodeDecodeInstruction(Create_sub(Regs::a3, Regs::a5, Regs::sp), "sub a3 a5 sp");
 	TestEncodeDecodeInstruction(Create_sub(Regs::s6, Regs::x0, Regs::s7), "sub s6 x0 s7");
-	TestEncodeDecodeInstruction(Create_sub(Regs::t3, Regs::qp, Regs::tp), "sub t3 qp tp");
+	TestEncodeDecodeInstruction(Create_sub(Regs::t3, Regs::gp, Regs::tp), "sub t3 gp tp");
 }
 static void Test_sll()
 {
 	TestEncodeDecodeInstruction(Create_sll(Regs::a3, Regs::a5, Regs::sp), "sll a3 a5 sp");
 	TestEncodeDecodeInstruction(Create_sll(Regs::s6, Regs::x0, Regs::s7), "sll s6 x0 s7");
-	TestEncodeDecodeInstruction(Create_sll(Regs::t3, Regs::qp, Regs::tp), "sll t3 qp tp");
+	TestEncodeDecodeInstruction(Create_sll(Regs::t3, Regs::gp, Regs::tp), "sll t3 gp tp");
 }
 static void Test_slt()
 {
 	TestEncodeDecodeInstruction(Create_slt(Regs::a3, Regs::a5, Regs::sp), "slt a3 a5 sp");
 	TestEncodeDecodeInstruction(Create_slt(Regs::s6, Regs::x0, Regs::s7), "slt s6 x0 s7");
-	TestEncodeDecodeInstruction(Create_slt(Regs::t3, Regs::qp, Regs::tp), "slt t3 qp tp");
+	TestEncodeDecodeInstruction(Create_slt(Regs::t3, Regs::gp, Regs::tp), "slt t3 gp tp");
 }
 static void Test_sltu()
 {
 	TestEncodeDecodeInstruction(Create_sltu(Regs::a3, Regs::a5, Regs::sp), "sltu a3 a5 sp");
 	TestEncodeDecodeInstruction(Create_sltu(Regs::s6, Regs::x0, Regs::s7), "sltu s6 x0 s7");
-	TestEncodeDecodeInstruction(Create_sltu(Regs::t3, Regs::qp, Regs::tp), "sltu t3 qp tp");
+	TestEncodeDecodeInstruction(Create_sltu(Regs::t3, Regs::gp, Regs::tp), "sltu t3 gp tp");
 }
 static void Test_xor()
 {
 	TestEncodeDecodeInstruction(Create_xor(Regs::a3, Regs::a5, Regs::sp), "xor a3 a5 sp");
 	TestEncodeDecodeInstruction(Create_xor(Regs::s6, Regs::x0, Regs::s7), "xor s6 x0 s7");
-	TestEncodeDecodeInstruction(Create_xor(Regs::t3, Regs::qp, Regs::tp), "xor t3 qp tp");
+	TestEncodeDecodeInstruction(Create_xor(Regs::t3, Regs::gp, Regs::tp), "xor t3 gp tp");
 }
 static void Test_srl()
 {
 	TestEncodeDecodeInstruction(Create_srl(Regs::a3, Regs::a5, Regs::sp), "srl a3 a5 sp");
 	TestEncodeDecodeInstruction(Create_srl(Regs::s6, Regs::x0, Regs::s7), "srl s6 x0 s7");
-	TestEncodeDecodeInstruction(Create_srl(Regs::t3, Regs::qp, Regs::tp), "srl t3 qp tp");
+	TestEncodeDecodeInstruction(Create_srl(Regs::t3, Regs::gp, Regs::tp), "srl t3 gp tp");
 }
 static void Test_sra()
 {
 	TestEncodeDecodeInstruction(Create_sra(Regs::a3, Regs::a5, Regs::sp), "sra a3 a5 sp");
 	TestEncodeDecodeInstruction(Create_sra(Regs::s6, Regs::x0, Regs::s7), "sra s6 x0 s7");
-	TestEncodeDecodeInstruction(Create_sra(Regs::t3, Regs::qp, Regs::tp), "sra t3 qp tp");
+	TestEncodeDecodeInstruction(Create_sra(Regs::t3, Regs::gp, Regs::tp), "sra t3 gp tp");
 }
 static void Test_or()
 {
 	TestEncodeDecodeInstruction(Create_or(Regs::a3, Regs::a5, Regs::sp), "or a3 a5 sp");
 	TestEncodeDecodeInstruction(Create_or(Regs::s6, Regs::x0, Regs::s7), "or s6 x0 s7");
-	TestEncodeDecodeInstruction(Create_or(Regs::t3, Regs::qp, Regs::tp), "or t3 qp tp");
+	TestEncodeDecodeInstruction(Create_or(Regs::t3, Regs::gp, Regs::tp), "or t3 gp tp");
 }
 static void Test_and()
 {
 	TestEncodeDecodeInstruction(Create_and(Regs::a3, Regs::a5, Regs::sp), "and a3 a5 sp");
 	TestEncodeDecodeInstruction(Create_and(Regs::s6, Regs::x0, Regs::s7), "and s6 x0 s7");
-	TestEncodeDecodeInstruction(Create_and(Regs::t3, Regs::qp, Regs::tp), "and t3 qp tp");
+	TestEncodeDecodeInstruction(Create_and(Regs::t3, Regs::gp, Regs::tp), "and t3 gp tp");
 }
 static void Test_lui()
 {
@@ -245,7 +245,7 @@ static void Test_jalr()
 {
 	TestEncodeDecodeInstruction(Create_jalr(Regs::a3, Regs::a5,  1), "jalr a3 a5 1");
 	TestEncodeDecodeInstruction(Create_jalr(Regs::s6, Regs::x0, 21), "jalr s6 x0 21");
-	TestEncodeDecodeInstruction(Create_jalr(Regs::t3, Regs::qp,  0), "jalr t3 qp 0");
+	TestEncodeDecodeInstruction(Create_jalr(Regs::t3, Regs::gp,  0), "jalr t3 gp 0");
 }
 static void Test_jal()
 {

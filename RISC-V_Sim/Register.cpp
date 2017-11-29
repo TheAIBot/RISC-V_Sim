@@ -7,7 +7,7 @@ static const std::string registerNames[32] =
 	"x0",
 	"ra",
 	"sp",
-	"qp",
+	"gp",
 	"tp",
 	"t0",
 	"t1",

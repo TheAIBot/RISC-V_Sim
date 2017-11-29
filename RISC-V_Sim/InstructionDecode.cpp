@@ -1,6 +1,8 @@
 #include "InstructionDecode.h"
 #include <cstdint>
 #include <stdexcept>
+#include <memory>
+#include <vector>
 #include "Instruction.h"
 #include "InstructionFormat.h"
 #include "ImmediateFormat.h"
@@ -154,14 +156,15 @@ Instruction DecodeInstruction(const uint32_t rawInstruction)
 	}
 }
 
-const Instruction* DecodeInstructions(const uint32_t* rawInstructions, const uint32_t instructionsCount)
+std::unique_ptr<std::vector<Instruction>> DecodeInstructions(const uint32_t* rawInstructions, const uint32_t instructionsCount)
 {
-	Instruction* instructions = new Instruction[instructionsCount];
+	std::unique_ptr<std::vector<Instruction>> instructions = std::make_unique<std::vector<Instruction>>();
 
 	for (uint32_t i = 0; i < instructionsCount; i++)
 	{
 		const uint32_t rawInstruction = rawInstructions[i];
-		instructions[i] = DecodeInstruction(rawInstruction);
+		const Instruction instruction = DecodeInstruction(rawInstruction);
+		instructions->push_back(instruction);
 	}
 
 	return instructions;
@@ -172,7 +175,7 @@ std::string GetProgramAsString(const uint32_t* rawInstructions, const uint32_t i
 	std::string program;
 	for(uint32_t i = 0; i < instructionCount; i++)
 	{
-		const Instruction& instruction = DecodeInstruction(rawInstructions[i]);
+		const Instruction instruction = DecodeInstruction(rawInstructions[i]);
 		program += InstructionAsString(instruction) + "\n";
 	}
 

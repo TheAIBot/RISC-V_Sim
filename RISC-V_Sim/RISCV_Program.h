@@ -26,6 +26,7 @@ public:
 	void ExpectRegisterValue(Regs reg, uint32_t expected);
 	void AddInstruction(uint32_t rawInstruction);
 	void AddInstruction(MultiInstruction mInstruction);
+	void RemoveLatestsInstruction();
 	void EndProgram();
 
 	void Run();
@@ -34,6 +35,7 @@ public:
 	void SaveProgramResult(const std::string& filepath) const;
 	std::string GetProgramName() const;
 	const uint32_t* GetProgramResult() const;
+	void ActualToExpectedRegisters();
 };
 
 void CompareRISCVPrograms(RISCV_Program& p1, std::unique_ptr<RISCV_Program>& p2);

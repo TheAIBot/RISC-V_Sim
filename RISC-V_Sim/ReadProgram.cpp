@@ -108,7 +108,7 @@ static void AddRegistersToProgram(std::unique_ptr<RISCV_Program>& program, const
 		}
 		delete[] registers;
 	}
-	catch (const std::exception& e)
+	catch (const std::exception&)
 	{
 		//it's not exactly an error that there isn't a register file
 		//but atleast notify the user about it

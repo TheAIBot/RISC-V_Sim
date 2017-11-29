@@ -18,7 +18,7 @@ enum class Regs : uint32_t
 	x0,
 	ra,
 	sp,
-	qp,
+	gp,
 	tp,
 	t0,
 	t1,

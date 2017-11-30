@@ -201,9 +201,9 @@ static void Test_and()
 }
 static void Test_lui()
 {
-	TestEncodeDecodeInstruction(Create_lui(Regs::t1,  122782), "lui t1 122782");
-	TestEncodeDecodeInstruction(Create_lui(Regs::s6, -154694), "lui s6 -154694");
-	TestEncodeDecodeInstruction(Create_lui(Regs::s1,     2), "lui s1 2");
+	TestEncodeDecodeInstruction(Create_lui(Regs::t1, 122782), "lui t1 122782");
+	TestEncodeDecodeInstruction(Create_lui(Regs::s6,   1594), "lui s6 1594");
+	TestEncodeDecodeInstruction(Create_lui(Regs::s1,      2), "lui s1 2");
 }
 static void Test_beq()
 {

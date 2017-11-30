@@ -20,8 +20,8 @@ void testFile(std::string filePath)
 
 int runAllTests()
 {
-	//TestAllEncodeDecode();
-	//TestAllInstructions();
+	TestAllEncodeDecode();
+	TestAllInstructions();
 	TestRandomArithmeticInstructions();
 	try
 	{

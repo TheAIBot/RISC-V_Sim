@@ -230,6 +230,7 @@ uint32_t Create_and(const Regs rd, const Regs rs1, const Regs rs2)
 }
 uint32_t Create_lui(const Regs rd, const uint32_t immediate)
 {
+	VerifyRange(0, 1048575, immediate);
 	return EncodeUType(InstructionType::lui, rd, immediate << 12);
 }
 uint32_t Create_beq(const Regs rs1, const Regs rs2, const uint32_t immediate)

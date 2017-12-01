@@ -30,6 +30,7 @@ static void TestProgram(RISCV_Program& program, const std::string& filepath)
 static void Test_lb()
 {
 	RISCV_Program program("Test_lb");
+
 	program.SetRegister(Regs::s0, 102);
 	program.AddInstruction(Create_sb(Regs::x0, Regs::s0, 100));
 	program.AddInstruction(Create_lb(Regs::t0, Regs::x0, 100));
@@ -55,6 +56,7 @@ static void Test_lb()
 static void Test_lh()
 {
 	RISCV_Program program("Test_lh");
+
 	program.SetRegister(Regs::s0, 13302);
 	program.AddInstruction(Create_sh(Regs::x0, Regs::s0, 100));
 	program.AddInstruction(Create_lh(Regs::t0, Regs::x0, 100));
@@ -80,6 +82,7 @@ static void Test_lh()
 static void Test_lw()
 {
 	RISCV_Program program("Test_lw");
+
 	program.SetRegister(Regs::s0, 1338802);
 	program.AddInstruction(Create_sw(Regs::x0, Regs::s0, 100));
 	program.AddInstruction(Create_lw(Regs::t0, Regs::x0, 100));
@@ -105,6 +108,7 @@ static void Test_lw()
 static void Test_lbu()
 {
 	RISCV_Program program("Test_lbu");
+
 	program.SetRegister(Regs::s0, 102);
 	program.AddInstruction(Create_sb(Regs::x0, Regs::s0, 100));
 	program.AddInstruction(Create_lbu(Regs::t0, Regs::x0, 100));
@@ -130,6 +134,7 @@ static void Test_lbu()
 static void Test_lhu()
 {
 	RISCV_Program program("Test_lhu");
+
 	program.SetRegister(Regs::s0, 13302);
 	program.AddInstruction(Create_sh(Regs::x0, Regs::s0, 100));
 	program.AddInstruction(Create_lhu(Regs::t0, Regs::x0, 100));
@@ -163,6 +168,7 @@ static void Test_fence_i()
 static void Test_addi()
 {
     RISCV_Program program("Test_addi");
+
     program.AddInstruction(Create_addi(Regs::t1, Regs::x0, 125));
     program.ExpectRegisterValue(Regs::t1, 125);
 
@@ -180,6 +186,7 @@ static void Test_addi()
 static void Test_slli()
 {
 	RISCV_Program program("Test_slli");
+
 	program.SetRegister(Regs::t0, 0x0f'00'ff'00);
 	program.AddInstruction(Create_slli(Regs::t1, Regs::t0, 4));
 	program.ExpectRegisterValue(Regs::t1, 0xf0'0f'f0'00);
@@ -195,6 +202,7 @@ static void Test_slli()
 static void Test_slti()
 {
 	RISCV_Program program("Test_slti");
+
 	program.SetRegister(Regs::t0, 20);
 	program.AddInstruction(Create_slti(Regs::t1, Regs::t0, 21));
 	program.ExpectRegisterValue(Regs::t1, 1);
@@ -226,6 +234,7 @@ static void Test_slti()
 static void Test_sltiu()
 {
 	RISCV_Program program("Test_sltiu");
+
 	program.SetRegister(Regs::t0, 20);
 	program.AddInstruction(Create_sltiu(Regs::t1, Regs::t0, 21));
 	program.ExpectRegisterValue(Regs::t1, 1);
@@ -257,6 +266,7 @@ static void Test_sltiu()
 static void Test_xori()
 {
 	RISCV_Program program("Test_xori");
+
 	program.SetRegister(Regs::t0, 0x0f'00'ff'f0);
 	program.AddInstruction(Create_xori(Regs::t1, Regs::t0, 0x00'00'07'0f));
 	program.ExpectRegisterValue(Regs::t1, 0x0f'00'f8'ff);
@@ -269,6 +279,7 @@ static void Test_xori()
 static void Test_srli()
 {
 	RISCV_Program program("Test_srli");
+
 	program.SetRegister(Regs::t0, 0xf0'ff'00'f0);
 	program.AddInstruction(Create_srli(Regs::t1, Regs::t0, 4));
 	program.ExpectRegisterValue(Regs::t1, 0x0f'0f'f0'0f);
@@ -284,6 +295,7 @@ static void Test_srli()
 static void Test_srai()
 {
 	RISCV_Program program("Test_srai");
+
 	program.SetRegister(Regs::t0, 0xf0'ff'00'f0);
 	program.AddInstruction(Create_srai(Regs::t1, Regs::t0, 4));
 	program.ExpectRegisterValue(Regs::t1, 0xff'0f'f0'0f);
@@ -306,6 +318,7 @@ static void Test_srai()
 static void Test_ori()
 {
 	RISCV_Program program("Test_ori");
+
 	program.SetRegister(Regs::t0, 0x8f'00'ff'f1);
 	program.AddInstruction(Create_ori(Regs::t1, Regs::t0, 0x00'00'07'00));
 	program.ExpectRegisterValue(Regs::t1, 0x8f'00'ff'f1);
@@ -318,6 +331,7 @@ static void Test_ori()
 static void Test_andi()
 {
 	RISCV_Program program("Test_andi");
+
 	program.SetRegister(Regs::t0, 0x0f'00'ff'f1);
 	program.AddInstruction(Create_andi(Regs::t1, Regs::t0, 0x00'00'07'01));
 	program.ExpectRegisterValue(Regs::t1, 0x00'00'07'01);
@@ -330,8 +344,9 @@ static void Test_andi()
 static void Test_auipc()
 {
 	RISCV_Program program("Test_auipc");
+
 	program.AddInstruction(Create_auipc(Regs::t0, 0x00'00'04'00));
-	program.ExpectRegisterValue(Regs::t0, 0x00'00'04'00 << 12);
+	program.ExpectRegisterValue(Regs::t0, (0x00'00'04'00 << 12) + 0);
 
 	program.AddInstruction(Create_auipc(Regs::t1, 0x00'00'04'00));
 	program.ExpectRegisterValue(Regs::t1, (0x00'00'04'00 << 12) + 4);
@@ -351,13 +366,14 @@ static void Test_sb()
 {
 	//has already been tested in the lb tests
 	RISCV_Program program("Test_sb");
+
 	program.SetRegister(Regs::s0, 102);
 	program.AddInstruction(Create_sb(Regs::x0, Regs::s0, 100));
 	program.AddInstruction(Create_lb(Regs::t0, Regs::x0, 100));
 	program.ExpectRegisterValue(Regs::t0, 102);
 
 	program.SetRegister(Regs::s2, 102);
-	program.SetRegister(Regs::s1, 50);
+	program.SetRegister(Regs::s1, 60);
 	program.AddInstruction(Create_sb(Regs::s1, Regs::s2, -23));
 	program.AddInstruction(Create_lb(Regs::t1, Regs::s1, -23));
 	program.ExpectRegisterValue(Regs::t1, 102);
@@ -370,6 +386,7 @@ static void Test_sb()
 static void Test_sh()
 {
 	RISCV_Program program("Test_sh");
+
 	program.SetRegister(Regs::s0, 0xce'2d);
 	program.AddInstruction(Create_sh(Regs::x0, Regs::s0, 100));
 
@@ -392,6 +409,7 @@ static void Test_sh()
 static void Test_sw()
 {
 	RISCV_Program program("Test_sw");
+
 	program.SetRegister(Regs::s0, 0x3a'74'ce'2d);
 	program.AddInstruction(Create_sw(Regs::x0, Regs::s0, 100));
 
@@ -426,6 +444,7 @@ static void Test_sw()
 static void Test_add()
 {
 	RISCV_Program program("Test_add");
+
 	program.SetRegister(Regs::t0, 125);
 	program.AddInstruction(Create_add(Regs::t1, Regs::x0, Regs::t0));
 	program.ExpectRegisterValue(Regs::t1, 125);
@@ -446,6 +465,7 @@ static void Test_add()
 static void Test_sub()
 {
 	RISCV_Program program("Test_sub");
+
 	program.SetRegister(Regs::t0, 125);
 	program.AddInstruction(Create_sub(Regs::t1, Regs::x0, Regs::t0));
 	program.ExpectRegisterValue(Regs::t1, -125);
@@ -466,6 +486,7 @@ static void Test_sub()
 static void Test_sll()
 {
 	RISCV_Program program("Test_sll");
+
 	program.SetRegister(Regs::t0, 0x0f'00'ff'00);
 	program.SetRegister(Regs::s0, 4);
 	program.AddInstruction(Create_sll(Regs::t1, Regs::t0, Regs::s0));
@@ -483,6 +504,7 @@ static void Test_sll()
 static void Test_slt()
 {
 	RISCV_Program program("Test_slt");
+
 	program.SetRegister(Regs::t0, 20);
 	program.SetRegister(Regs::a0, 21);
 	program.AddInstruction(Create_slt(Regs::t1, Regs::t0, Regs::a0));
@@ -521,6 +543,7 @@ static void Test_slt()
 static void Test_sltu()
 {
 	RISCV_Program program("Test_sltu");
+
 	program.SetRegister(Regs::t0, 20);
 	program.SetRegister(Regs::a0, 21);
 	program.AddInstruction(Create_sltu(Regs::t1, Regs::t0, Regs::a0));
@@ -559,6 +582,7 @@ static void Test_sltu()
 static void Test_xor()
 {
 	RISCV_Program program("Test_xor");
+
 	program.SetRegister(Regs::t0, 0x0f'00'ff'f0);
 	program.SetRegister(Regs::t1, 0x00'00'07'0f);
 	program.AddInstruction(Create_xor(Regs::t2, Regs::t0, Regs::t1));
@@ -572,6 +596,7 @@ static void Test_xor()
 static void Test_srl()
 {
 	RISCV_Program program("Test_srl");
+
 	program.SetRegister(Regs::t0, 0xf0'ff'00'f0);
 	program.SetRegister(Regs::a0, 4);
 	program.AddInstruction(Create_srl(Regs::t1, Regs::t0, Regs::a0));
@@ -589,6 +614,7 @@ static void Test_srl()
 static void Test_sra()
 {
 	RISCV_Program program("Test_sra");
+
 	program.SetRegister(Regs::t0, 0xf0'ff'00'f0);
 	program.SetRegister(Regs::a0, 4);
 	program.AddInstruction(Create_sra(Regs::t1, Regs::t0, Regs::a0));
@@ -615,6 +641,7 @@ static void Test_sra()
 static void Test_or()
 {
 	RISCV_Program program("Test_or");
+
 	program.SetRegister(Regs::t0, 0x8f'00'ff'f1);
 	program.SetRegister(Regs::a0, 0x00'00'07'00);
 	program.AddInstruction(Create_or(Regs::t1, Regs::t0, Regs::a0));
@@ -628,6 +655,7 @@ static void Test_or()
 static void Test_and()
 {
 	RISCV_Program program("Test_and");
+
 	program.SetRegister(Regs::t0, 0x0f'00'ff'f1);
 	program.SetRegister(Regs::a0, 0x00'00'07'01);
 	program.AddInstruction(Create_and(Regs::t1, Regs::t0, Regs::a0));
@@ -641,6 +669,7 @@ static void Test_and()
 static void Test_lui()
 {
 	RISCV_Program program("Test_lui");
+
 	program.AddInstruction(Create_lui(Regs::t0, 0x00'00'04'00));
 	program.ExpectRegisterValue(Regs::t0, 0x00'00'04'00 << 12);
 
@@ -655,6 +684,7 @@ static void Test_lui()
 static void Test_beq()
 {
 	RISCV_Program program("Test_beq");
+
 	program.SetRegister(Regs::s0, 1);
 	program.SetRegister(Regs::s1, 1);
 	program.SetRegister(Regs::s2, 1);
@@ -699,6 +729,7 @@ static void Test_beq()
 static void Test_bne()
 {
 	RISCV_Program program("Test_bne");
+
 	program.SetRegister(Regs::s0, 1);
 	program.SetRegister(Regs::s1, 1);
 	program.SetRegister(Regs::s2, 1);
@@ -743,6 +774,7 @@ static void Test_bne()
 static void Test_blt()
 {
 	RISCV_Program program("Test_blt");
+
 	program.SetRegister(Regs::s0, 1);
 	program.SetRegister(Regs::s1, 1);
 	program.SetRegister(Regs::s2, 1);
@@ -787,6 +819,7 @@ static void Test_blt()
 static void Test_bge()
 {
 	RISCV_Program program("Test_bge");
+
 	program.SetRegister(Regs::s0, 1);
 	program.SetRegister(Regs::s1, 1);
 	program.SetRegister(Regs::s2, 1);
@@ -831,6 +864,7 @@ static void Test_bge()
 static void Test_bltu()
 {
 	RISCV_Program program("Test_bltu");
+
 	program.SetRegister(Regs::s0, 1);
 	program.SetRegister(Regs::s1, 1);
 	program.SetRegister(Regs::s2, 1);
@@ -875,6 +909,7 @@ static void Test_bltu()
 static void Test_bgeu()
 {
 	RISCV_Program program("Test_bgeu");
+
 	program.SetRegister(Regs::s0, 1);
 	program.SetRegister(Regs::s1, 1);
 	program.SetRegister(Regs::s2, 1);
@@ -919,6 +954,7 @@ static void Test_bgeu()
 static void Test_jalr()
 {
 	RISCV_Program program("Test_jalr");
+
 	program.AddInstruction(Create_jalr(Regs::t0, Regs::x0, 8));
 	program.ExpectRegisterValue(Regs::t0, 4);
 	program.AddInstruction(Create_li(Regs::s0, -1));
@@ -940,6 +976,7 @@ static void Test_jalr()
 static void Test_jal()
 {
 	RISCV_Program program("Test_jal");
+
 	program.AddInstruction(Create_jal(Regs::t0, 8));
 	program.ExpectRegisterValue(Regs::t0, 4);
 	program.AddInstruction(Create_li(Regs::s0, -1));
@@ -960,6 +997,7 @@ static void Test_jal()
 static void Test_ecall()
 {
 	RISCV_Program program("Test_ecall");
+
 	program.SetRegister(Regs::a1, 10);
 	program.AddInstruction(Create_ecall());
 	program.SetRegister(Regs::s0, 1);
@@ -1016,6 +1054,7 @@ static void Test_csrrci()
 static void Test_li()
 {
 	RISCV_Program program("Test_li");
+
 	program.AddInstruction(Create_li(Regs::s0, 0xff'ff'ff'ff));
 	program.ExpectRegisterValue(     Regs::s0, 0xff'ff'ff'ff);
 

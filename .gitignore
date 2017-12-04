@@ -255,5 +255,3 @@ SolveFunktion/perf.data.old
 *.o
 *.o
 SolveFunktion/solver
-RISC-V_Sim/tests
-RISC-V_Sim/InstructionTests

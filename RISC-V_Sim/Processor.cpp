@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <memory>
 #include <vector>
+#include <climits>
 #include "InstructionDecode.h"
 #include "Register.h"
 
@@ -227,7 +228,7 @@ bool Processor::RunInstruction(const Instruction& instruction)
 			pc += 4;
 			break;
 		case InstructionType::mulhsu:
-			registers[instruction.rd].uword = static_cast<uint32_t>((static_cast<int64_t>(registers[instruction.rs1].word) * static_cast<uint64_t>(registers[instruction.rs2].uword)) >> 32);
+			registers[instruction.rd].word = (static_cast<int64_t>(registers[instruction.rs1].word) * static_cast<uint64_t>(registers[instruction.rs2].uword)) >> 32;
 			pc += 4;
 			break;
 		case InstructionType::mulhu:
@@ -238,6 +239,10 @@ bool Processor::RunInstruction(const Instruction& instruction)
 			if (registers[instruction.rs2].word == 0)
 			{
 				registers[instruction.rd].word = -1;
+			}
+			else if (registers[instruction.rs1].word == LONG_MIN && registers[instruction.rs2].word == -1)
+			{
+				registers[instruction.rd].word = registers[instruction.rs1].word;
 			}
 			else
 			{
@@ -260,6 +265,10 @@ bool Processor::RunInstruction(const Instruction& instruction)
 			if (registers[instruction.rs2].word == 0)
 			{
 				registers[instruction.rd].word = registers[instruction.rs1].word;
+			}
+			else if (registers[instruction.rs1].word == LONG_MIN && registers[instruction.rs2].word == -1)
+			{
+				registers[instruction.rd].word = 0;
 			}
 			else
 			{

@@ -7,6 +7,7 @@
 #include "InstructionDecode.h"
 #include <string>
 #include <memory>
+#include <climits>
 #include "Instruction.h"
 #include "ReadProgram.h"
 #include "RISCV_Program.h"
@@ -1051,6 +1052,400 @@ static void Test_csrrci()
 {
 
 }
+static void Test_mul()
+{
+	RISCV_Program program("Test_mul");
+
+	program.SetRegister(Regs::a0, 12);
+	program.SetRegister(Regs::a1, 27);
+	program.ExpectRegisterValue(Regs::s0, 12 * 27);
+	program.ExpectRegisterValue(Regs::s1, 12 * 27);
+	program.AddInstruction(Create_mul(Regs::s0, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_mul(Regs::s1, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -31);
+	program.SetRegister(Regs::a1, 756);
+	program.ExpectRegisterValue(Regs::s2, -31 * 756);
+	program.ExpectRegisterValue(Regs::s3, -31 * 756);
+	program.AddInstruction(Create_mul(Regs::s2, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_mul(Regs::s3, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -31);
+	program.SetRegister(Regs::a1, -756);
+	program.ExpectRegisterValue(Regs::s4, -31 * -756);
+	program.ExpectRegisterValue(Regs::s5, -31 * -756);
+	program.AddInstruction(Create_mul(Regs::s4, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_mul(Regs::s5, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -32331);
+	program.SetRegister(Regs::a1, -712356);
+	program.ExpectRegisterValue(Regs::s6, -32331 * -712356);
+	program.ExpectRegisterValue(Regs::s7, -32331 * -712356);
+	program.AddInstruction(Create_mul(Regs::s6, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_mul(Regs::s7, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, 21351321);
+	program.SetRegister(Regs::a1, -92364243);
+	program.ExpectRegisterValue(Regs::s8, 21351321 * -92364243);
+	program.ExpectRegisterValue(Regs::s9, 21351321 * -92364243);
+	program.AddInstruction(Create_mul(Regs::s8, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_mul(Regs::s9, Regs::a1, Regs::a0));
+
+	program.EndProgram();
+	TestProgram(program, "InstructionTests/test_mul");
+
+	Success("test_mul");
+}
+static void Test_mulh()
+{
+	RISCV_Program program("Test_mulh");
+
+	program.SetRegister(Regs::a0, 12);
+	program.SetRegister(Regs::a1, 27);
+	program.ExpectRegisterValue(Regs::s0, 0);
+	program.ExpectRegisterValue(Regs::s1, 0);
+	program.AddInstruction(Create_mulh(Regs::s0, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_mulh(Regs::s1, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -31);
+	program.SetRegister(Regs::a1, 756);
+	program.ExpectRegisterValue(Regs::s2, -1);
+	program.ExpectRegisterValue(Regs::s3, -1);
+	program.AddInstruction(Create_mulh(Regs::s2, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_mulh(Regs::s3, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -31);
+	program.SetRegister(Regs::a1, -756);
+	program.ExpectRegisterValue(Regs::s4, 0);
+	program.ExpectRegisterValue(Regs::s5, 0);
+	program.AddInstruction(Create_mulh(Regs::s4, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_mulh(Regs::s5, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -32331);
+	program.SetRegister(Regs::a1, -712356);
+	program.ExpectRegisterValue(Regs::s6, 5);
+	program.ExpectRegisterValue(Regs::s7, 5);
+	program.AddInstruction(Create_mulh(Regs::s6, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_mulh(Regs::s7, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, 21351321);
+	program.SetRegister(Regs::a1, -92364243);
+	program.ExpectRegisterValue(Regs::s8, -459165);
+	program.ExpectRegisterValue(Regs::s9, -459165);
+	program.AddInstruction(Create_mulh(Regs::s8, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_mulh(Regs::s9, Regs::a1, Regs::a0));
+
+	program.EndProgram();
+	TestProgram(program, "InstructionTests/test_mulh");
+
+	Success("test_mulh");
+}
+static void Test_mulhsu()
+{
+	RISCV_Program program("Test_mulhsu");
+
+	program.SetRegister(Regs::a0, 12);
+	program.SetRegister(Regs::a1, 27);
+	program.ExpectRegisterValue(Regs::s0, 0);
+	program.ExpectRegisterValue(Regs::s1, 0);
+	program.AddInstruction(Create_mulhsu(Regs::s0, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_mulhsu(Regs::s1, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -31);
+	program.SetRegister(Regs::a1, 756);
+	program.ExpectRegisterValue(Regs::s2, -1);
+	program.ExpectRegisterValue(Regs::s3, 755);
+	program.AddInstruction(Create_mulhsu(Regs::s2, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_mulhsu(Regs::s3, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -31);
+	program.SetRegister(Regs::a1, -756);
+	program.ExpectRegisterValue(Regs::s4, -31);
+	program.ExpectRegisterValue(Regs::s5, -756);
+	program.AddInstruction(Create_mulhsu(Regs::s4, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_mulhsu(Regs::s5, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -32331);
+	program.SetRegister(Regs::a1, -712356);
+	program.ExpectRegisterValue(Regs::s6, -32326);
+	program.ExpectRegisterValue(Regs::s7, -712351);
+	program.AddInstruction(Create_mulhsu(Regs::s6, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_mulhsu(Regs::s7, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, 21351321);
+	program.SetRegister(Regs::a1, -92364243);
+	program.ExpectRegisterValue(Regs::s8, 20892156);
+	program.ExpectRegisterValue(Regs::s9, -459165);
+	program.AddInstruction(Create_mulhsu(Regs::s8, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_mulhsu(Regs::s9, Regs::a1, Regs::a0));
+
+	program.EndProgram();
+	TestProgram(program, "InstructionTests/test_mulhsu");
+
+	Success("test_mulhsu");
+}
+static void Test_mulhu()
+{
+	RISCV_Program program("Test_mulhu");
+
+	program.SetRegister(Regs::a0, 12);
+	program.SetRegister(Regs::a1, 27);
+	program.ExpectRegisterValue(Regs::s0, 0);
+	program.ExpectRegisterValue(Regs::s1, 0);
+	program.AddInstruction(Create_mulhu(Regs::s0, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_mulhu(Regs::s1, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -31);
+	program.SetRegister(Regs::a1, 756);
+	program.ExpectRegisterValue(Regs::s2, 755);
+	program.ExpectRegisterValue(Regs::s3, 755);
+	program.AddInstruction(Create_mulhu(Regs::s2, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_mulhu(Regs::s3, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -31);
+	program.SetRegister(Regs::a1, -756);
+	program.ExpectRegisterValue(Regs::s4, -787);
+	program.ExpectRegisterValue(Regs::s5, -787);
+	program.AddInstruction(Create_mulhu(Regs::s4, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_mulhu(Regs::s5, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -32331);
+	program.SetRegister(Regs::a1, -712356);
+	program.ExpectRegisterValue(Regs::s6, -744682);
+	program.ExpectRegisterValue(Regs::s7, -744682);
+	program.AddInstruction(Create_mulhu(Regs::s6, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_mulhu(Regs::s7, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, 21351321);
+	program.SetRegister(Regs::a1, -92364243);
+	program.ExpectRegisterValue(Regs::s8, 20892156);
+	program.ExpectRegisterValue(Regs::s9, 20892156);
+	program.AddInstruction(Create_mulhu(Regs::s8, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_mulhu(Regs::s9, Regs::a1, Regs::a0));
+
+	program.EndProgram();
+	TestProgram(program, "InstructionTests/test_mulhu");
+
+	Success("test_mulhu");
+}
+static void Test_div()
+{
+	RISCV_Program program("Test_div");
+
+	program.SetRegister(Regs::a0, 12);
+	program.SetRegister(Regs::a1, 27);
+	program.ExpectRegisterValue(Regs::s0, 0);
+	program.ExpectRegisterValue(Regs::s1, 2);
+	program.AddInstruction(Create_div(Regs::s0, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_div(Regs::s1, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -31);
+	program.SetRegister(Regs::a1, 756);
+	program.ExpectRegisterValue(Regs::s2, 0);
+	program.ExpectRegisterValue(Regs::s3, -24);
+	program.AddInstruction(Create_div(Regs::s2, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_div(Regs::s3, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -31);
+	program.SetRegister(Regs::a1, -756);
+	program.ExpectRegisterValue(Regs::s4, 0);
+	program.ExpectRegisterValue(Regs::s5, 24);
+	program.AddInstruction(Create_div(Regs::s4, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_div(Regs::s5, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -32331);
+	program.SetRegister(Regs::a1, -712356);
+	program.ExpectRegisterValue(Regs::s6, 0);
+	program.ExpectRegisterValue(Regs::s7, 22);
+	program.AddInstruction(Create_div(Regs::s6, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_div(Regs::s7, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, 21351321);
+	program.SetRegister(Regs::a1, -92364243);
+	program.ExpectRegisterValue(Regs::s8, 0);
+	program.ExpectRegisterValue(Regs::s9, -4);
+	program.AddInstruction(Create_div(Regs::s8, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_div(Regs::s9, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, 10);
+	program.SetRegister(Regs::a1, 0);
+	program.ExpectRegisterValue(Regs::s10, -1);
+	program.ExpectRegisterValue(Regs::s11, 0);
+	program.AddInstruction(Create_div(Regs::s10, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_div(Regs::s11, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, LONG_MIN);
+	program.SetRegister(Regs::a1, -1);
+	program.ExpectRegisterValue(Regs::a2, LONG_MIN);
+	program.ExpectRegisterValue(Regs::a3, 0);
+	program.AddInstruction(Create_div(Regs::a2, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_div(Regs::a3, Regs::a1, Regs::a0));
+
+	program.EndProgram();
+	TestProgram(program, "InstructionTests/test_div");
+
+	Success("test_div");
+}
+static void Test_divu()
+{
+	RISCV_Program program("Test_divu");
+
+	program.SetRegister(Regs::a0, 12);
+	program.SetRegister(Regs::a1, 27);
+	program.ExpectRegisterValue(Regs::s0, 0);
+	program.ExpectRegisterValue(Regs::s1, 2);
+	program.AddInstruction(Create_divu(Regs::s0, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_divu(Regs::s1, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -31);
+	program.SetRegister(Regs::a1, 756);
+	program.ExpectRegisterValue(Regs::s2, 5681173);
+	program.ExpectRegisterValue(Regs::s3, 0);
+	program.AddInstruction(Create_divu(Regs::s2, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_divu(Regs::s3, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -31);
+	program.SetRegister(Regs::a1, -756);
+	program.ExpectRegisterValue(Regs::s4, 1);
+	program.ExpectRegisterValue(Regs::s5, 0);
+	program.AddInstruction(Create_divu(Regs::s4, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_divu(Regs::s5, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -32331);
+	program.SetRegister(Regs::a1, -712356);
+	program.ExpectRegisterValue(Regs::s6, 1);
+	program.ExpectRegisterValue(Regs::s7, 0);
+	program.AddInstruction(Create_divu(Regs::s6, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_divu(Regs::s7, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, 21351321);
+	program.SetRegister(Regs::a1, -92364243);
+	program.ExpectRegisterValue(Regs::s8, 0);
+	program.ExpectRegisterValue(Regs::s9, 196);
+	program.AddInstruction(Create_divu(Regs::s8, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_divu(Regs::s9, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, 10);
+	program.SetRegister(Regs::a1, 0);
+	program.ExpectRegisterValue(Regs::s10, 10);
+	program.ExpectRegisterValue(Regs::s11, 0);
+	program.AddInstruction(Create_divu(Regs::s10, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_divu(Regs::s11, Regs::a1, Regs::a0));
+
+	program.EndProgram();
+	TestProgram(program, "InstructionTests/test_divu");
+
+	Success("test_divu");
+}
+static void Test_rem()
+{
+	RISCV_Program program("Test_rem");
+
+	program.SetRegister(Regs::a0, 12);
+	program.SetRegister(Regs::a1, 27);
+	program.ExpectRegisterValue(Regs::s0, 12);
+	program.ExpectRegisterValue(Regs::s1, 3);
+	program.AddInstruction(Create_rem(Regs::s0, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_rem(Regs::s1, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -31);
+	program.SetRegister(Regs::a1, 756);
+	program.ExpectRegisterValue(Regs::s2, -31);
+	program.ExpectRegisterValue(Regs::s3, 12);
+	program.AddInstruction(Create_rem(Regs::s2, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_rem(Regs::s3, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -31);
+	program.SetRegister(Regs::a1, -756);
+	program.ExpectRegisterValue(Regs::s4, -31);
+	program.ExpectRegisterValue(Regs::s5, -12);
+	program.AddInstruction(Create_rem(Regs::s4, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_rem(Regs::s5, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -32331);
+	program.SetRegister(Regs::a1, -712356);
+	program.ExpectRegisterValue(Regs::s6, -32331);
+	program.ExpectRegisterValue(Regs::s7, -1074);
+	program.AddInstruction(Create_rem(Regs::s6, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_rem(Regs::s7, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, 21351321);
+	program.SetRegister(Regs::a1, -92364243);
+	program.ExpectRegisterValue(Regs::s8, 21351321);
+	program.ExpectRegisterValue(Regs::s9, -6958959);
+	program.AddInstruction(Create_rem(Regs::s8, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_rem(Regs::s9, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, 10);
+	program.SetRegister(Regs::a1, 0);
+	program.ExpectRegisterValue(Regs::s10, 10);
+	program.ExpectRegisterValue(Regs::s11, 0);
+	program.AddInstruction(Create_rem(Regs::s10, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_rem(Regs::s11, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, LONG_MIN);
+	program.SetRegister(Regs::a1, -1);
+	program.ExpectRegisterValue(Regs::a2, 0);
+	program.ExpectRegisterValue(Regs::a3, -1);
+	program.AddInstruction(Create_rem(Regs::a2, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_rem(Regs::a3, Regs::a1, Regs::a0));
+
+	program.EndProgram();
+	TestProgram(program, "InstructionTests/test_rem");
+
+	Success("test_rem");
+}
+static void Test_remu()
+{
+	RISCV_Program program("Test_remu");
+
+	program.SetRegister(Regs::a0, 12);
+	program.SetRegister(Regs::a1, 27);
+	program.ExpectRegisterValue(Regs::s0, 12);
+	program.ExpectRegisterValue(Regs::s1, 3);
+	program.AddInstruction(Create_remu(Regs::s0, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_remu(Regs::s1, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -31);
+	program.SetRegister(Regs::a1, 756);
+	program.ExpectRegisterValue(Regs::s2, 477);
+	program.ExpectRegisterValue(Regs::s3, 756);
+	program.AddInstruction(Create_remu(Regs::s2, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_remu(Regs::s3, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -31);
+	program.SetRegister(Regs::a1, -756);
+	program.ExpectRegisterValue(Regs::s4, 725);
+	program.ExpectRegisterValue(Regs::s5, -756);
+	program.AddInstruction(Create_remu(Regs::s4, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_remu(Regs::s5, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, -32331);
+	program.SetRegister(Regs::a1, -712356);
+	program.ExpectRegisterValue(Regs::s6, 680025);
+	program.ExpectRegisterValue(Regs::s7, -712356);
+	program.AddInstruction(Create_remu(Regs::s6, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_remu(Regs::s7, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, 21351321);
+	program.SetRegister(Regs::a1, -92364243);
+	program.ExpectRegisterValue(Regs::s8, 21351321);
+	program.ExpectRegisterValue(Regs::s9, 17744137);
+	program.AddInstruction(Create_remu(Regs::s8, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_remu(Regs::s9, Regs::a1, Regs::a0));
+
+	program.SetRegister(Regs::a0, 10);
+	program.SetRegister(Regs::a1, 0);
+	program.ExpectRegisterValue(Regs::s10, 10);
+	program.ExpectRegisterValue(Regs::s11, 0);
+	program.AddInstruction(Create_remu(Regs::s10, Regs::a0, Regs::a1));
+	program.AddInstruction(Create_remu(Regs::s11, Regs::a1, Regs::a0));
+
+	program.EndProgram();
+	TestProgram(program, "InstructionTests/test_remu");
+
+	Success("test_remu");
+}
 static void Test_li()
 {
 	RISCV_Program program("Test_li");
@@ -1134,6 +1529,14 @@ void TestAllInstructions()
 		Test_csrrwi();
 		Test_csrrsi();
 		Test_csrrci();
+		Test_mul();
+		Test_mulh();
+		Test_mulhsu();
+		Test_mulhu();
+		Test_div();
+		Test_divu();
+		Test_rem();
+		Test_remu();
 		Test_li();
 	}
 	catch (std::runtime_error& e)

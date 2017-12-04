@@ -206,7 +206,7 @@ static std::unique_ptr<RISCV_Program> CreateRandomProgram(const std::array<Instr
 template<uint32_t ArraySize>
 void CreateAndSaveTest(const std::array<InstructionType, ArraySize>& instructionTypes, const uint32_t size, const std::string& filepath)
 {
-	auto program = CreateRandomProgram(instructionTypes, size);
+	auto program = CreateRandomProgram<ArraySize>(instructionTypes, size);
 	program->Run();
 	program->ActualToExpectedRegisters();
 	program->Save(filepath);

@@ -2,6 +2,8 @@
 #include <stdexcept>
 #include <fstream>
 #include <memory>
+#include <iostream>
+#include <iomanip>
 #include "InstructionEncode.h"
 #include "InstructionDecode.h"
 #include "Processor.h"
@@ -167,6 +169,16 @@ void RISCV_Program::ActualToExpectedRegisters()
 	for(uint32_t i = 0; i < 32; i++)
 	{
 		ExpectedRegisters[i] = ActualRegisters[i];
+	}
+}
+
+void RISCV_Program::PrintResult()
+{
+	for(int32_t i = 0; i < 32; i++)
+	{
+		std::cout << std::setw(3) << RegisterName(i) << "  ";
+		std::cout << std::setw(10) << std::to_string(static_cast<int32_t>(ActualRegisters[i]));
+		std::cout << std::endl;
 	}
 }
 

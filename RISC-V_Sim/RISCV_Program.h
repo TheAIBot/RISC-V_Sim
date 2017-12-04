@@ -36,6 +36,7 @@ public:
 	std::string GetProgramName() const;
 	const uint32_t* GetProgramResult() const;
 	void ActualToExpectedRegisters();
+	void PrintResult();
 };
 
 void CompareRISCVPrograms(RISCV_Program& p1, std::unique_ptr<RISCV_Program>& p2);

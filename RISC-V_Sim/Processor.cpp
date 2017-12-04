@@ -240,7 +240,7 @@ bool Processor::RunInstruction(const Instruction& instruction)
 			{
 				registers[instruction.rd].word = -1;
 			}
-			else if (registers[instruction.rs1].word == LONG_MIN && registers[instruction.rs2].word == -1)
+			else if (registers[instruction.rs1].word == -2147483648 && registers[instruction.rs2].word == -1)
 			{
 				registers[instruction.rd].word = registers[instruction.rs1].word;
 			}
@@ -266,7 +266,7 @@ bool Processor::RunInstruction(const Instruction& instruction)
 			{
 				registers[instruction.rd].word = registers[instruction.rs1].word;
 			}
-			else if (registers[instruction.rs1].word == LONG_MIN && registers[instruction.rs2].word == -1)
+			else if (registers[instruction.rs1].word == -2147483648 && registers[instruction.rs2].word == -1)
 			{
 				registers[instruction.rd].word = 0;
 			}

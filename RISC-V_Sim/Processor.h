@@ -26,7 +26,7 @@ private:
 
 public:
 	Processor();
-	void Run(const uint32_t* instructions, const uint32_t instructionCount);
+	void Run(const uint32_t* instructions, const size_t instructionCount);
 	bool RunInstruction(const Instruction& instruction);
 	void PrintInstructions(const uint32_t* rawInstructions, const uint32_t instructionCount);
 	void PrintRegisters();

@@ -156,11 +156,11 @@ Instruction DecodeInstruction(const uint32_t rawInstruction)
 	}
 }
 
-std::unique_ptr<std::vector<Instruction>> DecodeInstructions(const uint32_t* rawInstructions, const uint32_t instructionsCount)
+std::unique_ptr<std::vector<Instruction>> DecodeInstructions(const uint32_t* rawInstructions, const size_t instructionsCount)
 {
 	std::unique_ptr<std::vector<Instruction>> instructions = std::make_unique<std::vector<Instruction>>();
 
-	for (uint32_t i = 0; i < instructionsCount; i++)
+	for (size_t i = 0; i < instructionsCount; i++)
 	{
 		const uint32_t rawInstruction = rawInstructions[i];
 		const Instruction instruction = DecodeInstruction(rawInstruction);
@@ -170,10 +170,10 @@ std::unique_ptr<std::vector<Instruction>> DecodeInstructions(const uint32_t* raw
 	return instructions;
 }
 
-std::string GetProgramAsString(const uint32_t* rawInstructions, const uint32_t instructionCount)
+std::string GetProgramAsString(const uint32_t* rawInstructions, const size_t instructionCount)
 {
 	std::string program;
-	for(uint32_t i = 0; i < instructionCount; i++)
+	for(size_t i = 0; i < instructionCount; i++)
 	{
 		const Instruction instruction = DecodeInstruction(rawInstructions[i]);
 		program += InstructionAsString(instruction) + "\n";

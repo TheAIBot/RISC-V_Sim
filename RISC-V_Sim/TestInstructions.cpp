@@ -7,7 +7,6 @@
 #include "InstructionDecode.h"
 #include <string>
 #include <memory>
-#include <climits>
 #include "Instruction.h"
 #include "ReadProgram.h"
 #include "RISCV_Program.h"
@@ -1274,9 +1273,9 @@ static void Test_div()
 	program.AddInstruction(Create_div(Regs::s10, Regs::a0, Regs::a1));
 	program.AddInstruction(Create_div(Regs::s11, Regs::a1, Regs::a0));
 
-	program.SetRegister(Regs::a0, -2147483648);
+	program.SetRegister(Regs::a0, INT32_MIN);
 	program.SetRegister(Regs::a1, -1);
-	program.ExpectRegisterValue(Regs::a2, -2147483648);
+	program.ExpectRegisterValue(Regs::a2, INT32_MIN);
 	program.ExpectRegisterValue(Regs::a3, 0);
 	program.AddInstruction(Create_div(Regs::a2, Regs::a0, Regs::a1));
 	program.AddInstruction(Create_div(Regs::a3, Regs::a1, Regs::a0));
@@ -1383,7 +1382,7 @@ static void Test_rem()
 	program.AddInstruction(Create_rem(Regs::s10, Regs::a0, Regs::a1));
 	program.AddInstruction(Create_rem(Regs::s11, Regs::a1, Regs::a0));
 
-	program.SetRegister(Regs::a0, -2147483648);
+	program.SetRegister(Regs::a0, INT32_MIN);
 	program.SetRegister(Regs::a1, -1);
 	program.ExpectRegisterValue(Regs::a2, 0);
 	program.ExpectRegisterValue(Regs::a3, -1);

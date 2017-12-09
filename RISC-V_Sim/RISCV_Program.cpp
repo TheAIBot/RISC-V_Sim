@@ -124,7 +124,7 @@ void RISCV_Program::Test()
 	}
 }
 
-static void WriteFile(const std::string& filepath, const char* toWrite, const uint32_t size)
+static void WriteFile(const std::string& filepath, const char* toWrite, const size_t size)
 {
 	std::ofstream file(filepath.c_str(), std::ios::binary);
 	if (!file)

@@ -180,19 +180,19 @@ static uint32_t RandomizeInstruction(const InstructionType type, FRandom::TCRand
 }
 
 template<uint32_t ArraySize>
-static std::unique_ptr<RISCV_Program> CreateRandomProgram(const std::array<InstructionType, ArraySize>& instructionTypes, uint32_t size)
+static std::unique_ptr<RISCV_Program> CreateRandomProgram(const std::array<InstructionType, ArraySize>& instructionTypes, size_t size)
 {
 	auto program = std::make_unique<RISCV_Program>("Program size: " + std::to_string(size));
 	FRandom::TCRandom random = FRandom::GetTCRandom();
 
-	for (size_t i = 0; i < 32; i++)
+	for (uint32_t i = 0; i < 32; i++)
 	{
 		program->SetRegister(static_cast<Regs>(i), i);
 	}
 
 	for (size_t i = 0; i < size; i++)
 	{
-		const uint32_t index = FRandom::RandomRange(random, 0, instructionTypes.size() - 1);
+		const uint32_t index = FRandom::RandomRange(random, 0, static_cast<uint32_t>(instructionTypes.size()) - 1);
 		const InstructionType type = instructionTypes[index];
 		const uint32_t rawInstruction = RandomizeInstruction(type, random);
 
@@ -204,7 +204,7 @@ static std::unique_ptr<RISCV_Program> CreateRandomProgram(const std::array<Instr
 }
 
 template<uint32_t ArraySize>
-void CreateAndSaveTest(const std::array<InstructionType, ArraySize>& instructionTypes, const uint32_t size, const std::string& filepath)
+void CreateAndSaveTest(const std::array<InstructionType, ArraySize>& instructionTypes, const size_t size, const std::string& filepath)
 {
 	auto program = CreateRandomProgram<ArraySize>(instructionTypes, size);
 	program->Run();

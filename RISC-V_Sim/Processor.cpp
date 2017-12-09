@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <memory>
 #include <vector>
-#include <climits>
 #include "InstructionDecode.h"
 #include "Register.h"
 
@@ -16,7 +15,7 @@ Processor::Processor()
 	Reset();
 }
 
-void Processor::Run(const uint32_t* rawInstructions, const uint32_t instructionCount)
+void Processor::Run(const uint32_t* rawInstructions, const size_t instructionCount)
 {
 	Reset();
 	const std::unique_ptr<std::vector<Instruction>> instructions = DecodeInstructions(rawInstructions, instructionCount);
@@ -240,7 +239,7 @@ bool Processor::RunInstruction(const Instruction& instruction)
 			{
 				registers[instruction.rd].word = -1;
 			}
-			else if (registers[instruction.rs1].word == -2147483648 && registers[instruction.rs2].word == -1)
+			else if (registers[instruction.rs1].word == INT32_MIN && registers[instruction.rs2].word == -1)
 			{
 				registers[instruction.rd].word = registers[instruction.rs1].word;
 			}
@@ -266,7 +265,7 @@ bool Processor::RunInstruction(const Instruction& instruction)
 			{
 				registers[instruction.rd].word = registers[instruction.rs1].word;
 			}
-			else if (registers[instruction.rs1].word == -2147483648 && registers[instruction.rs2].word == -1)
+			else if (registers[instruction.rs1].word == INT32_MIN && registers[instruction.rs2].word == -1)
 			{
 				registers[instruction.rd].word = 0;
 			}
